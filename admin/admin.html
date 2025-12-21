@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulvard - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>Soulvard Admin Panel</h1>
+        <div class="admin-nav">
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Logout</a>
+        </div>
+    </div>
+
+    <div class="admin-main">
+        <div class="admin-sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" data-section="products"><i class="fas fa-box"></i> All Products</a></li>
+                <li><a href="#" data-section="add-product"><i class="fas fa-plus-circle"></i> Add Product</a></li>
+                <li><a href="#" data-section="playlists"><i class="fas fa-list"></i> Playlists</a></li>
+                <li><a href="#" data-section="coupons"><i class="fas fa-percentage"></i> Coupons</a></li>
+                <li><a href="#" data-section="hero-images"><i class="fas fa-images"></i> Hero Images</a></li>
+                <li><a href="#" data-section="size-charts"><i class="fas fa-chart-bar"></i> Size Charts</a></li>
+                <li><a href="#" data-section="promotions"><i class="fas fa-bullhorn"></i> Promotions</a></li>
+                <li><a href="#" data-section="categories"><i class="fas fa-tags"></i> Categories</a></li>
+            </ul>
+        </div>
+
+        <div class="admin-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section-content active">
+                <h2 style="margin-bottom: 1.5rem;">Dashboard Overview</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Total Products</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">16</div>
+                        <div class="stat-label">New Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">₹2,48,917</div>
+                        <div class="stat-label">Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Customer Satisfaction</div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Recent Activity</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Activity</th>
+                                    <th>User</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2023-11-15</td>
+                                    <td>New product "Silk Shirt" added</td>
+                                    <td>Admin</td>
+                                </tr>
+                                <tr>
+                                    <td>2023-11-14</td>
+                                    <td>Coupon "SOULVARD20" created</td>
+                                    <td>Admin</td>
+                                </tr>
+                                <tr>
+                                    <td>2023-11-13</td>
+                                    <td>Order #1045 completed</td>
+                                    <td>System</td>
+                                </tr>
+                                <tr>
+                                    <td>2023-11-12</td>
+                                    <td>Hero images updated</td>
+                                    <td>Admin</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Products Section -->
+            <div id="products" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">All Products</h2>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Product List</h2>
+                        <div>
+                            <input type="text" class="form-control" placeholder="Search products..." style="width: 300px;">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Products will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Product Section -->
+            <div id="add-product" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Add New Product</h2>
+                
+                <div class="admin-card">
+                    <div class="card-body">
+                        <form id="productForm">
+                            <input type="hidden" id="productId" value="">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productName">Product Name</label>
+                                    <input type="text" id="productName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice">Price (₹)</label>
+                                    <input type="number" id="productPrice" class="form-control" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="productDescription">Description</label>
+                                <textarea id="productDescription" class="form-control" maxlength="500" required></textarea>
+                                <div style="text-align: right; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-light);">
+                                    <span id="charCount">0</span>/500 characters
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productCategory">Category</label>
+                                    <div style="display: flex; gap: 10px;">
+                                        <select id="productCategory" class="form-control" required>
+                                            <option value="">Select Category</option>
+                                            <!-- Categories will be populated dynamically -->
+                                        </select>
+                                        <button type="button" class="btn" id="addCategoryBtn">Add Category</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productStock">Stock Quantity</label>
+                                    <input type="number" id="productStock" class="form-control" min="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productShipping">Shipping Charges (₹)</label>
+                                    <input type="number" id="productShipping" class="form-control" min="0" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <!-- Empty for alignment -->
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Color Variants</label>
+                                <div id="colorVariantsContainer">
+                                    <!-- Color variants will be added dynamically -->
+                                </div>
+                                <button type="button" class="btn" id="addColorVariant" style="margin-top: 1rem;">+ Add Color Variant</button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Available Sizes</label>
+                                <div class="size-options">
+                                    <div class="size-option active">XS</div>
+                                    <div class="size-option active">S</div>
+                                    <div class="size-option active">M</div>
+                                    <div class="size-option">L</div>
+                                    <div class="size-option">XL</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Product Images</label>
+                                <div class="image-upload" id="imageUpload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p style="font-size: 0.8rem; color: var(--text-light);">PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                                <div class="image-preview" id="imagePreview"></div>
+                                <input type="file" id="fileInput" multiple style="display: none;" accept="image/*">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="productFeatured">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span style="margin-left: 10px;">Featured Product</span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success" id="productSubmitBtn">Add Product</button>
+                            <button type="button" class="btn" id="cancelEditBtn" style="display: none; margin-left: 10px;">Cancel Edit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Section -->
+            <div id="categories" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Category Management</h2>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Add New Category</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="newCategoryName">Category Name</label>
+                            <input type="text" id="newCategoryName" class="form-control">
+                        </div>
+                        <button type="button" class="btn" id="saveCategoryBtn">Add Category</button>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Existing Categories</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="category-list" id="categoryList">
+                            <!-- Categories will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections remain the same -->
+            <!-- Playlists Section -->
+            <div id="playlists" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Manage Playlists</h2>
+                
+                <div class="section-tabs">
+                    <div class="section-tab active" data-tab="top-picks">Top Picks</div>
+                    <div class="section-tab" data-tab="new-arrivals">New Arrivals</div>
+                </div>
+                
+                <!-- Top Picks Playlist -->
+                <div id="top-picks" class="section-content active">
+                    <div class="playlist-section">
+                        <div class="playlist-header">
+                            <h3>Top Picks Playlist</h3>
+                            <button class="btn">Add Product to Top Picks</button>
+                        </div>
+                        
+                        <div class="playlist-products">
+                            <div class="playlist-product">
+                                <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80" alt="Silk Shirt">
+                                <div class="playlist-product-info">
+                                    <div class="playlist-product-name">Silk Shirt</div>
+                                    <div class="playlist-product-actions">
+                                        <button class="btn btn-danger">Remove</button>
+                                        <button class="btn">Edit Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="playlist-product">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Cashmere Coat">
+                                <div class="playlist-product-info">
+                                    <div class="playlist-product-name">Cashmere Coat</div>
+                                    <div class="playlist-product-actions">
+                                        <button class="btn btn-danger">Remove</button>
+                                        <button class="btn">Edit Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="playlist-product">
+                                <img src="https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Wool Blazer">
+                                <div class="playlist-product-info">
+                                    <div class="playlist-product-name">Wool Blazer</div>
+                                    <div class="playlist-product-actions">
+                                        <button class="btn btn-danger">Remove</button>
+                                        <button class="btn">Edit Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Arrivals Playlist -->
+                <div id="new-arrivals" class="section-content">
+                    <div class="playlist-section">
+                        <div class="playlist-header">
+                            <h3>New Arrivals Playlist</h3>
+                            <button class="btn">Add Product to New Arrivals</button>
+                        </div>
+                        
+                        <div class="playlist-products">
+                            <div class="playlist-product">
+                                <img src="https://lh3.googleusercontent.com/p/AF1QipMIV1C6dppvP91qcgn6e8qDTcH0HCE2Qc5wWtQK=s1360-w1360-h1020-rw" alt="Tailored Trousers">
+                                <div class="playlist-product-info">
+                                    <div class="playlist-product-name">Tailored Trousers</div>
+                                    <div class="playlist-product-actions">
+                                        <button class="btn btn-danger">Remove</button>
+                                        <button class="btn">Edit Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="playlist-product">
+                                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Leather Jacket">
+                                <div class="playlist-product-info">
+                                    <div class="playlist-product-name">Leather Jacket</div>
+                                    <div class="playlist-product-actions">
+                                        <button class="btn btn-danger">Remove</button>
+                                        <button class="btn">Edit Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="playlist-product">
+                                <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Evening Dress">
+                                <div class="playlist-product-info">
+                                    <div class="playlist-product-name">Evening Dress</div>
+                                    <div class="playlist-product-actions">
+                                        <button class="btn btn-danger">Remove</button>
+                                        <button class="btn">Edit Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coupons Section -->
+            <div id="coupons" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Coupon Management</h2>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Create New Coupon</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="couponForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="couponCode">Coupon Code</label>
+                                    <input type="text" id="couponCode" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="couponDiscount">Discount (%)</label>
+                                    <input type="number" id="couponDiscount" class="form-control" min="1" max="100" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="couponStartDate">Start Date</label>
+                                    <input type="date" id="couponStartDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="couponEndDate">End Date</label>
+                                    <input type="date" id="couponEndDate" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="couponProducts">Applicable Products</label>
+                                <select id="couponProducts" class="form-control" multiple>
+                                    <option value="all">All Products</option>
+                                    <option value="silkshirt">Silk Shirt</option>
+                                    <option value="tailoredtrousers">Tailored Trousers</option>
+                                    <option value="cashmerecoat">Cashmere Coat</option>
+                                    <option value="leatherjacket">Leather Jacket</option>
+                                </select>
+                                <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.5rem;">
+                                    Hold Ctrl/Cmd to select multiple products
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="couponUsageLimit">Usage Limit</label>
+                                <input type="number" id="couponUsageLimit" class="form-control" min="1" placeholder="Leave empty for unlimited">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success">Create Coupon</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Existing Coupons</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Discount</th>
+                                    <th>Valid Until</th>
+                                    <th>Usage</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SOULVARD20</td>
+                                    <td>20%</td>
+                                    <td>2023-11-30</td>
+                                    <td>45/100</td>
+                                    <td><span style="color: var(--success);">Active</span></td>
+                                    <td class="table-actions">
+                                        <button class="btn">Edit</button>
+                                        <button class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>WELCOME10</td>
+                                    <td>10%</td>
+                                    <td>2023-12-15</td>
+                                    <td>128/Unlimited</td>
+                                    <td><span style="color: var(--success);">Active</span></td>
+                                    <td class="table-actions">
+                                        <button class="btn">Edit</button>
+                                        <button class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SUMMER25</td>
+                                    <td>25%</td>
+                                    <td>2023-09-30</td>
+                                    <td>89/100</td>
+                                    <td><span style="color: var(--error);">Expired</span></td>
+                                    <td class="table-actions">
+                                        <button class="btn">Edit</button>
+                                        <button class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Images Section -->
+            <div id="hero-images" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Hero Image Management</h2>
+                
+                <div class="admin-card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Current Hero Images</label>
+                            <div class="image-preview">
+                                <div class="preview-item">
+                                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Hero Image 1">
+                                    <div class="remove">&times;</div>
+                                </div>
+                                <div class="preview-item">
+                                    <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80" alt="Hero Image 2">
+                                    <div class="remove">&times;</div>
+                                </div>
+                                <div class="preview-item">
+                                    <img src="https://images.unsplash.com/photo-1558769132-cb25e35ca267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80" alt="Hero Image 3">
+                                    <div class="remove">&times;</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Add New Hero Image</label>
+                            <div class="image-upload" id="heroImageUpload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload or drag and drop</p>
+                                <p style="font-size: 0.8rem; color: var(--text-light);">PNG, JPG, GIF up to 10MB</p>
+                            </div>
+                            <input type="file" id="heroFileInput" style="display: none;" accept="image/*">
+                        </div>
+                        
+                        <button type="button" class="btn">Update Hero Images</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Charts Section -->
+            <div id="size-charts" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Size Chart Management</h2>
+                
+                <div class="admin-card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="sizeChartCategory">Select Category</label>
+                            <select id="sizeChartCategory" class="form-control">
+                                <option value="shirts">Shirts</option>
+                                <option value="trousers">Trousers</option>
+                                <option value="coats">Coats</option>
+                                <option value="dresses">Dresses</option>
+                                <option value="shoes">Shoes</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Size Chart Data</label>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Chest (inches)</th>
+                                        <th>Waist (inches)</th>
+                                        <th>Hip (inches)</th>
+                                        <th>Length (inches)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>XS</td>
+                                        <td><input type="text" class="form-control" value="32-34"></td>
+                                        <td><input type="text" class="form-control" value="26-28"></td>
+                                        <td><input type="text" class="form-control" value="34-36"></td>
+                                        <td><input type="text" class="form-control" value="26"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>S</td>
+                                        <td><input type="text" class="form-control" value="34-36"></td>
+                                        <td><input type="text" class="form-control" value="28-30"></td>
+                                        <td><input type="text" class="form-control" value="36-38"></td>
+                                        <td><input type="text" class="form-control" value="27"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>M</td>
+                                        <td><input type="text" class="form-control" value="36-38"></td>
+                                        <td><input type="text" class="form-control" value="30-32"></td>
+                                        <td><input type="text" class="form-control" value="38-40"></td>
+                                        <td><input type="text" class="form-control" value="28"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>L</td>
+                                        <td><input type="text" class="form-control" value="38-40"></td>
+                                        <td><input type="text" class="form-control" value="32-34"></td>
+                                        <td><input type="text" class="form-control" value="40-42"></td>
+                                        <td><input type="text" class="form-control" value="29"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>XL</td>
+                                        <td><input type="text" class="form-control" value="40-42"></td>
+                                        <td><input type="text" class="form-control" value="34-36"></td>
+                                        <td><input type="text" class="form-control" value="42-44"></td>
+                                        <td><input type="text" class="form-control" value="30"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <button type="button" class="btn">Update Size Chart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotions Section -->
+            <div id="promotions" class="section-content">
+                <h2 style="margin-bottom: 1.5rem;">Promotion Management</h2>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Current Promotion Banner</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="promoTitle">Promotion Title</label>
+                            <input type="text" id="promoTitle" class="form-control" value="SPECIAL OFFER">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="promoDescription">Promotion Description</label>
+                            <textarea id="promoDescription" class="form-control">Enjoy 20% off your first purchase with code: SOULVARD20</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="promoEndDate">Promotion End Date</label>
+                            <input type="date" id="promoEndDate" class="form-control" value="2023-11-30">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="promoActive" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span style="margin-left: 10px;">Promotion Active</span>
+                        </div>
+                        
+                        <button type="button" class="btn">Update Promotion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Category</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="categoryName">Category Name</label>
+                    <input type="text" id="categoryName" class="form-control">
+                </div>
+                <button type="button" class="btn" id="saveNewCategoryBtn">Save Category</button>
+            </div>
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

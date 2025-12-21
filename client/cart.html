@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soulvard - Shopping Cart</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles/cart.css" />
+  </head>
+  <body>
+    <!-- Header Banner -->
+    <div class="header-banner">
+      <div class="banner-content">
+        <div class="banner-text">FREE SHIPPING ON ORDERS OVER $500</div>
+        <div class="banner-text">NEW COLLECTION LAUNCHING SOON</div>
+        <div class="banner-text">EXCLUSIVE OFFERS FOR SUBSCRIBERS</div>
+      </div>
+    </div>
+
+    <nav id="navbar">
+      <div class="logo">SOULVARD</div>
+      <ul class="nav-links">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="index.html#top-picks">TOP PICKS</a></li>
+        <li><a href="collection.html">COLLECTION</a></li>
+        <li><a href="index.html#about">ABOUT</a></li>
+        <li><a href="index.html#contact">CONTACT</a></li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 1rem">
+        <a href="whishlist.html" class="wishlist-icon" title="View Wishlist">
+          <span>❤️</span>
+          <div class="wishlist-count">0</div>
+        </a>
+        <div class="cart-icon" onclick="goToCartPage()">
+          <span>🛒</span>
+          <div class="cart-count">3</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Cart Page -->
+    <section class="cart-page">
+      <h1 class="page-title">SHOPPING CART</h1>
+
+      <div class="cart-container">
+        <!-- Cart Items -->
+        <div class="cart-items">
+          <div class="cart-header">
+            <h2>YOUR ITEMS (3)</h2>
+            <div class="cart-actions">
+              <button class="cart-action-btn" onclick="saveCartForLater()">
+                <i class="far fa-bookmark"></i> SAVE FOR LATER
+              </button>
+              <button class="cart-action-btn" onclick="clearCart()">
+                <i class="fas fa-trash-alt"></i> CLEAR CART
+              </button>
+            </div>
+          </div>
+
+          <div class="cart-item">
+            <div
+              class="cart-item-image"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80');
+              "
+            ></div>
+            <div class="cart-item-details">
+              <h3>Silk Shirt</h3>
+              <p>Size: M | Color: Ivory</p>
+              <div class="item-availability">
+                <span class="availability-dot"></span>
+                <span>In Stock - Ready to Ship</span>
+              </div>
+            </div>
+            <div class="quantity-controls">
+              <button class="quantity-btn" onclick="updateQuantity(this, -1)">
+                -
+              </button>
+              <span class="quantity">1</span>
+              <button class="quantity-btn" onclick="updateQuantity(this, 1)">
+                +
+              </button>
+            </div>
+            <div class="item-price">$299</div>
+            <button class="remove-item" onclick="removeItem(this)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="cart-item">
+            <div
+              class="cart-item-image"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+              "
+            ></div>
+            <div class="cart-item-details">
+              <h3>Tailored Trousers</h3>
+              <p>Size: 32 | Color: Charcoal</p>
+              <div class="item-availability">
+                <span class="availability-dot"></span>
+                <span>In Stock - Ready to Ship</span>
+              </div>
+            </div>
+            <div class="quantity-controls">
+              <button class="quantity-btn" onclick="updateQuantity(this, -1)">
+                -
+              </button>
+              <span class="quantity">1</span>
+              <button class="quantity-btn" onclick="updateQuantity(this, 1)">
+                +
+              </button>
+            </div>
+            <div class="item-price">$399</div>
+            <button class="remove-item" onclick="removeItem(this)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="cart-item">
+            <div
+              class="cart-item-image"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80');
+              "
+            ></div>
+            <div class="cart-item-details">
+              <h3>Cashmere Sweater</h3>
+              <p>Size: L | Color: Camel</p>
+              <div class="item-availability">
+                <span class="availability-dot"></span>
+                <span>In Stock - Ready to Ship</span>
+              </div>
+            </div>
+            <div class="quantity-controls">
+              <button class="quantity-btn" onclick="updateQuantity(this, -1)">
+                -
+              </button>
+              <span class="quantity">1</span>
+              <button class="quantity-btn" onclick="updateQuantity(this, 1)">
+                +
+              </button>
+            </div>
+            <div class="item-price">$459</div>
+            <button class="remove-item" onclick="removeItem(this)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Billing Section -->
+        <div class="billing-section">
+          <h2 class="billing-title">ORDER SUMMARY</h2>
+
+          <div class="order-summary">
+            <div class="summary-row">
+              <span>Subtotal (3 items)</span>
+              <span id="subtotal">$1157.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span id="shipping">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax</span>
+              <span id="tax">$115.70</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span id="total">$1272.70</span>
+            </div>
+          </div>
+
+          <div class="shipping-note">
+            <i class="fas fa-shipping-fast"></i>
+            <span>You've qualified for free shipping!</span>
+          </div>
+
+          <div class="billing-form">
+            <h2 class="billing-title">SHIPPING INFORMATION</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" placeholder="John" required />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name *</label>
+                <input type="text" id="lastName" placeholder="Doe" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="+1 (555) 123-4567"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address *</label>
+              <textarea
+                id="address"
+                placeholder="123 Main Street, Apt 4B"
+                rows="2"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City *</label>
+                <input type="text" id="city" placeholder="New York" required />
+              </div>
+              <div class="form-group">
+                <label for="pincode">Pincode *</label>
+                <input type="text" id="pincode" placeholder="10001" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="country">Country *</label>
+              <select id="country" required>
+                <option value="">Select Country</option>
+                <option value="us">United States</option>
+                <option value="ca">Canada</option>
+                <option value="uk">United Kingdom</option>
+                <option value="au">Australia</option>
+                <option value="in">India</option>
+              </select>
+            </div>
+
+            <h2 class="billing-title">PAYMENT METHOD</h2>
+
+            <div class="payment-methods">
+              <div
+                class="payment-method active"
+                onclick="selectPaymentMethod(this, 'razorpay')"
+              >
+                <img
+                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIyIDguNDJWMjBIMjBWMTAuNDJIMTguODhWMTIuNDJIMTcuNzZWOC40MkgyMlY2LjQySDE3Ljc2VjQuNDJIMTkuODhWMi40MkgyMlYwLjQySDE3Ljc2VjIuNDJIMTUuNjRWNC40MkgxNC41MlY2LjQySDEzLjRWOC40MkgxMi4yOFYxMC40MkgxMS4xNlYxMi40MkgxMC4wNFYxNC40Mkg4LjkyVjE2LjQySDcuOFYxOC40Mkg2LjY4VjIwLjQySDUuNTZWMjIuNDJINC40NFYyMC40MkgzLjMyVjE4LjQySDIuMlYxNi40MkgxLjA4VjE0LjQySDBWMTIuNDJIMS4xMlYxMC40MkgyLjI0VjguNDJIMy4zNlY2LjQySDQuNDhWNC40Mkg1LjZWMi40Mkg2LjcyVjAuNDJINS42VjIuNDJINC40OFY0LjQySDMuMzZWNi40MkgyLjI0VjguNDJIMS4xMlYxMC40MkgwVjguNDJIMS4xMlY2LjQySDIuMjRWNC40MkgzLjM2VjIuNDJINC40OFYwLjQySDMuMzZWMi40MkgyLjI0VjQuNDJIMS4xMlY2LjQySDBWNC40MkgxLjEyVjIuNDJIMi4yNFYwLjQySDEuMTJWOC40MkgwVjEwLjQySDEuMTJWMTIuNDJIMFYxNC40MkgxLjEyVjE2LjQySDBWMTguNDJIMS4xMlYyMC40MkgwVjIyLjQySDEuMTJWMjAuNDJIMi4yNFYxOC40MkgzLjM2VjE2LjQySDQuNDhWMTQuNDJINS42VjEyLjQySDYuNzJWMTQuNDJINy44NFYxNi40Mkg4Ljk2VjE4LjQyaDEuMTJWMTYuNDJIMTEuMTZWMTQuNDJIMTIuMjhWMTIuNDJIMTMuNFYxMC40MkgxNC41MlY4LjQySDE1LjY0VjYuNDJIMTYuNzZWNC40MkgxNy44OFYyLjQySDE5VjQuNDJIMjAuMTJWNi40MkgyMS4yNFY4LjQySDIyVjEwLjQySDIwLjg4VjEyLjQySDIyVjE0LjQySDIwLjg4VjE2LjQySDIyVjE4LjQySDIwLjg4VjIwLjQySDIyVjIyLjQySDIwLjg4VjIwLjQySDE5Ljc2VjE4LjQySDE4LjY0VjE2LjQySDE3LjUyVjE0LjQySDE2LjRWMTIuNDJIMTUuMjhWMTQuNDJIMTQuMTZWMTYuNDJIMTMuMDRWMTguNDJIMTEuOTJWMTYuNDJIMTAuOFYxNC40Mkg5LjY4VjEyLjQySDguNTZWMTQuNDJINy40NFYxNi40Mkg2LjMyVjE0LjQySDUuMlYxMi40Mkg0LjA4VjEwLjQySDIuOTZWOC40MkgxLjg0VjEwLjQySDAuNzJWMTIuNDJIMS44NFYxMC40MkgyLjk2VjguNDJINC4wOFY2LjQySDUuMlY0LjQySDYuMzJWMi40Mkg3LjQ0VjAuNDJINi4zMlYyLjQySDUuMlY0LjQySDQuMDhWNi40MkgyLjk2VjguNDJIMS44NFY2LjQySDAuNzJWNC40MkgxLjg0VjIuNDJIMi45NlYwLjQySDEuODRWNi40MkgwVjguNDJIMS4xMlYxMC40MkgyLjI0VjEyLjQySDMuMzZWMTQuNDJINC40OFYxNi40Mkg1LjZWMTguNDJINi43MlYyMC40Mkg3Ljg0VjIyLjQySDguOTZWMjAuNDJIMTAuMDhWMTguNDJIMTEuMlYxNi40MkgxMi4zMlYxNC40MkgxMy40NFYxMi40MkgxNC41NlYxMC40MkgxNS42OFY4LjQySDE2LjhWNi40MkgxNy45MlY0LjQySDE5LjA0VjIuNDJIMjAuMTZWMC40MkgxOS4wNFYyLjQySDE3LjkyVjQuNDJIMTYuOFY2LjQySDE1LjY4VjguNDJIMTQuNTZWMTYuNDJIMTUuNjRWMTguNDJIMTYuNzZWMjAuNDJIMTcuODhWMjIuNDJIMTlWMjAuNDJIMjAuMTJWMTguNDJIMjEuMjRWMTYuNDJIMjIuMzZWMTQuNDJIMjMuNDhWMTIuNDJIMjIuMzZWMTQuNDJIMjEuMjRWMTYuNDJIMjAuMTJWMTguNDJIMTlWMjAuNDJIMTcuODhWMTguNDJIMTYuNzZWMTYuNDJIMTUuNjRWMTQuNDJIMTQuNTJWMTIuNDJIMTMuNFYxMC40MkgyMi44OFY4LjQySDIyWiIgZmlsbD0iIzMzMzMzMyIvPgo8L3N2Zz4K"
+                  alt="Razorpay"
+                  class="razorpay-logo"
+                />
+                <div>Razorpay</div>
+              </div>
+              <div
+                class="payment-method"
+                onclick="selectPaymentMethod(this, 'card')"
+              >
+                <i class="fab fa-cc-visa"></i>
+                <div>Credit Card</div>
+              </div>
+            </div>
+
+            <div class="secure-checkout">
+              <i class="fas fa-lock"></i>
+              <span>Your payment details are secure and encrypted</span>
+            </div>
+
+            <button class="checkout-btn" onclick="processCheckout()">
+              <i class="fas fa-lock"></i> PAY SECURELY WITH RAZORPAY
+            </button>
+
+            <p
+              style="
+                text-align: center;
+                margin-top: 1rem;
+                font-size: 0.8rem;
+                color: var(--text-light);
+              "
+            >
+              By completing your purchase you agree to our
+              <a href="#" style="color: var(--gold)">Terms of Service</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <div class="footer-content">
+        <div class="logo" style="margin-bottom: 2rem; color: white">
+          SOULVARD
+        </div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-pinterest"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+        <div class="footer-links">
+          <a href="index.html#top-picks">TOP PICKS</a>
+          <a href="collection.html">SHOP</a>
+          <a href="index.html#about">ABOUT</a>
+          <a href="#">JOURNAL</a>
+          <a href="index.html#contact">CONTACT</a>
+          <a href="#">CAREERS</a>
+        </div>
+        <p style="margin-top: 2rem; letter-spacing: 2px; opacity: 0.7">
+          © 2025 SOULVARD. ALL RIGHTS RESERVED.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="scripts/cart.js"></script>
+  </body>
+</html>

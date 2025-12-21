@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulvard - My Wishlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/wishlist.css">
+</head>
+<body>
+    <!-- Header Banner -->
+    <div class="header-banner">
+        <div class="banner-content">
+            <div class="banner-text">FREE SHIPPING ON ORDERS OVER ₹500</div>
+            <div class="banner-text">NEW COLLECTION LAUNCHING SOON</div>
+            <div class="banner-text">EXCLUSIVE OFFERS FOR SUBSCRIBERS</div>
+        </div>
+    </div>
+
+    <nav id="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">SOULVARD</div>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="index.html#top-picks">TOP PICKS</a></li>
+            <li><a href="collection.html">COLLECTION</a></li>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li>
+        </ul>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="whishlist.html" class="wishlist-icon" title="View Wishlist">
+                <span>❤️</span>
+                <div class="wishlist-count" id="wishlistCount">0</div>
+            </a>
+            <a href="cart.html" class="cart-icon">
+                <span>🛒</span>
+                <div class="cart-count" id="cartCount">0</div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Wishlist Page -->
+    <section class="wishlist-page">
+        <h1 class="page-title">MY WISHLIST</h1>
+        
+        <div class="wishlist-container">
+            <div class="wishlist-header">
+                <h2 id="wishlistTitle">SAVED ITEMS (0)</h2>
+                <div class="wishlist-actions">
+                    <button class="wishlist-action-btn" onclick="shareWishlist()">
+                        <i class="fas fa-share-alt"></i> SHARE WISHLIST
+                    </button>
+                    <button class="wishlist-action-btn" onclick="clearWishlist()">
+                        <i class="fas fa-trash-alt"></i> CLEAR ALL
+                    </button>
+                </div>
+            </div>
+            
+            <div class="wishlist-items" id="wishlistItems">
+                <!-- Wishlist items will be dynamically inserted here -->
+            </div>
+            
+            <div class="wishlist-empty" id="emptyWishlist" style="display: none;">
+                <i class="fas fa-heart"></i>
+                <h3>YOUR WISHLIST IS EMPTY</h3>
+                <p>Discover our premium collection and add items you love to your wishlist. They'll be saved here for you to revisit anytime.</p>
+                <button class="continue-shopping" onclick="window.location.href='index.html'">CONTINUE SHOPPING</button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 2rem; color: white;">SOULVARD</div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#top-picks">TOP PICKS</a>
+                <a href="collection.html">SHOP</a>
+                <a href="index.html#about">ABOUT</a>
+                <a href="#">JOURNAL</a>
+                <a href="index.html#contact">CONTACT</a>
+                <a href="#">CAREERS</a>
+            </div>
+            <p style="margin-top: 2rem; letter-spacing: 2px; opacity: 0.7;">© 2025 SOULVARD. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+    
+    <script src="scripts/wishlist.js"></script>
+</body>
+</html>

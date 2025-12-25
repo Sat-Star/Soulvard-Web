@@ -145,10 +145,21 @@
       </div>
     </div>
 
-    <!-- Top Picks Section - 8 cards -->
+    <!-- Top Picks Section - Dynamically loaded from API -->
     <section class="top-picks" id="top-picks">
       <h2 class="section-title">TOP PICKS</h2>
-      <div class="product-grid">
+      <div class="product-grid" id="topPicksGrid">
+        <!-- Product cards will be dynamically generated from API -->
+      </div>
+    </section>
+
+    <!-- New Arrivals Section - Dynamically loaded from API -->
+    <section class="collection" id="collection">
+      <h2 class="section-title">NEW ARRIVALS</h2>
+      <div class="product-grid" id="newArrivalsGrid">
+        <!-- Product cards will be dynamically generated from API -->
+      </div>
+    </section>
         <!-- Product cards with updated buttons -->
         <div class="product-card">
           <div class="product-badge">BESTSELLER</div>
@@ -655,11 +666,11 @@
     <section class="coupon-banner">
       <div class="coupon-content">
         <h2>SPECIAL OFFER</h2>
-        <p>Enjoy 20% off your first purchase with code:</p>
+        <p>Enjoy exclusive discounts with code:</p>
         <div class="coupon-code" id="couponCode" onclick="copyCouponCode()">
-          SOULVARD20
+          <!-- Coupon code loaded from API -->
         </div>
-        <p>Limited time offer. Valid until the end of this month.</p>
+        <p id="couponDescription">Limited time offer.</p>
 
         <div class="coupon-timer">
           <div class="timer-item">
@@ -706,73 +717,9 @@
       <h2 class="section-title">WHAT OUR CUSTOMERS SAY</h2>
       <div class="testimonial-container">
         <div class="testimonial-slider">
+          <!-- Testimonials loaded dynamically from API -->
           <div class="testimonial-track" id="testimonialTrack">
-            <div class="testimonial-slide">
-              <div class="testimonial-card">
-                <p class="testimonial-text">
-                  I've never experienced such quality and attention to detail in
-                  clothing before. Soulvard pieces have become staples in my
-                  wardrobe. The fabrics feel incredible and the fit is always
-                  perfect.
-                </p>
-                <div class="testimonial-author">
-                  <div
-                    class="author-avatar"
-                    style="
-                      background-image: url('https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
-                    "
-                  ></div>
-                  <div class="author-info">
-                    <div class="author-name">SARAH JENKINS</div>
-                    <div class="author-title">Fashion Editor</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-slide">
-              <div class="testimonial-card">
-                <p class="testimonial-text">
-                  The craftsmanship is exceptional. I purchased the cashmere
-                  coat last winter and it's the best investment I've made. It
-                  keeps me warm without being bulky and always garners
-                  compliments.
-                </p>
-                <div class="testimonial-author">
-                  <div
-                    class="author-avatar"
-                    style="
-                      background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
-                    "
-                  ></div>
-                  <div class="author-info">
-                    <div class="author-name">MICHAEL CHEN</div>
-                    <div class="author-title">Architect</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-slide">
-              <div class="testimonial-card">
-                <p class="testimonial-text">
-                  As someone who values sustainable fashion, I appreciate
-                  Soulvard's commitment to quality and ethical production. Their
-                  pieces are timeless and will remain in my wardrobe for years
-                  to come.
-                </p>
-                <div class="testimonial-author">
-                  <div
-                    class="author-avatar"
-                    style="
-                      background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
-                    "
-                  ></div>
-                  <div class="author-info">
-                    <div class="author-name">EMMA ROBERTS</div>
-                    <div class="author-title">Sustainability Advocate</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- Dynamic testimonials will be inserted here -->
           </div>
         </div>
 
@@ -789,13 +736,9 @@
           <i class="fas fa-chevron-right"></i>
         </div>
 
-        <div class="testimonial-nav">
-          <div
-            class="testimonial-dot active"
-            onclick="currentTestimonial(0)"
-          ></div>
-          <div class="testimonial-dot" onclick="currentTestimonial(1)"></div>
-          <div class="testimonial-dot" onclick="currentTestimonial(2)"></div>
+        <!-- Navigation dots will be dynamically created for each testimonial -->
+        <div class="testimonial-nav" id="testimonialNav">
+          <!-- Dots will be inserted here dynamically -->
         </div>
       </div>
     </section>
@@ -844,6 +787,7 @@
       </div>
     </footer>
 
+    <script src="scripts/api.js"></script>
     <script src="scripts/index.js"></script>
   </body>
 </html>

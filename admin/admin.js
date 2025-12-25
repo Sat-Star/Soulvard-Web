@@ -1,79 +1,61 @@
-let products = [
-  {
-    id: "001",
-    name: "Silk Shirt",
-    category: "Top Picks",
-    price: "₹24,917",
-    stock: 15,
-    status: "Active",
-    description: "Luxurious silk shirt with premium finish",
-    shipping: 200,
-    colors: [
-      {
-        name: "Black",
-        value: "#000000",
-        image:
-          "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
-      },
-      {
-        name: "White",
-        value: "#ffffff",
-        image:
-          "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-      },
-    ],
-    sizes: ["XS", "S", "M"],
-    images: [
-      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
-      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    ],
-    featured: true,
-  },
-  {
-    id: "002",
-    name: "Tailored Trousers",
-    category: "New Arrivals",
-    price: "₹33,117",
-    stock: 8,
-    status: "Active",
-    description: "Perfectly tailored trousers for a sharp look",
-    shipping: 250,
-    colors: [
-      {
-        name: "Navy",
-        value: "#1a1a2e",
-        image:
-          "https://lh3.googleusercontent.com/p/AF1QipMIV1C6dppvP91qcgn6e8qDTcH0HCE2Qc5wWtQK=s1360-w1360-h1020-rw",
-      },
-      {
-        name: "Charcoal",
-        value: "#36454f",
-        image:
-          "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-      },
-    ],
-    sizes: ["S", "M", "L"],
-    images: [
-      "https://lh3.googleusercontent.com/p/AF1QipMIV1C6dppvP91qcgn6e8qDTcH0HCE2Qc5wWtQK=s1360-w1360-h1020-rw",
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    ],
-    featured: false,
-  },
-];
+const API_URL = "http://localhost:5000";
 
-// Sample categories
-let categories = [
-  "Shirts",
-  "Trousers",
-  "Coats",
-  "Jackets",
-  "Accessories",
-  "Top Picks",
-  "New Arrivals",
-];
+let products = [];
+let categories = [];
+
+// Get JWT token from localStorage
+function getAuthToken() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("You are not authenticated. Please login.");
+    window.location.href = "/client/login.html";
+  }
+  return token;
+}
+
+// Load products from API
+async function loadProducts() {
+  try {
+    const response = await fetch(`${API_URL}/api/products`);
+    if (!response.ok) throw new Error("Failed to load products");
+    products = await response.json();
+  } catch (error) {
+    console.error("Error loading products:", error);
+    alert("Error loading products from server");
+  }
+}
+
+// Load categories from API
+async function loadCategories() {
+  try {
+    const response = await fetch(`${API_URL}/api/categories`);
+    if (!response.ok) throw new Error("Failed to load categories");
+    categories = await response.json();
+  } catch (error) {
+    console.error("Error loading categories:", error);
+    alert("Error loading categories from server");
+  }
+}
 
 // Initialize the application
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  // Check authentication
+  if (!localStorage.getItem("token")) {
+    window.location.href = "/client/login.html";
+    return;
+  }
+
+  // Check if user is admin
+  const userRole = localStorage.getItem("userRole");
+  if (userRole !== "admin") {
+    alert("Access denied. Admin privileges required.");
+    window.location.href = "/index.html";
+    return;
+  }
+
+  // Load data from API
+  await loadCategories();
+  await loadProducts();
   renderProductsTable();
   populateCategories();
   renderCategoryList();
@@ -213,89 +195,45 @@ document.addEventListener("DOMContentLoaded", function () {
   // Form submissions
   document
     .getElementById("productForm")
-    .addEventListener("submit", function (e) {
+    .addEventListener("submit", async function (e) {
       e.preventDefault();
       const productId = document.getElementById("productId").value;
 
       if (productId) {
-        // Update existing product
-        updateProduct(productId);
-        alert("Product updated successfully!");
+        await updateProduct(productId);
       } else {
-        // Add new product
-        addProduct();
-        alert("Product added successfully!");
+        await addProduct();
       }
 
       this.reset();
       document.getElementById("charCount").textContent = "0";
       imagePreview.innerHTML = "";
       document.getElementById("colorVariantsContainer").innerHTML = "";
+      addColorVariant();
       document.getElementById("productSubmitBtn").textContent = "Add Product";
       document.getElementById("cancelEditBtn").style.display = "none";
       document.getElementById("productId").value = "";
 
       // Re-render products table
+      await loadProducts();
       renderProductsTable();
     });
 
   document
     .getElementById("couponForm")
-    .addEventListener("submit", function (e) {
+    .addEventListener("submit", async function (e) {
       e.preventDefault();
-      alert("Coupon created successfully!");
+      await addCoupon();
       this.reset();
     });
-
-  // Remove existing images
-  document.querySelectorAll(".preview-item .remove").forEach((removeBtn) => {
-    removeBtn.addEventListener("click", function () {
-      this.parentElement.remove();
-    });
-  });
 
   // Add category button
   document
     .getElementById("addCategoryBtn")
-    .addEventListener("click", function () {
-      document.getElementById("categoryModal").style.display = "flex";
-    });
-
-  // Close modal
-  document.querySelector(".close-modal").addEventListener("click", function () {
-    document.getElementById("categoryModal").style.display = "none";
-  });
-
-  // Save new category
-  document
-    .getElementById("saveNewCategoryBtn")
-    .addEventListener("click", function () {
-      const categoryName = document.getElementById("categoryName").value.trim();
-      if (categoryName && !categories.includes(categoryName)) {
-        categories.push(categoryName);
-        populateCategories();
-        renderCategoryList();
-        document.getElementById("categoryModal").style.display = "none";
-        document.getElementById("categoryName").value = "";
-      } else {
-        alert("Category name is required and must be unique");
-      }
-    });
-
-  // Save category from categories section
-  document
-    .getElementById("saveCategoryBtn")
-    .addEventListener("click", function () {
-      const categoryName = document
-        .getElementById("newCategoryName")
-        .value.trim();
-      if (categoryName && !categories.includes(categoryName)) {
-        categories.push(categoryName);
-        populateCategories();
-        renderCategoryList();
-        document.getElementById("newCategoryName").value = "";
-      } else {
-        alert("Category name is required and must be unique");
+    .addEventListener("click", async function () {
+      const categoryName = prompt("Enter category name:");
+      if (categoryName) {
+        await addCategory(categoryName);
       }
     });
 
@@ -327,29 +265,30 @@ function renderProductsTable() {
 
   products.forEach((product) => {
     const row = document.createElement("tr");
+    const imageUrl =
+      product.images && product.images.length > 0
+        ? product.images[0]
+        : "https://via.placeholder.com/50";
     row.innerHTML = `
-                    <td>${product.id}</td>
-                    <td><img src="${product.images[0]}" alt="${
+      <td>${product.name}</td>
+      <td><img src="${imageUrl}" alt="${
       product.name
-    }" style="width: 50px; height: 50px; object-fit: cover;"></td>
-                    <td>${product.name}</td>
-                    <td>${product.category}</td>
-                    <td>${product.price}</td>
-                    <td>${product.stock}</td>
-                    <td><span style="color: ${
-                      product.status === "Active"
-                        ? "var(--success)"
-                        : "var(--error)"
-                    };">${product.status}</span></td>
-                    <td class="table-actions">
-                        <button class="btn" onclick="editProduct('${
-                          product.id
-                        }')">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteProduct('${
-                          product.id
-                        }')">Delete</button>
-                    </td>
-                `;
+    }" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+      <td>${product.category}</td>
+      <td>₹${product.price}</td>
+      <td>${product.stock}</td>
+      <td><span style="color: ${product.stock > 0 ? "green" : "red"};">${
+      product.stock > 0 ? "Active" : "Out of Stock"
+    }</span></td>
+      <td class="table-actions">
+        <button class="btn" onclick="editProduct('${
+          product._id
+        }')">Edit</button>
+        <button class="btn btn-danger" onclick="deleteProduct('${
+          product._id
+        }')">Delete</button>
+      </td>
+    `;
     tableBody.appendChild(row);
   });
 }
@@ -360,9 +299,10 @@ function populateCategories() {
   categorySelect.innerHTML = '<option value="">Select Category</option>';
 
   categories.forEach((category) => {
+    const categoryName = category.name || category;
     const option = document.createElement("option");
-    option.value = category;
-    option.textContent = category;
+    option.value = categoryName;
+    option.textContent = categoryName;
     categorySelect.appendChild(option);
   });
 }
@@ -373,24 +313,46 @@ function renderCategoryList() {
   categoryList.innerHTML = "";
 
   categories.forEach((category) => {
+    const categoryName = category.name || category;
     const tag = document.createElement("div");
     tag.className = "category-tag";
     tag.innerHTML = `
-                    ${category}
-                    <span class="remove" onclick="removeCategory('${category}')">&times;</span>
-                `;
+      ${categoryName}
+      <span class="remove" onclick="deleteCategory('${categoryName}')">&times;</span>
+    `;
     categoryList.appendChild(tag);
   });
 }
 
 // Function to remove category
-function removeCategory(categoryName) {
+async function deleteCategory(categoryName) {
   if (
-    confirm(`Are you sure you want to remove the category "${categoryName}"?`)
+    !confirm(`Are you sure you want to delete the category "${categoryName}"?`)
   ) {
-    categories = categories.filter((cat) => cat !== categoryName);
-    populateCategories();
-    renderCategoryList();
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/categories/${categoryName}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Category deleted successfully!");
+      await loadCategories();
+      populateCategories();
+      renderCategoryList();
+    } else {
+      alert(`Error: ${data.message || "Failed to delete category"}`);
+    }
+  } catch (error) {
+    alert(`Error deleting category: ${error.message}`);
+    console.error(error);
   }
 }
 
@@ -452,129 +414,248 @@ function handleColorImageUpload(input, previewId) {
   }
 }
 
+// ===== CATEGORY OPERATIONS =====
+
+async function addCategory(categoryName) {
+  if (!categoryName.trim()) {
+    alert("Please enter a category name");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: categoryName }),
+    });
+
+    const data = await response.json();
+    if (response.ok || response.status === 201) {
+      alert("Category added successfully!");
+      await loadCategories();
+      populateCategories();
+      renderCategoryList();
+    } else {
+      alert(`Error: ${data.message || "Failed to add category"}`);
+    }
+  } catch (error) {
+    alert(`Error adding category: ${error.message}`);
+    console.error(error);
+  }
+}
+
+// ===== COUPON OPERATIONS =====
+
+async function addCoupon() {
+  const code = document.getElementById("couponCode").value.trim();
+  const discount = parseFloat(document.getElementById("couponDiscount").value);
+  const startDate = document.getElementById("couponStartDate").value;
+  const endDate = document.getElementById("couponEndDate").value;
+  const usageLimit =
+    parseInt(document.getElementById("couponUsageLimit").value) || null;
+
+  if (!code || !discount || !startDate || !endDate) {
+    alert("Please fill in all required fields");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/coupons`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        code,
+        discount,
+        startDate,
+        endDate,
+        usageLimit,
+        applicableProducts: ["all"],
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok || response.status === 201) {
+      alert("Coupon created successfully!");
+      document.getElementById("couponForm").reset();
+    } else {
+      alert(`Error: ${data.message || "Failed to create coupon"}`);
+    }
+  } catch (error) {
+    alert(`Error creating coupon: ${error.message}`);
+    console.error(error);
+  }
+}
+
 // Function to add product
-function addProduct() {
-  const name = document.getElementById("productName").value;
-  const price = document.getElementById("productPrice").value;
-  const description = document.getElementById("productDescription").value;
+async function addProduct() {
+  const name = document.getElementById("productName").value.trim();
   const category = document.getElementById("productCategory").value;
-  const stock = document.getElementById("productStock").value;
-  const shipping = document.getElementById("productShipping").value;
-  const featured = document.getElementById("productFeatured").checked;
+  const price = parseFloat(document.getElementById("productPrice").value);
+  const stock = parseInt(document.getElementById("productStock").value);
+  const description = document
+    .getElementById("productDescription")
+    .value.trim();
+  const shipping =
+    parseFloat(document.getElementById("productShipping").value) || 0;
 
-  // Get color variants
-  const colorVariants = [];
-  document.querySelectorAll(".color-variant").forEach((variant) => {
-    const colorName = variant.querySelector(".color-name").value;
-    const colorValue = variant.querySelector(".color-picker").value;
-    const colorImage = variant.querySelector(".color-image-preview img");
+  if (!name || !category || !price || stock === "") {
+    alert("Please fill in all required fields");
+    return;
+  }
 
+  // Collect colors
+  const colors = [];
+  document.querySelectorAll(".color-variant").forEach((item) => {
+    const colorName = item.querySelector(".color-name").value.trim();
+    const colorValue = item.querySelector(".color-picker").value;
     if (colorName) {
-      colorVariants.push({
+      colors.push({
         name: colorName,
         value: colorValue,
-        image: colorImage ? colorImage.src : "",
+        image: "",
       });
     }
   });
 
-  // Get selected sizes
-  const sizes = [];
-  document.querySelectorAll(".size-option.active").forEach((size) => {
-    sizes.push(size.textContent);
-  });
+  // Collect sizes
+  const sizes = Array.from(
+    document.querySelectorAll(".size-option.active")
+  ).map((option) => option.textContent.trim());
 
-  // Get product images
-  const images = [];
-  document
-    .querySelectorAll("#imagePreview .preview-item img")
-    .forEach((img) => {
-      images.push(img.src);
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("category", category);
+  formData.append("price", price);
+  formData.append("stock", stock);
+  formData.append("description", description);
+  formData.append("shipping", shipping);
+  formData.append("colors", JSON.stringify(colors));
+  formData.append("sizes", JSON.stringify(sizes));
+
+  // Add images from file input
+  const fileInput = document.getElementById("fileInput");
+  if (fileInput.files.length > 0) {
+    for (let i = 0; i < fileInput.files.length; i++) {
+      formData.append("images", fileInput.files[i]);
+    }
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/products`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
     });
 
-  // Create new product
-  const newProduct = {
-    id: String(products.length + 1).padStart(3, "0"),
-    name,
-    category,
-    price: `₹${parseInt(price).toLocaleString("en-IN")}`,
-    stock: parseInt(stock),
-    status: stock > 0 ? "Active" : "Out of Stock",
-    description,
-    shipping: parseInt(shipping),
-    colors: colorVariants,
-    sizes,
-    images,
-    featured,
-  };
-
-  products.push(newProduct);
+    const data = await response.json();
+    if (response.ok || response.status === 201) {
+      alert("Product added successfully!");
+      document.getElementById("fileInput").value = "";
+      await loadProducts();
+      renderProductsTable();
+    } else {
+      alert(`Error: ${data.message || "Failed to add product"}`);
+    }
+  } catch (error) {
+    alert(`Error adding product: ${error.message}`);
+    console.error(error);
+  }
 }
 
 // Function to update product
-function updateProduct(productId) {
-  const productIndex = products.findIndex((p) => p.id === productId);
-  if (productIndex === -1) return;
-
-  const name = document.getElementById("productName").value;
-  const price = document.getElementById("productPrice").value;
-  const description = document.getElementById("productDescription").value;
+async function updateProduct(productId) {
+  const name = document.getElementById("productName").value.trim();
   const category = document.getElementById("productCategory").value;
-  const stock = document.getElementById("productStock").value;
-  const shipping = document.getElementById("productShipping").value;
-  const featured = document.getElementById("productFeatured").checked;
+  const price = parseFloat(document.getElementById("productPrice").value);
+  const stock = parseInt(document.getElementById("productStock").value);
+  const description = document
+    .getElementById("productDescription")
+    .value.trim();
+  const shipping =
+    parseFloat(document.getElementById("productShipping").value) || 0;
 
-  // Get color variants
-  const colorVariants = [];
-  document.querySelectorAll(".color-variant").forEach((variant) => {
-    const colorName = variant.querySelector(".color-name").value;
-    const colorValue = variant.querySelector(".color-picker").value;
-    const colorImage = variant.querySelector(".color-image-preview img");
+  if (!name || !category || !price || stock === "") {
+    alert("Please fill in all required fields");
+    return;
+  }
 
+  const colors = [];
+  document.querySelectorAll(".color-variant").forEach((item) => {
+    const colorName = item.querySelector(".color-name").value.trim();
+    const colorValue = item.querySelector(".color-picker").value;
     if (colorName) {
-      colorVariants.push({
+      colors.push({
         name: colorName,
         value: colorValue,
-        image: colorImage ? colorImage.src : "",
+        image: "",
       });
     }
   });
 
-  // Get selected sizes
-  const sizes = [];
-  document.querySelectorAll(".size-option.active").forEach((size) => {
-    sizes.push(size.textContent);
-  });
+  const sizes = Array.from(
+    document.querySelectorAll(".size-option.active")
+  ).map((option) => option.textContent.trim());
 
-  // Get product images
-  const images = [];
-  document
-    .querySelectorAll("#imagePreview .preview-item img")
-    .forEach((img) => {
-      images.push(img.src);
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("category", category);
+  formData.append("price", price);
+  formData.append("stock", stock);
+  formData.append("description", description);
+  formData.append("shipping", shipping);
+  formData.append("colors", JSON.stringify(colors));
+  formData.append("sizes", JSON.stringify(sizes));
+
+  const fileInput = document.getElementById("fileInput");
+  if (fileInput.files.length > 0) {
+    for (let i = 0; i < fileInput.files.length; i++) {
+      formData.append("images", fileInput.files[i]);
+    }
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/products/${productId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
     });
 
-  // Update product
-  products[productIndex] = {
-    ...products[productIndex],
-    name,
-    category,
-    price: `₹${parseInt(price).toLocaleString("en-IN")}`,
-    stock: parseInt(stock),
-    status: stock > 0 ? "Active" : "Out of Stock",
-    description,
-    shipping: parseInt(shipping),
-    colors: colorVariants,
-    sizes,
-    images,
-    featured,
-  };
+    const data = await response.json();
+    if (response.ok) {
+      alert("Product updated successfully!");
+      document.getElementById("fileInput").value = "";
+      await loadProducts();
+      renderProductsTable();
+    } else {
+      alert(`Error: ${data.message || "Failed to update product"}`);
+    }
+  } catch (error) {
+    alert(`Error updating product: ${error.message}`);
+    console.error(error);
+  }
 }
 
 // Function to edit product
 function editProduct(productId) {
-  const product = products.find((p) => p.id === productId);
-  if (!product) return;
+  const product = products.find((p) => p._id === productId);
+  if (!product) {
+    alert("Product not found");
+    return;
+  }
 
   // Navigate to add product section
   document.querySelectorAll(".sidebar-menu a").forEach((item) => {
@@ -590,50 +671,42 @@ function editProduct(productId) {
   document.getElementById("add-product").classList.add("active");
 
   // Fill form with product data
-  document.getElementById("productId").value = product.id;
+  document.getElementById("productId").value = product._id;
   document.getElementById("productName").value = product.name;
-  document.getElementById("productPrice").value = product.price
-    .replace("₹", "")
-    .replace(/,/g, "");
-  document.getElementById("productDescription").value = product.description;
+  document.getElementById("productPrice").value = product.price;
+  document.getElementById("productDescription").value =
+    product.description || "";
   document.getElementById("productCategory").value = product.category;
   document.getElementById("productStock").value = product.stock;
-  document.getElementById("productShipping").value = product.shipping;
-  document.getElementById("productFeatured").checked = product.featured;
-  document.getElementById("charCount").textContent = product.description.length;
+  document.getElementById("productShipping").value = product.shipping || 0;
+  document.getElementById("charCount").textContent = (
+    product.description || ""
+  ).length;
 
   // Clear and add color variants
   document.getElementById("colorVariantsContainer").innerHTML = "";
-  product.colors.forEach((color) => {
-    addColorVariant(color);
-  });
+  if (product.colors && product.colors.length > 0) {
+    product.colors.forEach((color) => {
+      addColorVariant(color);
+    });
+  } else {
+    addColorVariant();
+  }
 
   // Set sizes
   document.querySelectorAll(".size-option").forEach((option) => {
-    if (product.sizes.includes(option.textContent)) {
-      option.classList.add("active");
-    } else {
-      option.classList.remove("active");
-    }
+    option.classList.remove("active");
   });
-
-  // Set images
-  const imagePreview = document.getElementById("imagePreview");
-  imagePreview.innerHTML = "";
-  product.images.forEach((image) => {
-    const previewItem = document.createElement("div");
-    previewItem.className = "preview-item";
-    previewItem.innerHTML = `
-                    <img src="${image}" alt="Preview">
-                    <div class="remove">&times;</div>
-                `;
-    imagePreview.appendChild(previewItem);
-
-    // Add remove functionality
-    previewItem.querySelector(".remove").addEventListener("click", function () {
-      previewItem.remove();
+  if (product.sizes && product.sizes.length > 0) {
+    product.sizes.forEach((size) => {
+      const sizeBtn = Array.from(
+        document.querySelectorAll(".size-option")
+      ).find((btn) => btn.textContent.trim() === size);
+      if (sizeBtn) {
+        sizeBtn.classList.add("active");
+      }
     });
-  });
+  }
 
   // Update button text
   document.getElementById("productSubmitBtn").textContent = "Update Product";
@@ -641,9 +714,30 @@ function editProduct(productId) {
 }
 
 // Function to delete product
-function deleteProduct(productId) {
-  if (confirm("Are you sure you want to delete this product?")) {
-    products = products.filter((p) => p.id !== productId);
-    renderProductsTable();
+async function deleteProduct(productId) {
+  if (!confirm("Are you sure you want to delete this product?")) {
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/products/${productId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Product deleted successfully!");
+      await loadProducts();
+      renderProductsTable();
+    } else {
+      alert(`Error: ${data.message || "Failed to delete product"}`);
+    }
+  } catch (error) {
+    alert(`Error deleting product: ${error.message}`);
+    console.error(error);
   }
 }

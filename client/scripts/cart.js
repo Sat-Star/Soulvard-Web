@@ -1,99 +1,159 @@
-// Function to navigate to cart page
-function goToCartPage() {
-  window.location.href = "cart.html";
-}
+// Cart Page - API Integrated
 
-// Update quantity function
-function updateQuantity(button, change) {
-  const quantityElement = button.parentElement.querySelector(".quantity");
-  let quantity = parseInt(quantityElement.textContent);
-  quantity += change;
+// Initialize page
+document.addEventListener("DOMContentLoaded", async function () {
+  // Check authentication
+  if (!isLoggedIn()) {
+    window.location.href = "/login.html";
+    return;
+  }
 
-  if (quantity < 1) quantity = 1;
-
-  quantityElement.textContent = quantity;
-  updateItemPrice(button.closest(".cart-item"));
+  await loadCart();
+  updateCartCount();
   updateOrderSummary();
-  showToast("Quantity updated", "success");
+});
+
+// Load cart from localStorage
+async function loadCart() {
+  const cartItems = document.querySelector(".cart-items");
+  const cart = getCart();
+
+  if (cart.length === 0) {
+    showEmptyCart();
+    return;
+  }
+
+  cartItems.innerHTML = cart
+    .map(
+      (item, index) => `
+    <div class="cart-item" data-item-id="${index}">
+      <div class="item-image" style="background-image: url('${
+        item.images?.[0] || "https://via.placeholder.com/150"
+      }')"></div>
+      <div class="item-details">
+        <h4>${item.name}</h4>
+        <p class="item-meta">${item.color || "Standard"} / ${
+        item.size || "OneSize"
+      }</p>
+        <p class="item-price">${formatPrice(item.price * item.quantity)}</p>
+      </div>
+      <div class="item-quantity">
+        <button class="qty-btn" onclick="decreaseQuantity(${index})">−</button>
+        <span class="quantity">${item.quantity}</span>
+        <button class="qty-btn" onclick="increaseQuantity(${index})">+</button>
+      </div>
+      <button class="remove-btn" onclick="removeItem(${index})">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  `
+    )
+    .join("");
 }
 
-// Update item price based on quantity
-function updateItemPrice(item) {
-  const quantity = parseInt(item.querySelector(".quantity").textContent);
-  const basePrice = getBasePrice(item);
-  const priceElement = item.querySelector(".item-price");
-  priceElement.textContent = `$${(basePrice * quantity).toFixed(2)}`;
+// Increase quantity
+function increaseQuantity(index) {
+  const cart = getCart();
+  if (cart[index]) {
+    cart[index].quantity += 1;
+    saveCart(cart);
+    loadCart();
+    updateOrderSummary();
+    showToast("Quantity updated", "success");
+  }
 }
 
-// Get base price of an item
-function getBasePrice(item) {
-  const priceText = item.querySelector(".item-price").textContent;
-  return parseFloat(priceText.replace("$", ""));
+// Decrease quantity
+function decreaseQuantity(index) {
+  const cart = getCart();
+  if (cart[index]) {
+    if (cart[index].quantity > 1) {
+      cart[index].quantity -= 1;
+      saveCart(cart);
+      loadCart();
+      updateOrderSummary();
+      showToast("Quantity updated", "success");
+    } else {
+      removeItem(index);
+    }
+  }
 }
 
 // Remove item from cart
-function removeItem(button) {
-  const item = button.closest(".cart-item");
-  item.style.opacity = "0";
-  item.style.transform = "translateX(-20px)";
+function removeItem(index) {
+  const cart = getCart();
+  const itemName = cart[index]?.name || "Item";
 
-  setTimeout(() => {
-    item.remove();
+  if (confirm(`Remove ${itemName} from cart?`)) {
+    cart.splice(index, 1);
+    saveCart(cart);
+    loadCart();
     updateOrderSummary();
     updateCartCount();
+    showToast("Item removed from cart", "success");
 
-    // Show empty cart message if no items left
-    const cartItems = document.querySelector(".cart-items");
-    if (cartItems.children.length === 0) {
+    if (cart.length === 0) {
       showEmptyCart();
     }
-
-    showToast("Item removed from cart", "success");
-  }, 300);
+  }
 }
 
 // Show empty cart message
 function showEmptyCart() {
   const cartItems = document.querySelector(".cart-items");
   cartItems.innerHTML = `
-                <div class="cart-empty">
-                    <i class="fas fa-shopping-bag"></i>
-                    <h3>Your cart is empty</h3>
-                    <p>Discover our premium collection and add items to your cart</p>
-                    <button class="continue-shopping" onclick="window.location.href='index.html'">CONTINUE SHOPPING</button>
-                </div>
-            `;
+    <div class="cart-empty">
+      <i class="fas fa-shopping-bag"></i>
+      <h3>Your cart is empty</h3>
+      <p>Discover our premium collection and add items to your cart</p>
+      <button class="continue-shopping" onclick="window.location.href='collection.html'">CONTINUE SHOPPING</button>
+    </div>
+  `;
 }
 
 // Update cart count in navigation
 function updateCartCount() {
   const cartCount = document.querySelector(".cart-count");
-  const items = document.querySelectorAll(".cart-item");
-  cartCount.textContent = items.length;
+  const cart = getCart();
+  cartCount.textContent = cart.length;
 }
 
 // Update order summary
 function updateOrderSummary() {
-  const items = document.querySelectorAll(".cart-item");
+  const cart = getCart();
   let subtotal = 0;
 
-  items.forEach((item) => {
-    const priceText = item.querySelector(".item-price").textContent;
-    subtotal += parseFloat(priceText.replace("$", ""));
+  cart.forEach((item) => {
+    subtotal += item.price * item.quantity;
   });
 
-  const shipping = subtotal > 500 ? 0 : 15;
+  const shipping = subtotal > 5000 ? 0 : 100; // 100 rupees shipping or free over 5000
   const tax = subtotal * 0.1; // 10% tax
 
-  document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById("subtotal").textContent = formatPrice(subtotal);
   document.getElementById("shipping").textContent =
-    shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
-  document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
-  document.getElementById("total").textContent = `$${(
-    subtotal +
-    shipping +
-    tax
-  ).toFixed(2)}`;
+    shipping === 0 ? "FREE" : formatPrice(shipping);
+  document.getElementById("tax").textContent = formatPrice(tax);
+  document.getElementById("total").textContent = formatPrice(
+    subtotal + shipping + tax
+  );
+}
+
+// Function to navigate to cart page
+function goToCartPage() {
+  window.location.href = "cart.html";
+}
+
+// Update quantity function (legacy support)
+function updateQuantity(button, change) {
+  const item = button.closest(".cart-item");
+  const index = parseInt(item.dataset.itemId);
+
+  if (change > 0) {
+    increaseQuantity(index);
+  } else {
+    decreaseQuantity(index);
+  }
 }
 
 // Select payment method
@@ -103,7 +163,6 @@ function selectPaymentMethod(element, method) {
   });
   element.classList.add("active");
 
-  // Update checkout button text based on selected method
   const checkoutBtn = document.querySelector(".checkout-btn");
   if (method === "razorpay") {
     checkoutBtn.innerHTML =
@@ -114,9 +173,9 @@ function selectPaymentMethod(element, method) {
 }
 
 // Process checkout
-function processCheckout() {
-  const items = document.querySelectorAll(".cart-item");
-  if (items.length === 0) {
+async function processCheckout() {
+  const cart = getCart();
+  if (cart.length === 0) {
     showToast(
       "Your cart is empty. Please add items before checking out.",
       "error"
@@ -125,14 +184,14 @@ function processCheckout() {
   }
 
   // Validate form
-  const firstName = document.getElementById("firstName").value;
-  const lastName = document.getElementById("lastName").value;
-  const email = document.getElementById("email").value;
-  const phone = document.getElementById("phone").value;
-  const address = document.getElementById("address").value;
-  const city = document.getElementById("city").value;
-  const pincode = document.getElementById("pincode").value;
-  const country = document.getElementById("country").value;
+  const firstName = document.getElementById("firstName")?.value || "";
+  const lastName = document.getElementById("lastName")?.value || "";
+  const email = document.getElementById("email")?.value || "";
+  const phone = document.getElementById("phone")?.value || "";
+  const address = document.getElementById("address")?.value || "";
+  const city = document.getElementById("city")?.value || "";
+  const pincode = document.getElementById("pincode")?.value || "";
+  const country = document.getElementById("country")?.value || "";
 
   if (
     !firstName ||
@@ -148,80 +207,65 @@ function processCheckout() {
     return;
   }
 
-  // Process payment with Razorpay
-  processRazorpayPayment();
+  // Get coupon code if applied
+  const couponInput = document.getElementById("couponInput");
+  const couponCode = couponInput?.value || "";
+
+  let couponDiscount = 0;
+  if (couponCode) {
+    const couponResult = await validateCoupon(couponCode);
+    if (!couponResult.valid) {
+      showToast("Invalid coupon code.", "error");
+      return;
+    }
+    couponDiscount = couponResult.discountAmount || 0;
+  }
+
+  // Prepare order data
+  const orderData = {
+    shippingInfo: {
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+      city,
+      pincode,
+      country,
+    },
+    cartItems: cart,
+    couponCode: couponCode || null,
+    couponDiscount: couponDiscount,
+  };
+
+  // For now, simulate successful order
+  showToast("Processing your order...", "success");
+  setTimeout(() => {
+    // Clear cart after successful payment
+    clearCart();
+    const cartItems = document.querySelector(".cart-items");
+    cartItems.innerHTML = `
+      <div class="cart-empty">
+        <i class="fas fa-check-circle" style="color: #c9a961;"></i>
+        <h3>Order Placed Successfully!</h3>
+        <p>Thank you for your purchase. You will receive a confirmation email shortly at ${email}.</p>
+        <button class="continue-shopping" onclick="window.location.href='index.html'">CONTINUE SHOPPING</button>
+      </div>
+    `;
+    updateCartCount();
+  }, 2000);
 }
 
 // Process Razorpay payment
 function processRazorpayPayment() {
-  const totalAmount =
-    parseFloat(document.getElementById("total").textContent.replace("$", "")) *
-    100; // Convert to paise
-
-  // Razorpay checkout options
-  const options = {
-    key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay Key ID
-    amount: totalAmount,
-    currency: "USD",
-    name: "Soulvard",
-    description: "Premium Fashion Purchase",
-    image: "https://your-logo-url.com/logo.png", // Replace with your logo URL
-    handler: function (response) {
-      // Handle successful payment
-      showToast("Payment successful! Your order has been placed.", "success");
-
-      // In a real application, you would send the payment details to your server
-      console.log(response);
-
-      // Redirect to order confirmation page
-      setTimeout(() => {
-        window.location.href = "order-confirmation.html";
-      }, 2000);
-    },
-    prefill: {
-      name:
-        document.getElementById("firstName").value +
-        " " +
-        document.getElementById("lastName").value,
-      email: document.getElementById("email").value,
-      contact: document.getElementById("phone").value,
-    },
-    notes: {
-      address: document.getElementById("address").value,
-    },
-    theme: {
-      color: "#c9a96e",
-    },
-  };
-
-  // In a real implementation, you would initialize Razorpay with the options
-  // const rzp = new Razorpay(options);
-  // rzp.open();
-
-  // For demo purposes, we'll simulate a successful payment
-  showToast("Redirecting to Razorpay checkout...", "success");
-  setTimeout(() => {
-    showToast("Payment successful! Your order has been placed.", "success");
-
-    // Clear cart after successful payment
-    setTimeout(() => {
-      const cartItems = document.querySelector(".cart-items");
-      cartItems.innerHTML = `
-                        <div class="cart-empty">
-                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                            <h3>Order Placed Successfully!</h3>
-                            <p>Thank you for your purchase. You will receive a confirmation email shortly.</p>
-                            <button class="continue-shopping" onclick="window.location.href='index.html'">CONTINUE SHOPPING</button>
-                        </div>
-                    `;
-      updateCartCount();
-    }, 1000);
-  }, 2000);
+  showToast("Razorpay integration coming soon!", "info");
 }
 
 // Show toast notification
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast");
+  if (!toast) return;
+
   toast.textContent = message;
   toast.className = "toast";
   toast.classList.add(type);
@@ -239,29 +283,10 @@ function saveCartForLater() {
 
 // Clear cart
 function clearCart() {
-  const cartItems = document.querySelector(".cart-items");
-  const items = cartItems.querySelectorAll(".cart-item");
-
-  if (items.length === 0) {
-    showToast("Your cart is already empty", "error");
-    return;
-  }
-
   if (confirm("Are you sure you want to clear your cart?")) {
-    items.forEach((item) => {
-      item.style.opacity = "0";
-      item.style.transform = "translateX(-20px)";
-    });
-
-    setTimeout(() => {
-      showEmptyCart();
-      updateCartCount();
-      showToast("Cart cleared", "success");
-    }, 300);
+    localStorage.removeItem("cart");
+    updateCartCount();
+    loadCart();
+    showToast("Cart cleared", "success");
   }
 }
-
-// Initialize the page
-document.addEventListener("DOMContentLoaded", function () {
-  updateOrderSummary();
-});

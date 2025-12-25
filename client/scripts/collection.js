@@ -1,476 +1,446 @@
-// Product data - can be expanded in the future
-const products = [
-  {
-    id: 1,
-    name: "SILK SHIRT",
-    price: 24917,
-    category: "shirts",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipMeETOZyJ9SssdJp9_3_6iw6rgtCjQGQ3YPG6XU=s1360-w1360-h1020-rw",
-    badge: "BESTSELLER",
-    type: "shirt",
-  },
-  {
-    id: 2,
-    name: "TAILORED TROUSERS",
-    price: 33117,
-    category: "trousers",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipMIV1C6dppvP91qcgn6e8qDTcH0HCE2Qc5wWtQK=s1360-w1360-h1020-rw",
-    badge: "NEW",
-    type: "trousers",
-  },
-  {
-    id: 3,
-    name: "CASHMERE COAT",
-    price: 74617,
-    category: "coats",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipNr0mFeR5VZCqBpOqWRtRu5KPF5IwHPqJMw_DZy=s1360-w1360-h1020-rw",
-    badge: "",
-    type: "coat",
-  },
-  {
-    id: 4,
-    name: "LEATHER JACKET",
-    price: 66317,
-    category: "jackets",
-    image:
-      "https://lh3.googleusercontent.com/p/AF1QipOyDO0gOBgzsgwSq-kyEpGvVC-96Xvkuvp-N1EH=s1360-w1360-h1020-rw",
-    badge: "LIMITED",
-    type: "jacket",
-  },
-  {
-    id: 5,
-    name: "WOOL BLAZER",
-    price: 49717,
-    category: "blazers",
-    image:
-      "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "NEW",
-    type: "blazer",
-  },
-  {
-    id: 6,
-    name: "LINEN SHIRT",
-    price: 23157,
-    category: "shirts",
-    image:
-      "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1815&q=80",
-    badge: "",
-    type: "shirt",
-  },
-  {
-    id: 7,
-    name: "SUEDE BOOTS",
-    price: 53867,
-    category: "shoes",
-    image:
-      "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "LIMITED",
-    type: "shoes",
-  },
-  {
-    id: 8,
-    name: "CASHMERE SWEATER",
-    price: 38097,
-    category: "sweaters",
-    image:
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80",
-    badge: "BESTSELLER",
-    type: "sweater",
-  },
-  {
-    id: 9,
-    name: "EVENING DRESS",
-    price: 66317,
-    category: "dresses",
-    image:
-      "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "NEW",
-    type: "dress",
-  },
-  {
-    id: 10,
-    name: "SILK SCARF",
-    price: 12457,
-    category: "accessories",
-    image:
-      "https://images.unsplash.com/photo-1582142306909-195724d1a6ee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "",
-    type: "accessory",
-  },
-  {
-    id: 11,
-    name: "DENIM JACKET",
-    price: 29817,
-    category: "jackets",
-    image:
-      "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "",
-    type: "jacket",
-  },
-  {
-    id: 12,
-    name: "LEATHER BELT",
-    price: 8297,
-    category: "accessories",
-    image:
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1769&q=80",
-    badge: "",
-    type: "accessory",
-  },
-  {
-    id: 13,
-    name: "COTTON SHIRT",
-    price: 21517,
-    category: "shirts",
-    image:
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "",
-    type: "shirt",
-  },
-  {
-    id: 14,
-    name: "WINTER COAT",
-    price: 58097,
-    category: "coats",
-    image:
-      "https://images.unsplash.com/photo-1539533018447-63fcce2678e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "BESTSELLER",
-    type: "coat",
-  },
-  {
-    id: 15,
-    name: "LINEN TROUSERS",
-    price: 24817,
-    category: "trousers",
-    image:
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "",
-    type: "trousers",
-  },
-  {
-    id: 16,
-    name: "KNIT SWEATER",
-    price: 29817,
-    category: "sweaters",
-    image:
-      "https://images.unsplash.com/photo-1574180045827-681f8a1a9622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-    badge: "NEW",
-    type: "sweater",
-  },
-];
-
-// DOM elements
-const productGrid = document.getElementById("productGrid");
-const filterButtons = document.querySelectorAll(".filter-btn");
-const sortSelect = document.getElementById("sortSelect");
-const productCount = document.getElementById("productCount");
-const loadMoreBtn = document.getElementById("loadMoreBtn");
-const quickViewModal = document.getElementById("quickViewModal");
-const modalProductContent = document.getElementById("modalProductContent");
-const sizeChartModal = document.getElementById("sizeChartModal");
-
-// State variables
+// Collection Page - API Integrated
+let products = [];
+let filteredProducts = [];
+let categories = [];
 let currentCategory = "all";
-let currentSort = "featured";
-let visibleProducts = 8;
-let cartCount = 0;
-let wishlistCount = 0;
+let currentSort = "name";
 
-// Initialize the page
-document.addEventListener("DOMContentLoaded", function () {
-  renderProducts();
-  setupEventListeners();
+// Initialize page
+document.addEventListener("DOMContentLoaded", async function () {
+  // Check authentication
+  if (!isLoggedIn()) {
+    window.location.href = "/login.html";
+    return;
+  }
+
+  // Load data from API
+  await loadCollectionData();
+
+  // Initialize filters and display
+  initializeFilters();
+  renderProducts(filteredProducts);
+
+  // Update cart count
   updateCartCount();
-  updateWishlistCount();
+
+  // Navbar scroll effect
+  window.addEventListener("scroll", function () {
+    const navbar = document.getElementById("navbar");
+    if (window.scrollY > 50) {
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+    }
+  });
 });
 
-// Set up event listeners
-function setupEventListeners() {
-  // Filter buttons
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      // Remove active class from all buttons
-      filterButtons.forEach((btn) => btn.classList.remove("active"));
-      // Add active class to clicked button
-      this.classList.add("active");
-      // Update current category
-      currentCategory = this.getAttribute("data-category");
-      // Reset visible products
-      visibleProducts = 8;
-      // Render products
-      renderProducts();
-    });
-  });
-
-  // Sort select
-  sortSelect.addEventListener("change", function () {
-    currentSort = this.value;
-    renderProducts();
-  });
-
-  // Load more button
-  loadMoreBtn.addEventListener("click", function () {
-    visibleProducts += 8;
-    renderProducts();
-  });
-
-  // Close modal when clicking outside
-  window.addEventListener("click", function (event) {
-    if (event.target === quickViewModal) {
-      closeModal();
-    }
-    if (event.target === sizeChartModal) {
-      closeSizeChart();
-    }
-  });
+// Load products and categories from API
+async function loadCollectionData() {
+  try {
+    products = await getProducts();
+    categories = await getCategories();
+    filteredProducts = [...products];
+  } catch (error) {
+    console.error("Error loading collection data:", error);
+    alert("Error loading products. Please try again.");
+  }
 }
 
-// Render products based on current filters and sort
-function renderProducts() {
-  // Filter products
-  let filteredProducts = products;
-  if (currentCategory !== "all") {
-    filteredProducts = products.filter(
-      (product) => product.category === currentCategory
-    );
+// Initialize filters
+function initializeFilters() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  if (categoryFilter) {
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+    categories.forEach((category) => {
+      const categoryName = category.name || category;
+      const option = document.createElement("option");
+      option.value = categoryName.toLowerCase();
+      option.textContent = categoryName;
+      categoryFilter.appendChild(option);
+    });
   }
 
-  // Sort products
-  filteredProducts = sortProducts(filteredProducts, currentSort);
+  // Add event listeners
+  const categorySelect = document.getElementById("categoryFilter");
+  const sortSelect = document.getElementById("sortFilter");
+  const searchInput = document.getElementById("searchInput");
 
-  // Update product count
-  productCount.textContent = `Showing ${Math.min(
-    visibleProducts,
-    filteredProducts.length
-  )} of ${filteredProducts.length} products`;
+  if (categorySelect) {
+    categorySelect.addEventListener("change", filterProducts);
+  }
+  if (sortSelect) {
+    sortSelect.addEventListener("change", sortFilteredProducts);
+  }
+  if (searchInput) {
+    searchInput.addEventListener("input", searchFilteredProducts);
+  }
+}
 
-  // Show/hide load more button
-  if (visibleProducts >= filteredProducts.length) {
-    loadMoreBtn.style.display = "none";
+// Filter products by category
+function filterProducts() {
+  const categorySelect = document.getElementById("categoryFilter");
+  currentCategory = categorySelect.value;
+
+  if (currentCategory === "all") {
+    filteredProducts = [...products];
   } else {
-    loadMoreBtn.style.display = "block";
+    filteredProducts = filterProductsByCategory(products, currentCategory);
   }
 
-  // Clear product grid
-  productGrid.innerHTML = "";
-
-  // Render products
-  const productsToShow = filteredProducts.slice(0, visibleProducts);
-  productsToShow.forEach((product) => {
-    const productCard = createProductCard(product);
-    productGrid.appendChild(productCard);
-  });
+  applySort();
+  renderProducts(filteredProducts);
 }
 
-// Sort products based on selected option
-function sortProducts(products, sortBy) {
-  switch (sortBy) {
-    case "newest":
-      return [...products].sort((a, b) => b.id - a.id);
-    case "price-low":
-      return [...products].sort((a, b) => a.price - b.price);
-    case "price-high":
-      return [...products].sort((a, b) => b.price - a.price);
-    case "name":
-      return [...products].sort((a, b) => a.name.localeCompare(b.name));
-    case "featured":
-    default:
-      return products;
+// Sort products
+function sortFilteredProducts() {
+  const sortSelect = document.getElementById("sortFilter");
+  currentSort = sortSelect.value;
+  applySort();
+  renderProducts(filteredProducts);
+}
+
+// Apply sorting
+function applySort() {
+  filteredProducts = sortProducts(filteredProducts, currentSort);
+}
+
+// Search products
+function searchFilteredProducts() {
+  const searchInput = document.getElementById("searchInput");
+  const query = searchInput.value;
+
+  if (query.trim()) {
+    filteredProducts = searchProducts(products, query);
+  } else {
+    if (currentCategory === "all") {
+      filteredProducts = [...products];
+    } else {
+      filteredProducts = filterProductsByCategory(products, currentCategory);
+    }
   }
+
+  applySort();
+  renderProducts(filteredProducts);
 }
 
-// Create product card HTML
-function createProductCard(product) {
-  const card = document.createElement("div");
-  card.className = "product-card";
-  card.innerHTML = `
-                <div class="product-image" style="background-image: url('${
-                  product.image
-                }')">
-                    ${
-                      product.badge
-                        ? `<div class="product-badge">${product.badge}</div>`
-                        : ""
-                    }
-                    <div class="product-overlay">
-                        <div class="product-actions">
-                            <button class="quick-view" onclick="openQuickView(${
-                              product.id
-                            })">QUICK VIEW</button>
-                            <button class="add-to-cart" onclick="addToCart(${
-                              product.id
-                            })">ADD TO CART</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-price">₹${product.price.toLocaleString()}</p>
-                </div>
-            `;
-  return card;
+// Render products
+function renderProducts(productsToRender) {
+  const productGrid = document.getElementById("productGrid");
+
+  if (!productGrid) return;
+
+  if (productsToRender.length === 0) {
+    productGrid.innerHTML =
+      '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">No products found.</p>';
+    return;
+  }
+
+  productGrid.innerHTML = productsToRender
+    .map((product) => {
+      const imageUrl =
+        product.images && product.images.length > 0
+          ? product.images[0]
+          : "https://via.placeholder.com/300";
+      const formattedPrice = formatPrice(product.price);
+      const badge = product.featured ? "BESTSELLER" : "";
+
+      return `
+      <div class="product-card">
+        <div class="product-image" style="background-image: url('${imageUrl}')">
+          ${badge ? `<div class="product-badge">${badge}</div>` : ""}
+          <div class="product-overlay">
+            <button class="quick-view-btn" onclick="openQuickView('${
+              product.name
+            }', ${product.price}, '${imageUrl}', '${product.category}', '${
+        product._id
+      }')">
+              QUICK VIEW
+            </button>
+          </div>
+          <button class="wishlist-icon ${
+            isInWishlist(product._id) ? "active" : ""
+          }" onclick="toggleWishlistProduct('${product._id}', event)">
+            <i class="${
+              isInWishlist(product._id) ? "fas" : "far"
+            } fa-heart"></i>
+          </button>
+        </div>
+        <div class="product-details">
+          <h3>${product.name}</h3>
+          <p class="product-category">${product.category}</p>
+          <div class="product-footer">
+            <span class="price">${formattedPrice}</span>
+            <button class="add-to-cart-btn" onclick="addProductToCart('${
+              product._id
+            }', '${product.name}', ${product.price}, '${imageUrl}')">
+              <i class="fas fa-shopping-bag"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    })
+    .join("");
 }
 
-// Open quick view modal
-function openQuickView(productId) {
-  const product = products.find((p) => p.id === productId);
-  if (!product) return;
+// Toggle wishlist for product
+function toggleWishlistProduct(productId, event) {
+  event.stopPropagation();
+  const product = products.find((p) => p._id === productId);
 
-  modalProductContent.innerHTML = `
-                <div class="modal-product-image" style="background-image: url('${
-                  product.image
-                }')"></div>
-                <div class="modal-product-info">
-                    <h3>${product.name}</h3>
-                    <p class="price">₹${product.price.toLocaleString()}</p>
-                    <p class="description">Experience luxury and comfort with our premium ${product.name.toLowerCase()}. Crafted from the finest materials with attention to detail, this piece embodies sophistication and style.</p>
-                    
-                    ${
-                      product.type === "shirt" ||
-                      product.type === "coat" ||
-                      product.type === "blazer" ||
-                      product.type === "jacket" ||
-                      product.type === "sweater" ||
-                      product.type === "dress"
-                        ? `
-                    <div class="size-selection">
-                        <h4>SELECT SIZE</h4>
-                        <div class="size-options">
-                            <div class="size-option">XS</div>
-                            <div class="size-option selected">S</div>
-                            <div class="size-option">M</div>
-                            <div class="size-option">L</div>
-                            <div class="size-option">XL</div>
-                        </div>
-                        <a class="size-chart-link" onclick="openSizeChart()">Size Chart</a>
-                    </div>
-                    `
-                        : ""
-                    }
-                    
-                    ${
-                      product.type === "shirt" ||
-                      product.type === "sweater" ||
-                      product.type === "dress"
-                        ? `
-                    <div class="color-selection">
-                        <h4>SELECT COLOR</h4>
-                        <div class="color-options">
-                            <div class="color-option-container">
-                                <div class="color-option selected" style="background-color: #1a1a1a;"></div>
-                                <span class="color-name">Black</span>
-                            </div>
-                            <div class="color-option-container">
-                                <div class="color-option" style="background-color: #f8f5f0;"></div>
-                                <span class="color-name">Cream</span>
-                            </div>
-                            <div class="color-option-container">
-                                <div class="color-option" style="background-color: #c9a96e;"></div>
-                                <span class="color-name">Gold</span>
-                            </div>
-                        </div>
-                    </div>
-                    `
-                        : ""
-                    }
-                    
-                    <div class="modal-actions">
-                        <button class="add-to-cart" onclick="addToCart(${
-                          product.id
-                        })">ADD TO CART</button>
-                        <button class="wishlist-btn" onclick="toggleWishlist(${
-                          product.id
-                        })">
-                            <span>❤️</span> ADD TO WISHLIST
-                        </button>
-                    </div>
-                </div>
-            `;
+  if (isInWishlist(productId)) {
+    removeFromWishlist(productId);
+    showNotification(`${product.name} removed from wishlist`, "info");
+  } else {
+    addToWishlist(product);
+    showNotification(`${product.name} added to wishlist`, "success");
+  }
 
-  // Add event listeners to size options
-  const sizeOptions = modalProductContent.querySelectorAll(".size-option");
-  sizeOptions.forEach((option) => {
-    option.addEventListener("click", function () {
-      sizeOptions.forEach((opt) => opt.classList.remove("selected"));
-      this.classList.add("selected");
-    });
-  });
-
-  // Add event listeners to color options
-  const colorOptions = modalProductContent.querySelectorAll(".color-option");
-  colorOptions.forEach((option) => {
-    option.addEventListener("click", function () {
-      colorOptions.forEach((opt) => opt.classList.remove("selected"));
-      this.classList.add("selected");
-    });
-  });
-
-  quickViewModal.style.display = "flex";
-}
-
-// Close quick view modal
-function closeModal() {
-  quickViewModal.style.display = "none";
-}
-
-// Open size chart modal
-function openSizeChart() {
-  sizeChartModal.style.display = "flex";
-}
-
-// Close size chart modal
-function closeSizeChart() {
-  sizeChartModal.style.display = "none";
+  // Re-render to update heart icon
+  renderProducts(filteredProducts);
 }
 
 // Add product to cart
-function addToCart(productId) {
-  cartCount++;
-  updateCartCount();
+function addProductToCart(productId, productName, price, imageUrl) {
+  const product = {
+    _id: productId,
+    name: productName,
+    price: price,
+    images: [imageUrl],
+  };
 
-  // Show confirmation (in a real app, this would add to cart storage)
-  alert("Product added to cart!");
-
-  // Close modal if open
-  closeModal();
+  // Add with default color and size
+  addToCart(product, 1, "", "");
+  showNotification(`${productName} added to cart!`, "success");
 }
 
-// Toggle product in wishlist
-function toggleWishlist(productId) {
-  const wishlistBtn = document.querySelector(".wishlist-btn");
+// Quick View Modal
+let currentProduct = null;
 
-  if (wishlistBtn.classList.contains("active")) {
-    wishlistCount--;
-    wishlistBtn.classList.remove("active");
-    wishlistBtn.innerHTML = "<span>❤️</span> ADD TO WISHLIST";
-  } else {
-    wishlistCount++;
-    wishlistBtn.classList.add("active");
-    wishlistBtn.innerHTML = "<span>❤️</span> ADDED TO WISHLIST";
+function openQuickView(productName, price, imageUrl, category, productId) {
+  const modal = document.getElementById("quickViewModal");
+  const modalContent = document.getElementById("modalProductContent");
+
+  currentProduct = {
+    _id: productId,
+    name: productName,
+    price: price,
+    images: [imageUrl],
+    category: category,
+  };
+
+  const sizeOptions = generateSizeOptions(category);
+  const colorOptions = generateColorOptions(category);
+
+  modalContent.innerHTML = `
+    <div class="modal-product-image" style="background-image: url('${imageUrl}')"></div>
+    <div class="modal-product-info">
+      <h3>${productName}</h3>
+      <div class="price">${formatPrice(price)}</div>
+      <div class="description">
+        Experience the epitome of luxury with our ${productName.toLowerCase()}. Meticulously crafted from the finest materials, this piece embodies timeless elegance and sophisticated design.
+      </div>
+      
+      <div class="color-selection">
+        <h4>SELECT COLOR</h4>
+        <div class="color-options">
+          ${colorOptions}
+        </div>
+      </div>
+      
+      <div class="size-selection">
+        <h4>SELECT SIZE</h4>
+        <div class="size-options">
+          ${sizeOptions}
+        </div>
+        <div class="size-chart-link" onclick="openSizeChart()">View Size Chart</div>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="add-to-cart" onclick="addProductToCart('${productId}', '${productName}', ${price}, '${imageUrl}'); closeModal()">ADD TO CART</button>
+        <button class="wishlist-btn" id="wishlistBtn" onclick="toggleWishlist('${productName}', ${price}, '${imageUrl}', '${productId}')">
+          <i class="${isInWishlist(productId) ? "fas" : "far"} fa-heart"></i> ${
+    isInWishlist(productId) ? "IN WISHLIST" : "ADD TO WISHLIST"
+  }
+        </button>
+      </div>
+    </div>
+  `;
+
+  modal.style.display = "flex";
+}
+
+// Generate size options
+function generateSizeOptions(category) {
+  let sizes = [];
+
+  switch (category.toLowerCase()) {
+    case "shirt":
+    case "blazer":
+    case "sweater":
+      sizes = ["XS", "S", "M", "L", "XL"];
+      break;
+    case "trousers":
+      sizes = ["28", "30", "32", "34", "36"];
+      break;
+    case "coat":
+    case "jacket":
+      sizes = ["S", "M", "L", "XL", "XXL"];
+      break;
+    case "dress":
+      sizes = ["XS", "S", "M", "L", "XL"];
+      break;
+    case "shoes":
+      sizes = ["7", "8", "9", "10", "11"];
+      break;
+    case "accessories":
+      sizes = ["One Size"];
+      break;
+    default:
+      sizes = ["XS", "S", "M", "L", "XL"];
   }
 
-  updateWishlistCount();
+  return sizes
+    .map((size, index) => {
+      const selected = index === 2 ? "selected" : "";
+      return `<div class="size-option ${selected}" onclick="selectSize(this)">${size}</div>`;
+    })
+    .join("");
 }
 
-// Update cart count display
-function updateCartCount() {
-  document.querySelector(".cart-count").textContent = cartCount;
+// Generate color options
+function generateColorOptions(category) {
+  let colors = [];
+
+  switch (category.toLowerCase()) {
+    case "shirt":
+    case "blazer":
+      colors = [
+        { name: "Ivory", value: "#f8f5f0" },
+        { name: "Navy", value: "#1a1a2e" },
+        { name: "Charcoal", value: "#36454f" },
+        { name: "White", value: "#ffffff" },
+      ];
+      break;
+    case "trousers":
+      colors = [
+        { name: "Charcoal", value: "#36454f" },
+        { name: "Navy", value: "#1a1a2e" },
+        { name: "Black", value: "#000000" },
+        { name: "Khaki", value: "#c3b091" },
+      ];
+      break;
+    case "coat":
+    case "jacket":
+      colors = [
+        { name: "Camel", value: "#c19a6b" },
+        { name: "Black", value: "#000000" },
+        { name: "Navy", value: "#1a1a2e" },
+        { name: "Charcoal", value: "#36454f" },
+      ];
+      break;
+    default:
+      colors = [
+        { name: "Black", value: "#000000" },
+        { name: "White", value: "#ffffff" },
+        { name: "Navy", value: "#1a1a2e" },
+        { name: "Charcoal", value: "#36454f" },
+      ];
+  }
+
+  return colors
+    .map((color, index) => {
+      const selected = index === 0 ? "selected" : "";
+      return `
+      <div class="color-option-container">
+        <div class="color-option ${selected}" style="background-color: ${color.value}" onclick="selectColor(this)" title="${color.name}"></div>
+        <div class="color-name">${color.name}</div>
+      </div>
+    `;
+    })
+    .join("");
 }
 
-// Update wishlist count display
-function updateWishlistCount() {
-  document.querySelector(".wishlist-count").textContent = wishlistCount;
+// Select size
+function selectSize(element) {
+  document.querySelectorAll(".size-option").forEach((option) => {
+    option.classList.remove("selected");
+  });
+  element.classList.add("selected");
 }
 
-// Navbar scroll effect
-window.addEventListener("scroll", function () {
-  const navbar = document.getElementById("navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled");
-  } else {
-    navbar.classList.remove("scrolled");
+// Select color
+function selectColor(element) {
+  document.querySelectorAll(".color-option").forEach((option) => {
+    option.classList.remove("selected");
+  });
+  element.classList.add("selected");
+}
+
+// Open/Close modals
+function openSizeChart() {
+  document.getElementById("sizeChartModal").style.display = "flex";
+}
+
+function closeSizeChart() {
+  document.getElementById("sizeChartModal").style.display = "none";
+}
+
+function closeModal() {
+  document.getElementById("quickViewModal").style.display = "none";
+}
+
+// Close modal on outside click
+window.addEventListener("click", function (event) {
+  const modal = document.getElementById("quickViewModal");
+  const sizeChartModal = document.getElementById("sizeChartModal");
+
+  if (event.target === modal) {
+    closeModal();
+  }
+  if (event.target === sizeChartModal) {
+    closeSizeChart();
   }
 });
+
+// Notification function
+function showNotification(message, type) {
+  const notification = document.createElement("div");
+  notification.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: ${type === "success" ? "#c9a961" : "#666"};
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 2px;
+    z-index: 2000;
+    font-weight: 500;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    animation: slideIn 0.3s ease;
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = "slideOut 0.3s ease";
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 300);
+  }, 3000);
+}
+
+// Add animations
+const style = document.createElement("style");
+style.textContent = `
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+  }
+`;
+document.head.appendChild(style);

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Soulvard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 2px solid #eee;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        background: white;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+      }
+
+      .tab-btn.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+        background: #f9f9f9;
+      }
+
+      .tab-btn:hover {
+        background: #f5f5f5;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 30px;
+      }
+
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      input::placeholder {
+        color: #999;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .form-footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .form-footer a:hover {
+        text-decoration: underline;
+      }
+
+      .alert {
+        padding: 12px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .alert-error {
+        background: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+      }
+
+      .alert-success {
+        background: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+      }
+
+      .alert-info {
+        background: #eef;
+        color: #33c;
+        border: 1px solid #ccf;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        color: #667eea;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .auth-link {
+        color: #667eea;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .auth-link:hover {
+        color: #764ba2;
+      }
+
+      .form-divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+      }
+
+      .form-divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #ddd;
+      }
+
+      .form-divider span {
+        background: white;
+        padding: 0 10px;
+        position: relative;
+        color: #999;
+        font-size: 12px;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: auto;
+        cursor: pointer;
+      }
+
+      .checkbox-group label {
+        margin-bottom: 0;
+        font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎭 SOULVARD</h1>
+        <p>Premium Fashion Store</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="customer">👤 Customer</button>
+        <button class="tab-btn" data-tab="admin">🔑 Admin</button>
+      </div>
+
+      <!-- CUSTOMER TAB -->
+      <div id="customer" class="tab-content active">
+        <div id="customerLoginForm">
+          <h2 style="margin-bottom: 20px; color: #333; font-size: 20px">
+            Login
+          </h2>
+
+          <div id="customerAlert" class="alert"></div>
+
+          <form id="cLoginForm">
+            <div class="form-group">
+              <label for="cEmail">Email Address</label>
+              <input
+                type="email"
+                id="cEmail"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="cPassword">Password</label>
+              <input
+                type="password"
+                id="cPassword"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox-group">
+              <input type="checkbox" id="cRemember" />
+              <label for="cRemember">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="loading" id="cLoginLoading">
+              <span class="spinner"></span>Logging in...
+            </div>
+          </form>
+
+          <div class="form-divider">
+            <span>Don't have an account?</span>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="switchCustomerForm('signup')"
+            style="
+              background: #f0f0f0;
+              color: #667eea;
+              border: 2px solid #667eea;
+            "
+          >
+            Create Account
+          </button>
+        </div>
+
+        <div id="customerSignupForm" style="display: none">
+          <h2 style="margin-bottom: 20px; color: #333; font-size: 20px">
+            Create Account
+          </h2>
+
+          <div id="customerSignupAlert" class="alert"></div>
+
+          <form id="cSignupForm">
+            <div class="form-group">
+              <label for="csName">Full Name</label>
+              <input type="text" id="csName" placeholder="John Doe" required />
+            </div>
+
+            <div class="form-group">
+              <label for="csEmail">Email Address</label>
+              <input
+                type="email"
+                id="csEmail"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="csPhone">Phone Number</label>
+              <input type="tel" id="csPhone" placeholder="+91 9876543210" />
+            </div>
+
+            <div class="form-group">
+              <label for="csPassword">Password</label>
+              <input
+                type="password"
+                id="csPassword"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="csConfirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="csConfirmPassword"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="csAddress">Address</label>
+              <input
+                type="text"
+                id="csAddress"
+                placeholder="123 Main St, City"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              Create Account
+            </button>
+            <div class="loading" id="cSignupLoading">
+              <span class="spinner"></span>Creating account...
+            </div>
+          </form>
+
+          <div class="form-divider">
+            <span>Already have an account?</span>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="switchCustomerForm('login')"
+            style="
+              background: #f0f0f0;
+              color: #667eea;
+              border: 2px solid #667eea;
+            "
+          >
+            Back to Login
+          </button>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB -->
+      <div id="admin" class="tab-content">
+        <h2 style="margin-bottom: 20px; color: #333; font-size: 20px">
+          Admin Login
+        </h2>
+
+        <div id="adminAlert" class="alert"></div>
+
+        <form id="aLoginForm">
+          <div class="form-group">
+            <label for="aEmail">Admin Email</label>
+            <input
+              type="email"
+              id="aEmail"
+              placeholder="admin@soulvard.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="aPassword">Password</label>
+            <input
+              type="password"
+              id="aPassword"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="aRemember" />
+            <label for="aRemember">Remember me</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Login as Admin</button>
+          <div class="loading" id="aLoginLoading">
+            <span class="spinner"></span>Logging in...
+          </div>
+        </form>
+
+        <div
+          class="form-footer"
+          style="
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+          "
+        >
+          <p style="font-size: 13px; color: #999; margin-bottom: 10px">
+            Demo Credentials:
+          </p>
+          <p style="font-size: 13px">
+            Email: <strong>admin@soulvard.com</strong>
+          </p>
+          <p style="font-size: 13px">Password: <strong>admin123</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:5000";
+
+      // ===== TAB SWITCHING =====
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tabName = btn.getAttribute("data-tab");
+
+          // Update active tab button
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Update active tab content
+          document
+            .querySelectorAll(".tab-content")
+            .forEach((content) => content.classList.remove("active"));
+          document.getElementById(tabName).classList.add("active");
+
+          // Clear previous alerts
+          clearAllAlerts();
+        });
+      });
+
+      // ===== ALERT FUNCTIONS =====
+      function showAlert(elementId, message, type) {
+        const alert = document.getElementById(elementId);
+        alert.textContent = message;
+        alert.className = `alert show alert-${type}`;
+
+        // Auto-hide after 5 seconds (unless it's an error)
+        if (type !== "error") {
+          setTimeout(() => {
+            alert.classList.remove("show");
+          }, 5000);
+        }
+      }
+
+      function clearAlert(elementId) {
+        const alert = document.getElementById(elementId);
+        alert.classList.remove("show");
+      }
+
+      function clearAllAlerts() {
+        document.querySelectorAll(".alert").forEach((alert) => {
+          alert.classList.remove("show");
+        });
+      }
+
+      // ===== CUSTOMER LOGIN =====
+      document
+        .getElementById("cLoginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("cEmail").value.trim();
+          const password = document.getElementById("cPassword").value;
+          const loading = document.getElementById("cLoginLoading");
+
+          if (!email || !password) {
+            showAlert("customerAlert", "Please fill in all fields", "error");
+            return;
+          }
+
+          loading.style.display = "block";
+
+          try {
+            const response = await fetch(`${API_URL}/api/auth/login`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Store token and user info
+              localStorage.setItem("token", data.token);
+              localStorage.setItem("user", JSON.stringify(data.user));
+              localStorage.setItem("userRole", data.user.role);
+
+              showAlert(
+                "customerAlert",
+                "Login successful! Redirecting...",
+                "success"
+              );
+
+              setTimeout(() => {
+                window.location.href = "/index.html";
+              }, 1500);
+            } else {
+              showAlert(
+                "customerAlert",
+                data.message || "Login failed",
+                "error"
+              );
+            }
+          } catch (error) {
+            showAlert(
+              "customerAlert",
+              "Network error. Please try again.",
+              "error"
+            );
+            console.error("Login error:", error);
+          } finally {
+            loading.style.display = "none";
+          }
+        });
+
+      // ===== CUSTOMER SIGNUP =====
+      document
+        .getElementById("cSignupForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const name = document.getElementById("csName").value.trim();
+          const email = document.getElementById("csEmail").value.trim();
+          const phone = document.getElementById("csPhone").value.trim();
+          const password = document.getElementById("csPassword").value;
+          const confirmPassword =
+            document.getElementById("csConfirmPassword").value;
+          const address = document.getElementById("csAddress").value.trim();
+          const loading = document.getElementById("cSignupLoading");
+
+          // Validation
+          if (!name || !email || !password || !confirmPassword) {
+            showAlert(
+              "customerSignupAlert",
+              "Please fill in all required fields",
+              "error"
+            );
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            showAlert("customerSignupAlert", "Passwords do not match", "error");
+            return;
+          }
+
+          if (password.length < 6) {
+            showAlert(
+              "customerSignupAlert",
+              "Password must be at least 6 characters",
+              "error"
+            );
+            return;
+          }
+
+          loading.style.display = "block";
+
+          try {
+            const response = await fetch(`${API_URL}/api/auth/signup`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ name, email, password, phone, address }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok || response.status === 201) {
+              // Store token and user info
+              localStorage.setItem("token", data.token);
+              localStorage.setItem("user", JSON.stringify(data.user));
+              localStorage.setItem("userRole", data.user.role);
+
+              showAlert(
+                "customerSignupAlert",
+                "Account created successfully! Redirecting...",
+                "success"
+              );
+
+              setTimeout(() => {
+                window.location.href = "/index.html";
+              }, 1500);
+            } else {
+              showAlert(
+                "customerSignupAlert",
+                data.message || "Signup failed",
+                "error"
+              );
+            }
+          } catch (error) {
+            showAlert(
+              "customerSignupAlert",
+              "Network error. Please try again.",
+              "error"
+            );
+            console.error("Signup error:", error);
+          } finally {
+            loading.style.display = "none";
+          }
+        });
+
+      // ===== ADMIN LOGIN =====
+      document
+        .getElementById("aLoginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("aEmail").value.trim();
+          const password = document.getElementById("aPassword").value;
+          const loading = document.getElementById("aLoginLoading");
+
+          if (!email || !password) {
+            showAlert("adminAlert", "Please fill in all fields", "error");
+            return;
+          }
+
+          loading.style.display = "block";
+
+          try {
+            const response = await fetch(`${API_URL}/api/auth/login`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Check if user is admin
+              if (data.user.role !== "admin") {
+                showAlert(
+                  "adminAlert",
+                  "This account is not an admin account",
+                  "error"
+                );
+                loading.style.display = "none";
+                return;
+              }
+
+              // Store token and user info
+              localStorage.setItem("token", data.token);
+              localStorage.setItem("user", JSON.stringify(data.user));
+              localStorage.setItem("userRole", data.user.role);
+
+              showAlert(
+                "adminAlert",
+                "Admin login successful! Redirecting...",
+                "success"
+              );
+
+              setTimeout(() => {
+                window.location.href = "/admin/admin.html";
+              }, 1500);
+            } else {
+              showAlert("adminAlert", data.message || "Login failed", "error");
+            }
+          } catch (error) {
+            showAlert(
+              "adminAlert",
+              "Network error. Please try again.",
+              "error"
+            );
+            console.error("Admin login error:", error);
+          } finally {
+            loading.style.display = "none";
+          }
+        });
+
+      // ===== CUSTOMER FORM SWITCHING =====
+      function switchCustomerForm(form) {
+        clearAlert("customerAlert");
+        clearAlert("customerSignupAlert");
+
+        const loginForm = document.getElementById("customerLoginForm");
+        const signupForm = document.getElementById("customerSignupForm");
+
+        if (form === "signup") {
+          loginForm.style.display = "none";
+          signupForm.style.display = "block";
+        } else {
+          loginForm.style.display = "block";
+          signupForm.style.display = "none";
+        }
+
+        // Reset forms
+        document.getElementById("cLoginForm").reset();
+        document.getElementById("cSignupForm").reset();
+      }
+
+      // ===== INITIALIZE =====
+      // Check if user is already logged in
+      window.addEventListener("load", () => {
+        const token = localStorage.getItem("token");
+        const userRole = localStorage.getItem("userRole");
+
+        if (token) {
+          if (userRole === "admin") {
+            window.location.href = "/admin/admin.html";
+          } else {
+            window.location.href = "/index.html";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

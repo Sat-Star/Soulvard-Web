@@ -152,7 +152,13 @@ window.addEventListener("scroll", function () {
 });
 
 // Quick View Modal functionality
-function openQuickView(productName, price, imageUrl, productType, productId) {
+async function openQuickView(
+  productName,
+  price,
+  imageUrl,
+  productType,
+  productId
+) {
   const modal = document.getElementById("quickViewModal");
   const modalContent = document.getElementById("modalProductContent");
 
@@ -165,7 +171,7 @@ function openQuickView(productName, price, imageUrl, productType, productId) {
   };
 
   // Generate size options based on product type
-  const sizeOptions = generateSizeOptions(productType);
+  const sizeOptions = await generateSizeOptions(productType);
 
   // Generate color options based on product type
   const colorOptions = generateColorOptions(productType);
@@ -215,34 +221,41 @@ function openQuickView(productName, price, imageUrl, productType, productId) {
   modal.style.display = "flex";
 }
 
-// Generate size options based on product type
-function generateSizeOptions(productType) {
+// Generate size options based on product type (using API data)
+async function generateSizeOptions(productType) {
   let sizes = [];
 
-  switch (productType) {
-    case "shirt":
-    case "blazer":
-    case "sweater":
-      sizes = ["XS", "S", "M", "L", "XL"];
-      break;
-    case "trousers":
-      sizes = ["28", "30", "32", "34", "36"];
-      break;
-    case "coat":
-    case "jacket":
-      sizes = ["S", "M", "L", "XL", "XXL"];
-      break;
-    case "dress":
-      sizes = ["XS", "S", "M", "L", "XL"];
-      break;
-    case "shoes":
-      sizes = ["7", "8", "9", "10", "11"];
-      break;
-    case "accessory":
-      sizes = ["One Size"];
-      break;
-    default:
-      sizes = ["XS", "S", "M", "L", "XL"];
+  // Try to fetch size chart from API
+  const sizeChart = await getSizeChartByCategory(productType);
+  if (sizeChart && sizeChart.sizes) {
+    sizes = sizeChart.sizes.map((s) => s.size);
+  } else {
+    // Fallback to hardcoded defaults if API data not available
+    switch (productType) {
+      case "shirt":
+      case "blazer":
+      case "sweater":
+        sizes = ["XS", "S", "M", "L", "XL"];
+        break;
+      case "trousers":
+        sizes = ["28", "30", "32", "34", "36"];
+        break;
+      case "coat":
+      case "jacket":
+        sizes = ["S", "M", "L", "XL", "XXL"];
+        break;
+      case "dress":
+        sizes = ["XS", "S", "M", "L", "XL"];
+        break;
+      case "shoes":
+        sizes = ["7", "8", "9", "10", "11"];
+        break;
+      case "accessory":
+        sizes = ["One Size"];
+        break;
+      default:
+        sizes = ["XS", "S", "M", "L", "XL"];
+    }
   }
 
   let html = "";

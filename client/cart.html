@@ -49,7 +49,7 @@
         <!-- Cart Items -->
         <div class="cart-items">
           <div class="cart-header">
-            <h2>YOUR ITEMS (3)</h2>
+            <h2>YOUR ITEMS (<span id="cartItemCount">0</span>)</h2>
             <div class="cart-actions">
               <button class="cart-action-btn" onclick="saveCartForLater()">
                 <i class="far fa-bookmark"></i> SAVE FOR LATER
@@ -60,94 +60,9 @@
             </div>
           </div>
 
-          <div class="cart-item">
-            <div
-              class="cart-item-image"
-              style="
-                background-image: url('https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80');
-              "
-            ></div>
-            <div class="cart-item-details">
-              <h3>Silk Shirt</h3>
-              <p>Size: M | Color: Ivory</p>
-              <div class="item-availability">
-                <span class="availability-dot"></span>
-                <span>In Stock - Ready to Ship</span>
-              </div>
-            </div>
-            <div class="quantity-controls">
-              <button class="quantity-btn" onclick="updateQuantity(this, -1)">
-                -
-              </button>
-              <span class="quantity">1</span>
-              <button class="quantity-btn" onclick="updateQuantity(this, 1)">
-                +
-              </button>
-            </div>
-            <div class="item-price">$299</div>
-            <button class="remove-item" onclick="removeItem(this)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-
-          <div class="cart-item">
-            <div
-              class="cart-item-image"
-              style="
-                background-image: url('https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
-              "
-            ></div>
-            <div class="cart-item-details">
-              <h3>Tailored Trousers</h3>
-              <p>Size: 32 | Color: Charcoal</p>
-              <div class="item-availability">
-                <span class="availability-dot"></span>
-                <span>In Stock - Ready to Ship</span>
-              </div>
-            </div>
-            <div class="quantity-controls">
-              <button class="quantity-btn" onclick="updateQuantity(this, -1)">
-                -
-              </button>
-              <span class="quantity">1</span>
-              <button class="quantity-btn" onclick="updateQuantity(this, 1)">
-                +
-              </button>
-            </div>
-            <div class="item-price">$399</div>
-            <button class="remove-item" onclick="removeItem(this)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-
-          <div class="cart-item">
-            <div
-              class="cart-item-image"
-              style="
-                background-image: url('https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80');
-              "
-            ></div>
-            <div class="cart-item-details">
-              <h3>Cashmere Sweater</h3>
-              <p>Size: L | Color: Camel</p>
-              <div class="item-availability">
-                <span class="availability-dot"></span>
-                <span>In Stock - Ready to Ship</span>
-              </div>
-            </div>
-            <div class="quantity-controls">
-              <button class="quantity-btn" onclick="updateQuantity(this, -1)">
-                -
-              </button>
-              <span class="quantity">1</span>
-              <button class="quantity-btn" onclick="updateQuantity(this, 1)">
-                +
-              </button>
-            </div>
-            <div class="item-price">$459</div>
-            <button class="remove-item" onclick="removeItem(this)">
-              <i class="fas fa-times"></i>
-            </button>
+          <!-- Cart items will be dynamically loaded from API -->
+          <div id="cartItemsContainer">
+            <!-- Items populated by cart.js -->
           </div>
         </div>
 
@@ -157,20 +72,20 @@
 
           <div class="order-summary">
             <div class="summary-row">
-              <span>Subtotal (3 items)</span>
-              <span id="subtotal">$1157.00</span>
+              <span>Subtotal (<span id="itemCount">0</span> items)</span>
+              <span id="subtotal">₹0.00</span>
             </div>
             <div class="summary-row">
               <span>Shipping</span>
-              <span id="shipping">$0.00</span>
+              <span id="shipping">₹0.00</span>
             </div>
             <div class="summary-row">
               <span>Tax</span>
-              <span id="tax">$115.70</span>
+              <span id="tax">₹0.00</span>
             </div>
             <div class="summary-row total">
               <span>Total</span>
-              <span id="total">$1272.70</span>
+              <span id="total">₹0.00</span>
             </div>
           </div>
 

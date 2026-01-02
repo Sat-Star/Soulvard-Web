@@ -431,3 +431,39 @@ async function getTestimonials() {
     return [];
   }
 }
+
+// ===== SIZE CHARTS =====
+
+/**
+ * Get all size charts from API
+ */
+async function getSizeCharts() {
+  try {
+    const response = await apiRequest("/api/size-charts");
+    if (!response || !response.ok) {
+      console.warn("Size charts endpoint not available");
+      return [];
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching size charts:", error);
+    return [];
+  }
+}
+
+/**
+ * Get size chart by category from API
+ */
+async function getSizeChartByCategory(category) {
+  try {
+    const response = await apiRequest(`/api/size-charts/${category}`);
+    if (!response || !response.ok) {
+      console.warn(`Size chart not found for category: ${category}`);
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching size chart for ${category}:`, error);
+    return null;
+  }
+}

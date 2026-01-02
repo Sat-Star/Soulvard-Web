@@ -2,6 +2,8 @@ const API_URL = "http://localhost:5000";
 
 let products = [];
 let categories = [];
+let sizeCharts = [];
+let currentSizeChartId = null;
 
 // Get JWT token from localStorage
 function getAuthToken() {
@@ -56,9 +58,29 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Load data from API
   await loadCategories();
   await loadProducts();
+  await loadSizeCharts();
   renderProductsTable();
   populateCategories();
+  populateCouponProducts();
   renderCategoryList();
+
+  // Set up size charts
+  const sizeChartCategorySelect = document.getElementById("sizeChartCategory");
+  const sizeChartButton = document.querySelector("#size-charts .btn");
+
+  if (sizeChartCategorySelect) {
+    sizeChartCategorySelect.addEventListener("change", function () {
+      displaySizeChart(this.value);
+    });
+    // Load initial size chart
+    if (sizeChartCategorySelect.value) {
+      displaySizeChart(sizeChartCategorySelect.value);
+    }
+  }
+
+  if (sizeChartButton) {
+    sizeChartButton.addEventListener("click", saveSizeChart);
+  }
 
   // Navigation between sections
   document.querySelectorAll(".sidebar-menu a").forEach((link) => {
@@ -304,6 +326,26 @@ function populateCategories() {
     option.value = categoryName;
     option.textContent = categoryName;
     categorySelect.appendChild(option);
+  });
+}
+
+// Function to populate coupon products dynamically from loaded products
+function populateCouponProducts() {
+  const couponProductsSelect = document.getElementById("couponProducts");
+
+  // Keep the "All Products" option
+  const allProductsOption = couponProductsSelect.querySelector(
+    'option[value="all"]'
+  );
+  couponProductsSelect.innerHTML = "";
+  couponProductsSelect.appendChild(allProductsOption);
+
+  // Add each product as an option
+  products.forEach((product) => {
+    const option = document.createElement("option");
+    option.value = product.id || product._id;
+    option.textContent = product.name;
+    couponProductsSelect.appendChild(option);
   });
 }
 
@@ -607,6 +649,14 @@ async function updateProduct(productId) {
     document.querySelectorAll(".size-option.active")
   ).map((option) => option.textContent.trim());
 
+  // Get existing images from preview that user wants to keep
+  const existingImages = [];
+  document
+    .querySelectorAll("#imagePreview .preview-item img")
+    .forEach((img) => {
+      existingImages.push(img.src);
+    });
+
   const formData = new FormData();
   formData.append("name", name);
   formData.append("category", category);
@@ -616,6 +666,7 @@ async function updateProduct(productId) {
   formData.append("shipping", shipping);
   formData.append("colors", JSON.stringify(colors));
   formData.append("sizes", JSON.stringify(sizes));
+  formData.append("existingImages", JSON.stringify(existingImages));
 
   const fileInput = document.getElementById("fileInput");
   if (fileInput.files.length > 0) {
@@ -693,6 +744,21 @@ function editProduct(productId) {
     addColorVariant();
   }
 
+  // Clear and load existing product images
+  const imagePreview = document.getElementById("imagePreview");
+  imagePreview.innerHTML = "";
+  if (product.images && product.images.length > 0) {
+    product.images.forEach((imageUrl) => {
+      const previewItem = document.createElement("div");
+      previewItem.className = "preview-item";
+      previewItem.innerHTML = `
+        <img src="${imageUrl}" alt="Product Image">
+        <div class="remove" onclick="this.parentElement.remove()">&times;</div>
+      `;
+      imagePreview.appendChild(previewItem);
+    });
+  }
+
   // Set sizes
   document.querySelectorAll(".size-option").forEach((option) => {
     option.classList.remove("active");
@@ -738,6 +804,124 @@ async function deleteProduct(productId) {
     }
   } catch (error) {
     alert(`Error deleting product: ${error.message}`);
+    console.error(error);
+  }
+}
+
+// ========== SIZE CHARTS MANAGEMENT ==========
+
+// Load size charts from API
+async function loadSizeCharts() {
+  try {
+    const response = await fetch(`${API_URL}/api/size-charts`);
+    if (!response.ok) throw new Error("Failed to load size charts");
+    sizeCharts = await response.json();
+  } catch (error) {
+    console.error("Error loading size charts:", error);
+  }
+}
+
+// Display size chart by category
+async function displaySizeChart(category) {
+  try {
+    const response = await fetch(`${API_URL}/api/size-charts/${category}`);
+    if (response.ok) {
+      const sizeChart = await response.json();
+      currentSizeChartId = sizeChart._id;
+
+      // Populate the form with size data
+      const tbody = document.querySelector("#size-charts tbody");
+      if (tbody && sizeChart.sizes) {
+        sizeChart.sizes.forEach((size, index) => {
+          const rows = tbody.querySelectorAll("tr");
+          if (rows[index]) {
+            rows[index].querySelectorAll("input").forEach((input, i) => {
+              if (i === 0) input.value = size.chest || "";
+              if (i === 1) input.value = size.waist || "";
+              if (i === 2) input.value = size.hip || "";
+              if (i === 3) input.value = size.length || "";
+            });
+          }
+        });
+      }
+    } else {
+      currentSizeChartId = null;
+      // Clear form for new size chart
+      const tbody = document.querySelector("#size-charts tbody");
+      if (tbody) {
+        tbody.querySelectorAll("input").forEach((input) => (input.value = ""));
+      }
+    }
+  } catch (error) {
+    console.error("Error loading size chart:", error);
+  }
+}
+
+// Save/Update size chart
+async function saveSizeChart() {
+  try {
+    const category = document.getElementById("sizeChartCategory")?.value;
+    if (!category) {
+      alert("Please select a category");
+      return;
+    }
+
+    // Collect size data from form
+    const tbody = document.querySelector("#size-charts tbody");
+    const sizeNames = ["XS", "S", "M", "L", "XL"];
+    const sizes = [];
+
+    tbody.querySelectorAll("tr").forEach((row, index) => {
+      const inputs = row.querySelectorAll("input");
+      sizes.push({
+        size: sizeNames[index],
+        chest: inputs[0]?.value || "",
+        waist: inputs[1]?.value || "",
+        hip: inputs[2]?.value || "",
+        length: inputs[3]?.value || "",
+      });
+    });
+
+    const payload = { category, sizes };
+
+    // Check if size chart exists for this category
+    let method = "POST";
+    let url = `${API_URL}/api/size-charts`;
+
+    if (currentSizeChartId) {
+      // Use stored ID if available
+      method = "PUT";
+      url = `${API_URL}/api/size-charts/${currentSizeChartId}`;
+    } else {
+      // Check if category exists to decide between POST or PUT
+      const existingChart = sizeCharts.find((sc) => sc.category === category);
+      if (existingChart) {
+        method = "PUT";
+        url = `${API_URL}/api/size-charts/${existingChart._id}`;
+        currentSizeChartId = existingChart._id;
+      }
+    }
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Size chart saved successfully!");
+      await loadSizeCharts();
+      // Reload the current category to get updated ID
+      await displaySizeChart(category);
+    } else {
+      alert(`Error: ${data.message || "Failed to save size chart"}`);
+    }
+  } catch (error) {
+    alert(`Error saving size chart: ${error.message}`);
     console.error(error);
   }
 }

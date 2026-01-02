@@ -99,6 +99,7 @@ router.put(
         colors,
         sizes,
         featured,
+        existingImages,
       } = req.body;
 
       const product = await Product.findById(req.params.id);
@@ -106,10 +107,27 @@ router.put(
         return res.status(404).json({ message: "Product not found" });
       }
 
-      // Handle image URLs from Cloudinary
+      // Handle image URLs - preserve existing ones and add new ones
+      let images = [];
+
+      // Start with existing images if provided
+      if (existingImages) {
+        try {
+          images = JSON.parse(existingImages);
+        } catch (e) {
+          images = [];
+        }
+      }
+
+      // Add new uploaded images
       if (req.files && req.files.length > 0) {
         const newImageUrls = req.files.map((file) => file.path);
-        product.images = newImageUrls;
+        images = [...images, ...newImageUrls];
+      }
+
+      // Update images array (keep existing if no changes)
+      if (images.length > 0) {
+        product.images = images;
       }
 
       product.name = name || product.name;

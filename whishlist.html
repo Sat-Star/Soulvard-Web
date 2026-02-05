@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soulvard - My Wishlist</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="whishlist.css" />
+  </head>
+  <body>
+    <!-- Header Banner -->
+    <div class="header-banner">
+      <div class="banner-content">
+        <div class="banner-text">FREE SHIPPING ON ORDERS OVER ₹500</div>
+        <div class="banner-text">NEW COLLECTION LAUNCHING SOON</div>
+        <div class="banner-text">EXCLUSIVE OFFERS FOR SUBSCRIBERS</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+      <div class="logo" onclick="window.location.href = 'index.html'">
+        SOULVARD
+      </div>
+
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <ul class="nav-links">
+        <li><a href="index.html">HOME</a></li>
+        <!-- <li><a href="index.html#top-picks">TOP PICKS</a></li>
+            <li><a href="collection.html">COLLECTION</a></li>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li> -->
+      </ul>
+
+      <div class="nav-actions">
+        <a href="whishlist.html" class="wishlist-icon">
+          <i class="fas fa-heart"></i>
+          <div class="wishlist-count" id="wishlistCount">0</div>
+        </a>
+        <a href="cart.html" class="cart-icon">
+          <i class="fas fa-shopping-bag"></i>
+          <div class="cart-count" id="cartCount">0</div>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="close-menu" onclick="toggleMobileMenu()">&times;</button>
+      <ul class="mobile-links">
+        <li><a href="index.html" onclick="toggleMobileMenu()">HOME</a></li>
+        <li>
+          <a href="collection.html" onclick="toggleMobileMenu()">COLLECTIONS</a>
+        </li>
+        <li>
+          <a href="Matching_Product.html" onclick="toggleMobileMenu()"
+            >MATCHING PRODUCTS</a
+          >
+        </li>
+        <li>
+          <a href="custome_product.html" onclick="toggleMobileMenu()"
+            >CUSTOMIZE</a
+          >
+        </li>
+        <li><a href="Custom.html" onclick="toggleMobileMenu()">CUSTOM</a></li>
+        <li><a href="cart.html" onclick="toggleMobileMenu()">CART</a></li>
+        <li>
+          <a href="whishlist.html" onclick="toggleMobileMenu()">WISHLIST</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Wishlist Page -->
+    <section class="wishlist-page">
+      <h1 class="page-title">MY WISHLIST</h1>
+
+      <div class="wishlist-container">
+        <div class="wishlist-header">
+          <h2 id="wishlistTitle">SAVED ITEMS (0)</h2>
+          <div class="wishlist-actions">
+            <button class="wishlist-action-btn" onclick="shareWishlist()">
+              <i class="fas fa-share-alt"></i> SHARE
+            </button>
+            <button class="wishlist-action-btn" onclick="clearWishlist()">
+              <i class="fas fa-trash-alt"></i> CLEAR ALL
+            </button>
+          </div>
+        </div>
+
+        <div class="wishlist-grid" id="wishlistGrid">
+          <!-- Wishlist items will be dynamically inserted here -->
+        </div>
+
+        <div class="wishlist-empty" id="emptyWishlist">
+          <i class="fas fa-heart"></i>
+          <h3>YOUR WISHLIST IS EMPTY</h3>
+          <p>
+            Discover our premium collection and add items you love to your
+            wishlist. They'll be saved here for you to revisit anytime.
+          </p>
+          <button
+            class="continue-shopping-btn"
+            onclick="window.location.href = 'index.html'"
+          >
+            CONTINUE SHOPPING
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+      <div class="footer-content">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <h3>SOULVARD</h3>
+            <p
+              style="
+                opacity: 0.8;
+                margin-bottom: 1.5rem;
+                font-weight: 300;
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 1.1rem;
+              "
+            >
+              Timeless elegance, crafted for you. Premium clothing for the
+              modern soul.
+            </p>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-whatsapp"></i></a>
+              <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3>QUICK LINKS</h3>
+            <ul class="footer-links">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="index.html#top-picks">Top Picks</a></li>
+              <li><a href="collection.html">Collection</a></li>
+              <li><a href="matching-products.html">Matching Products</a></li>
+              <li><a href="#">Size Guide</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h3>CONTACT US</h3>
+            <div style="margin-top: 1.5rem">
+              <p
+                style="
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                  opacity: 0.8;
+                  margin-bottom: 1rem;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 1rem;
+                "
+              >
+                <i
+                  class="fas fa-phone"
+                  style="
+                    color: var(--gold);
+                    width: 20px;
+                    font-size: 1rem;
+                    margin-top: 0.2rem;
+                  "
+                ></i>
+                +91 98765 43210
+              </p>
+              <p
+                style="
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                  opacity: 0.8;
+                  margin-bottom: 1rem;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 1rem;
+                "
+              >
+                <i
+                  class="fas fa-envelope"
+                  style="
+                    color: var(--gold);
+                    width: 20px;
+                    font-size: 1rem;
+                    margin-top: 0.2rem;
+                  "
+                ></i>
+                hello@soulvard.com
+              </p>
+              <p
+                style="
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                  opacity: 0.8;
+                  margin-bottom: 1rem;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 1rem;
+                "
+              >
+                <i
+                  class="fas fa-map-marker-alt"
+                  style="
+                    color: var(--gold);
+                    width: 20px;
+                    font-size: 1rem;
+                    margin-top: 0.2rem;
+                  "
+                ></i>
+                Mumbai, India
+              </p>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3>NEWSLETTER</h3>
+            <p
+              style="
+                opacity: 0.8;
+                margin-bottom: 1.5rem;
+                font-weight: 300;
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 1.1rem;
+              "
+            >
+              Subscribe for exclusive offers, styling tips, and updates.
+            </p>
+            <div style="margin-top: 1.5rem">
+              <input
+                type="email"
+                id="newsletterEmail"
+                placeholder="Your email address"
+                style="
+                  width: 100%;
+                  padding: 1rem;
+                  margin-bottom: 1rem;
+                  border: 1px solid var(--border-light);
+                  font-family: &quot;Inter&quot;, sans-serif;
+                "
+              />
+              <button
+                onclick="subscribeNewsletter()"
+                style="
+                  width: 100%;
+                  padding: 1rem;
+                  background: var(--gold);
+                  color: white;
+                  border: none;
+                  cursor: pointer;
+                  font-family: &quot;Inter&quot;, sans-serif;
+                  letter-spacing: 1.5px;
+                  text-transform: uppercase;
+                  font-weight: 500;
+                "
+              >
+                SUBSCRIBE
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2025 SOULVARD. ALL RIGHTS RESERVED.</p>
+          <div class="policy-links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms-of-use.html">Terms of Use</a>
+            <a href="refund-policy.html">Refund Policy</a>
+            <a href="shipping-policy.html">Shipping Policy</a>
+            <a href="faq.html">FAQ</a>
+            <a href="about-us.html">About Us</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="whishlist.js"></script>
+  </body>
+</html>

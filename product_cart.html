@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Soulvard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="product_cart.css">
+</head>
+<body>
+    <!-- Header Banner -->
+    <div class="header-banner">
+        <div class="banner-content">
+            <div class="banner-text">FREE SHIPPING ON ORDERS OVER ₹500</div>
+            <div class="banner-text">NEW COLLECTION LAUNCHING SOON</div>
+            <div class="banner-text">EXCLUSIVE OFFERS FOR SUBSCRIBERS</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">SOULVARD</div>
+        
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="collections.html">COLLECTIONS</a></li>
+            <li><a href="matching-products.html">MATCHING PRODUCTS</a></li>
+            <li><a href="custom-products.html">CUSTOM PRODUCTS</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li>
+        </ul>
+        
+        <div class="nav-actions">
+            <a href="#" class="wishlist-icon" onclick="toggleWishlist()">
+                <i class="far fa-heart"></i>
+                <div class="wishlist-count">0</div>
+            </a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <div class="cart-count">0</div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" onclick="toggleMobileMenu()">&times;</button>
+        <ul class="mobile-links">
+            <li><a href="index.html" onclick="toggleMobileMenu()">HOME</a></li>
+            <li><a href="collection.html" onclick="toggleMobileMenu()">COLLECTIONS</a></li>
+            <li><a href="Matching_Product.html" onclick="toggleMobileMenu()">MATCHING PRODUCTS</a></li>
+            <li><a href="custome_product.html" onclick="toggleMobileMenu()">CUSTOMIZE</a></li>
+            <li><a href="Custom.html" onclick="toggleMobileMenu()">CUSTOM</a></li>
+            <li><a href="cart.html" onclick="toggleMobileMenu()">CART</a></li>
+            <li><a href="whishlist.html" onclick="toggleMobileMenu()">WISHLIST</a></li>
+        </ul>
+    </div>
+
+    <!-- Product Detail Container -->
+    <div class="product-detail-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> 
+            <span>/</span>
+            <a href="collections.html">Collections</a> 
+            <span>/</span>
+            <a href="matching-products.html">Matching Products</a> 
+            <span>/</span>
+            <span>Duo Moqueen x Sally Tees</span>
+        </div>
+
+        <!-- Product Layout -->
+        <div class="product-layout">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <div class="main-image-container">
+                    <div class="main-image" id="mainImage" style="background-image: url('https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80')"></div>
+                </div>
+                
+                <div class="thumbnail-container" id="thumbnailContainer">
+                    <!-- Thumbnails will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Image Zoom Modal -->
+            <div class="image-zoom-modal" id="imageZoomModal">
+                <button class="close-zoom" onclick="closeZoom()">&times;</button>
+                <img src="" alt="" class="zoomed-image" id="zoomedImage">
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <div class="product-category">Couple T-Shirts</div>
+                <h1 class="product-title">Duo Moqueen x Sally Tees</h1>
+                
+                <div class="price-container">
+                    <div class="current-price">
+                        ₹3,599
+                        <span class="original-price">₹4,999</span>
+                        <span class="discount-badge">28% OFF</span>
+                    </div>
+                </div>
+                
+                <p class="product-description">
+                    A perfectly coordinated set for couples who want to express their connection through style. 
+                    Premium cotton blend with breathable fabric that ensures all-day comfort. 
+                    Features unique complementary designs that tell a story when worn together.
+                </p>
+                
+                <!-- Color Selection -->
+                <div class="color-section">
+                    <label class="color-label">Select Color</label>
+                    <div class="color-options" id="colorOptions">
+                        <!-- Color options will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Size Selection -->
+                <div class="size-section">
+                    <label class="size-label">Select Size</label>
+                    <a href="#" class="size-guide-link">Size Guide</a>
+                    <div class="size-options" id="sizeOptions">
+                        <!-- Size options will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Quantity Selector -->
+                <div class="quantity-section">
+                    <label class="quantity-label">Quantity</label>
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" max="10">
+                        <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="add-to-cart-btn" onclick="addToCart()">
+                        <i class="fas fa-shopping-bag" style="margin-right: 0.5rem;"></i> ADD TO CART
+                    </button>
+                    <button class="buy-now-btn" onclick="buyNow()">
+                        <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i> BUY NOW
+                    </button>
+                </div>
+                
+                <button class="wishlist-btn" id="wishlistBtn" onclick="toggleProductWishlist()">
+                    <i class="far fa-heart"></i>
+                </button>
+                
+                <!-- Product Details -->
+                <div class="product-details-section">
+                    <div class="details-tabs">
+                        <button class="detail-tab active" data-tab="description">Description</button>
+                        <button class="detail-tab" data-tab="details">Product Details</button>
+                        <button class="detail-tab" data-tab="shipping">Shipping & Returns</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="descriptionTab">
+                        <p>Our Duo Moqueen x Sally Tees are more than just matching outfits - they're a statement of connection. 
+                        Designed with premium 100% organic cotton, these tees offer exceptional comfort and durability.</p>
+                        <p>The unique artwork on each tee tells a complementary story - one piece is incomplete without the other, 
+                        much like the perfect relationship. The Moqueen design features subtle royal elements, while the Sally design 
+                        incorporates playful patterns that complete the narrative.</p>
+                    </div>
+                    
+                    <div class="tab-content" id="detailsTab">
+                        <ul class="details-list">
+                            <li><strong>Material:</strong> <span>100% Organic Cotton</span></li>
+                            <li><strong>Fit:</strong> <span>Regular Fit</span></li>
+                            <li><strong>Care:</strong> <span>Machine wash cold, tumble dry low</span></li>
+                            <li><strong>Origin:</strong> <span>Made in India</span></li>
+                            <li><strong>Weight:</strong> <span>180 GSM</span></li>
+                            <li><strong>Sustainability:</strong> <span>Eco-friendly dyes, sustainable packaging</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="shippingTab">
+                        <p><strong>Shipping:</strong> Free shipping on orders over ₹500. Delivery within 5-7 business days.</p>
+                        <p><strong>Returns:</strong> Easy 30-day return policy. Items must be unworn with original tags.</p>
+                        <p><strong>Customization:</strong> This product is part of our matching collection but can be customized upon request.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>SOULVARD</h3>
+                    <p style="opacity: 0.8; margin-bottom: 1.5rem; font-weight: 300; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;">Timeless elegance, crafted for you. Premium clothing for the modern soul.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://wa.me/919876543210" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>QUICK LINKS</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="collections.html">Collections</a></li>
+                        <li><a href="matching-products.html">Matching Products</a></li>
+                        <li><a href="custom-products.html">Custom Products</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>CONTACT US</h3>
+                    <div style="margin-top: 1.5rem;">
+                        <p style="font-family: 'Cormorant Garamond', serif; opacity: 0.8; margin-bottom: 1rem; font-weight: 300; font-size: 1.1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                            <i class="fas fa-phone" style="color: var(--gold); width: 20px; font-size: 1rem; margin-top: 0.2rem;"></i> +91 98765 43210
+                        </p>
+                        <p style="font-family: 'Cormorant Garamond', serif; opacity: 0.8; margin-bottom: 1rem; font-weight: 300; font-size: 1.1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                            <i class="fas fa-envelope" style="color: var(--gold); width: 20px; font-size: 1rem; margin-top: 0.2rem;"></i> hello@soulvard.com
+                        </p>
+                        <p style="font-family: 'Cormorant Garamond', serif; opacity: 0.8; margin-bottom: 1rem; font-weight: 300; font-size: 1.1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                            <i class="fas fa-map-marker-alt" style="color: var(--gold); width: 20px; font-size: 1rem; margin-top: 0.2rem;"></i> Mumbai, India
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>NEWSLETTER</h3>
+                    <p style="opacity: 0.8; margin-bottom: 1.5rem; font-weight: 300; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;">Subscribe for exclusive offers, styling tips, and updates.</p>
+                    <div style="margin-top: 1.5rem;">
+                        <input type="email" id="newsletterEmail" class="sort-select" placeholder="Your email address" style="width: 100%; margin-bottom: 1rem;">
+                        <button class="sort-select" onclick="subscribeNewsletter()" style="width: 100%; background: white; color: var(--charcoal); cursor: pointer;">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 SOULVARD. ALL RIGHTS RESERVED.</p>
+                <div class="policy-links">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-use.html">Terms of Use</a>
+                    <a href="refund-policy.html">Refund Policy</a>
+                    <a href="shipping-policy.html">Shipping Policy</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="product_cart.js"></script>
+</body>
+</html>

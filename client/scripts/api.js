@@ -3,7 +3,9 @@
  * Handles all API requests with authentication
  */
 
-const API_URL = "http://localhost:5000";
+// Auto-detect API URL based on current location
+// If running on localhost, use the same host/port for API
+const API_URL = window.location.origin;
 
 // ===== HELPER FUNCTIONS =====
 
@@ -187,7 +189,7 @@ function addToCart(
   product,
   quantity = 1,
   selectedColor = "",
-  selectedSize = ""
+  selectedSize = "",
 ) {
   const cart = getCart();
 
@@ -196,7 +198,7 @@ function addToCart(
     (item) =>
       item._id === product._id &&
       item.selectedColor === selectedColor &&
-      item.selectedSize === selectedSize
+      item.selectedSize === selectedSize,
   );
 
   if (existingItem) {
@@ -338,7 +340,7 @@ function formatProduct(product) {
 function filterProductsByCategory(products, category) {
   if (!category || category === "all") return products;
   return products.filter(
-    (p) => p.category.toLowerCase() === category.toLowerCase()
+    (p) => p.category.toLowerCase() === category.toLowerCase(),
   );
 }
 
@@ -350,7 +352,7 @@ function searchProducts(products, query) {
   return products.filter(
     (p) =>
       p.name.toLowerCase().includes(q) ||
-      (p.description && p.description.toLowerCase().includes(q))
+      (p.description && p.description.toLowerCase().includes(q)),
   );
 }
 

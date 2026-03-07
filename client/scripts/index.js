@@ -13,7 +13,8 @@ let currentTestimonialIndex = 0;
 document.addEventListener("DOMContentLoaded", async function () {
   // Check auth and redirect if needed
   if (!isLoggedIn()) {
-    window.location.href = "/client/login.html";
+    console.warn("User not logged in, redirecting to login page...");
+    window.location.href = "/login.html";
     return;
   }
 
@@ -157,7 +158,7 @@ async function openQuickView(
   price,
   imageUrl,
   productType,
-  productId
+  productId,
 ) {
   const modal = document.getElementById("quickViewModal");
   const modalContent = document.getElementById("modalProductContent");
@@ -203,7 +204,7 @@ async function openQuickView(
       </div>
       
       <div class="modal-actions">
-        <button class="add-to-cart" onclick="addToCart('${productName}', ${price}, '${productId}'); closeModal()">ADD TO CART</button>
+        <button class="add-to-cart" onclick="addToCartFromModal('${productName}', ${price}, '${productId}'); closeModal()">ADD TO CART</button>
         <button class="wishlist-btn" id="wishlistBtn" onclick="toggleWishlist('${productName}', ${price}, '${imageUrl}', '${productId}')">
           <i class="far fa-heart"></i> ADD TO WISHLIST
         </button>
@@ -439,8 +440,8 @@ function updateWishlistCount() {
   }
 }
 
-// Add to Cart functionality
-function addToCart(productName, price, productId) {
+// Add to Cart functionality - wrapper for modal quick view
+function addToCartFromModal(productName, price, productId) {
   const selectedSize = document.querySelector(".size-option.selected");
   const selectedColor = document.querySelector(".color-option.selected");
 
@@ -454,9 +455,14 @@ function addToCart(productName, price, productId) {
   const sizeValue = selectedSize ? selectedSize.textContent.trim() : "";
   const colorValue = selectedColor ? selectedColor.style.backgroundColor : "";
 
-  addToCart(product, 1, colorValue, sizeValue);
-
-  showNotification(`${productName} added to cart!`, "success");
+  // Call the existing addToCart from api.js with correct parameters
+  if (typeof window.addToCart === "function") {
+    window.addToCart(product, 1, colorValue, sizeValue);
+    showNotification(`${productName} added to cart!`, "success");
+  } else {
+    console.error("addToCart function not available from api.js");
+    showNotification("Error adding to cart. Please try again.", "error");
+  }
 }
 
 // Show notification
@@ -470,8 +476,8 @@ function showNotification(message, type) {
                   type === "success"
                     ? "var(--gold)"
                     : type === "info"
-                    ? "var(--charcoal)"
-                    : "var(--gold)"
+                      ? "var(--charcoal)"
+                      : "var(--gold)"
                 };
                 color: white;
                 padding: 1rem 2rem;
@@ -503,7 +509,7 @@ function scrollToCollection() {
 
 function learnMore() {
   alert(
-    "Thank you for your interest in Soulvard. Our story continues to unfold..."
+    "Thank you for your interest in Soulvard. Our story continues to unfold...",
   );
 }
 
@@ -546,7 +552,7 @@ function loadPromotionFromAPI() {
 
   // Update promotion details
   const descEl = document.querySelector(
-    ".coupon-banner > .coupon-content > p:nth-of-type(1)"
+    ".coupon-banner > .coupon-content > p:nth-of-type(1)",
   );
   if (descEl && activePromotion.description) {
     descEl.textContent = activePromotion.description;
@@ -567,7 +573,7 @@ function updatePromotionCountdown(endDate) {
     if (timeLeft > 0) {
       const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
-        (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
       );
       const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
@@ -726,11 +732,11 @@ function renderTopPicks() {
             <button class="quick-view" onclick="openQuickView('${
               product.name
             }', ${product.price}, '${imageUrl}', '${
-      product.category
-    }')">QUICK VIEW</button>
+              product.category
+            }')">QUICK VIEW</button>
             <button class="add-to-cart" onclick="addToCart('${product.name}', ${
-      product.price
-    })">ADD TO CART</button>
+              product.price
+            })">ADD TO CART</button>
           </div>
         </div>
       </div>
@@ -770,11 +776,11 @@ function renderNewArrivals() {
             <button class="quick-view" onclick="openQuickView('${
               product.name
             }', ${product.price}, '${imageUrl}', '${
-      product.category
-    }')">QUICK VIEW</button>
+              product.category
+            }')">QUICK VIEW</button>
             <button class="add-to-cart" onclick="addToCart('${product.name}', ${
-      product.price
-    })">ADD TO CART</button>
+              product.price
+            })">ADD TO CART</button>
           </div>
         </div>
       </div>
@@ -798,7 +804,7 @@ function updateCountdown() {
   if (timeLeft > 0) {
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor(
-      (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     );
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);

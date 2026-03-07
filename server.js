@@ -66,6 +66,27 @@ app.get("/wishlist.html", (req, res) => {
   res.sendFile(path.join(__dirname, "client/wishlist.html"));
 });
 
+// Handle /client/* paths - redirect to root paths for backward compatibility
+app.get("/client/index.html", (req, res) => {
+  res.redirect("/index.html");
+});
+
+app.get("/client/login.html", (req, res) => {
+  res.redirect("/login.html");
+});
+
+app.get("/client/collection.html", (req, res) => {
+  res.redirect("/collection.html");
+});
+
+app.get("/client/cart.html", (req, res) => {
+  res.redirect("/cart.html");
+});
+
+app.get("/client/wishlist.html", (req, res) => {
+  res.redirect("/wishlist.html");
+});
+
 // Admin routes
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "admin/admin.html"));
@@ -87,7 +108,7 @@ app.use((req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

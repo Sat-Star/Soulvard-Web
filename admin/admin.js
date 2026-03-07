@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:5000";
+// Auto-detect API URL based on current location
+const API_URL = window.location.origin;
 
 let products = [];
 let categories = [];
@@ -294,14 +295,14 @@ function renderProductsTable() {
     row.innerHTML = `
       <td>${product.name}</td>
       <td><img src="${imageUrl}" alt="${
-      product.name
-    }" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+        product.name
+      }" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
       <td>${product.category}</td>
       <td>₹${product.price}</td>
       <td>${product.stock}</td>
       <td><span style="color: ${product.stock > 0 ? "green" : "red"};">${
-      product.stock > 0 ? "Active" : "Out of Stock"
-    }</span></td>
+        product.stock > 0 ? "Active" : "Out of Stock"
+      }</span></td>
       <td class="table-actions">
         <button class="btn" onclick="editProduct('${
           product._id
@@ -335,7 +336,7 @@ function populateCouponProducts() {
 
   // Keep the "All Products" option
   const allProductsOption = couponProductsSelect.querySelector(
-    'option[value="all"]'
+    'option[value="all"]',
   );
   couponProductsSelect.innerHTML = "";
   couponProductsSelect.appendChild(allProductsOption);
@@ -569,7 +570,7 @@ async function addProduct() {
 
   // Collect sizes
   const sizes = Array.from(
-    document.querySelectorAll(".size-option.active")
+    document.querySelectorAll(".size-option.active"),
   ).map((option) => option.textContent.trim());
 
   const formData = new FormData();
@@ -646,7 +647,7 @@ async function updateProduct(productId) {
   });
 
   const sizes = Array.from(
-    document.querySelectorAll(".size-option.active")
+    document.querySelectorAll(".size-option.active"),
   ).map((option) => option.textContent.trim());
 
   // Get existing images from preview that user wants to keep
@@ -766,7 +767,7 @@ function editProduct(productId) {
   if (product.sizes && product.sizes.length > 0) {
     product.sizes.forEach((size) => {
       const sizeBtn = Array.from(
-        document.querySelectorAll(".size-option")
+        document.querySelectorAll(".size-option"),
       ).find((btn) => btn.textContent.trim() === size);
       if (sizeBtn) {
         sizeBtn.classList.add("active");

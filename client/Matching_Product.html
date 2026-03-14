@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>All Collections - Soulvard</title>
+    <title>Matching Products - Soulvard</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -13,7 +13,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles/collection.css" />
+    <link rel="stylesheet" href="styles/Matching_Product.css" />
   </head>
   <body>
     <!-- Header Banner -->
@@ -37,7 +37,7 @@
 
       <ul class="nav-links">
         <li><a href="index.html">HOME</a></li>
-        <li><a href="collection.html" class="active">COLLECTIONS</a></li>
+        <li><a href="collection.html">COLLECTIONS</a></li>
         <li><a href="Matching_Product.html">MATCH PRODUCTS</a></li>
         <li><a href="custome_product.html">CUSTOMIZATION</a></li>
         <li><a href="Custom.html">CUSTOME</a></li>
@@ -81,54 +81,55 @@
       </ul>
     </div>
 
-    <!-- Collections Hero Section -->
-    <section class="collections-hero">
-      <div class="hero-content">
-        <h1>ALL COLLECTIONS</h1>
+    <!-- Matching Products Hero -->
+    <section class="matching-hero">
+      <div class="matching-hero-content">
+        <h1>MATCHING PRODUCTS</h1>
         <p>
-          Discover our complete range of premium clothing. Timeless pieces
-          crafted with exceptional attention to detail.
+          Perfectly coordinated outfits for couples and groups. Express your
+          connection through style.
         </p>
       </div>
     </section>
 
-    <!-- Collections Container -->
-    <section class="collections-container">
-      <div class="collections-header">
-        <h2 class="collections-title">CURATED COLLECTIONS</h2>
+    <!-- Matching Products Container -->
+    <section class="matching-container">
+      <div class="matching-header">
+        <h2 class="matching-title">MATCHING TEES</h2>
 
         <div class="sort-controls">
           <span class="sort-label">Sort by:</span>
           <select class="sort-select" id="sortSelect">
-            <option value="featured">FEATURED</option>
-            <option value="newest">NEWEST</option>
-            <option value="price-low">PRICE: LOW TO HIGH</option>
-            <option value="price-high">PRICE: HIGH TO LOW</option>
-            <option value="name">NAME: A-Z</option>
+            <option value="best-selling">Best selling</option>
+            <option value="newest">Newest</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="availability">Availability</option>
           </select>
 
-          <span class="product-count" id="productCount">8 of 16 products</span>
+          <span class="product-count" id="productCount">26 products</span>
         </div>
       </div>
 
       <div class="category-tabs">
         <button class="category-tab active" data-category="all">
-          ALL PRODUCTS
+          All Matching
         </button>
-        <button class="category-tab" data-category="hoodie">HOODIE</button>
-        <button class="category-tab" data-category="t-shirt">T-SHIRT</button>
-        <button class="category-tab" data-category="shirts">SHIRTS</button>
-        <button class="category-tab" data-category="trousers">TROUSERS</button>
-        <button class="category-tab" data-category="coats">COATS</button>
-        <button class="category-tab" data-category="jackets">JACKETS</button>
-        <button class="category-tab" data-category="blazers">BLAZERS</button>
+        <button class="category-tab" data-category="couple-tshirts">
+          Couple T-Shirts
+        </button>
+        <button class="category-tab" data-category="couple-hoodies">
+          Couple Hoodies
+        </button>
+        <button class="category-tab" data-category="trio-tees">
+          Trio Tees
+        </button>
       </div>
 
-      <div class="collections-grid" id="collectionsGrid">
+      <div class="matching-grid" id="matchingGrid">
         <!-- Product cards will be dynamically generated -->
       </div>
 
-      <!-- FIXED: Added Load More Button -->
       <div class="load-more">
         <button class="load-more-btn" id="loadMoreBtn">LOAD MORE</button>
       </div>
@@ -287,7 +288,7 @@
         </div>
 
         <div class="footer-bottom">
-          <p>© 2026 SOULVARD. ALL RIGHTS RESERVED.</p>
+          <p>© 2025 SOULVARD. ALL RIGHTS RESERVED.</p>
           <div class="policy-links">
             <a href="privacy-policy.html">Privacy Policy</a>
             <a href="terms-of-use.html">Terms of Use</a>
@@ -300,6 +301,6 @@
       </div>
     </footer>
 
-    <script src="scripts/collection.js"></script>
+    <script src="scripts/Matching_Product.js"></script>
   </body>
 </html>

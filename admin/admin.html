@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Soulvard - Admin Panel</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Soulvard - Admin Dashboard</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -11,152 +14,929 @@
     <link rel="stylesheet" href="admin.css" />
   </head>
   <body>
-    <div class="admin-header">
-      <h1>Soulvard Admin Panel</h1>
-      <div class="admin-nav">
-        <a href="#" class="active">Dashboard</a>
-        <a href="#">Logout</a>
-      </div>
-    </div>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
 
-    <div class="admin-main">
-      <div class="admin-sidebar">
-        <ul class="sidebar-menu">
-          <li>
-            <a href="#" class="active" data-section="dashboard"
-              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="products"
-              ><i class="fas fa-box"></i> All Products</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="add-product"
-              ><i class="fas fa-plus-circle"></i> Add Product</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="playlists"
-              ><i class="fas fa-list"></i> Playlists</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="coupons"
-              ><i class="fas fa-percentage"></i> Coupons</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="hero-images"
-              ><i class="fas fa-images"></i> Hero Images</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="size-charts"
-              ><i class="fas fa-chart-bar"></i> Size Charts</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="promotions"
-              ><i class="fas fa-bullhorn"></i> Promotions</a
-            >
-          </li>
-          <li>
-            <a href="#" data-section="categories"
-              ><i class="fas fa-tags"></i> Categories</a
-            >
-          </li>
-        </ul>
-      </div>
+    <!-- Admin Container -->
+    <div class="admin-container">
+      <!-- Professional Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <a href="#" class="logo">
+            <div class="logo-icon">S</div>
+            <div class="logo-text">Soulvard</div>
+          </a>
+        </div>
 
-      <div class="admin-content">
-        <!-- Dashboard Section -->
-        <div id="dashboard" class="section-content active">
-          <h2 style="margin-bottom: 1.5rem">Dashboard Overview</h2>
+        <div class="nav-section">
+          <div class="nav-title">Dashboard</div>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="#dashboard"
+                class="nav-link active"
+                onclick="showSection('dashboard')"
+              >
+                <i class="fas fa-chart-line"></i>
+                <span>Overview</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value">42</div>
-              <div class="stat-label">Total Products</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">16</div>
-              <div class="stat-label">New Orders</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">₹2,48,917</div>
-              <div class="stat-label">Revenue</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">89%</div>
-              <div class="stat-label">Customer Satisfaction</div>
-            </div>
-          </div>
+        <div class="nav-section">
+          <div class="nav-title">Content</div>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="#hero-section"
+                class="nav-link"
+                onclick="showSection('hero-section')"
+              >
+                <i class="fas fa-images"></i>
+                <span>Hero Section</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#playlists"
+                class="nav-link"
+                onclick="showSection('playlists')"
+              >
+                <i class="fas fa-list-music"></i>
+                <span>Playlists</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Recent Activity</h2>
+        <div class="nav-section">
+          <div class="nav-title">Products</div>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="#add-product"
+                class="nav-link"
+                onclick="showSection('add-product')"
+              >
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Product</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#all-products"
+                class="nav-link"
+                onclick="showSection('all-products')"
+              >
+                <i class="fas fa-box"></i>
+                <span>All Products</span>
+                <span class="nav-badge" id="totalProductsBadge">6</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#inventory"
+                class="nav-link"
+                onclick="showSection('inventory')"
+              >
+                <i class="fas fa-boxes"></i>
+                <span>Inventory</span>
+                <span class="nav-badge warning" id="lowStockBadge">2</span>
+              </a>
+            </li>
+            <!-- Added Categories Menu Item -->
+            <li>
+              <a
+                href="#categories"
+                class="nav-link"
+                onclick="showSection('categories')"
+              >
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-title">Sales</div>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="#orders"
+                class="nav-link"
+                onclick="showSection('orders')"
+              >
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+                <span class="nav-badge" id="totalOrdersBadge">15</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div
+          style="
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 12px">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                background: var(--accent);
+                color: var(--primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                border-radius: 50%;
+              "
+            >
+              A
             </div>
-            <div class="card-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Activity</th>
-                    <th>User</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>2023-11-15</td>
-                    <td>New product "Silk Shirt" added</td>
-                    <td>Admin</td>
-                  </tr>
-                  <tr>
-                    <td>2023-11-14</td>
-                    <td>Coupon "SOULVARD20" created</td>
-                    <td>Admin</td>
-                  </tr>
-                  <tr>
-                    <td>2023-11-13</td>
-                    <td>Order #1045 completed</td>
-                    <td>System</td>
-                  </tr>
-                  <tr>
-                    <td>2023-11-12</td>
-                    <td>Hero images updated</td>
-                    <td>Admin</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div>
+              <div style="color: white; font-weight: 600; font-size: 14px">
+                Admin
+              </div>
+              <div style="color: rgba(255, 255, 255, 0.6); font-size: 12px">
+                Administrator
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- All Products Section -->
-        <div id="products" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">All Products</h2>
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+          <div class="header-left">
+            <h1>
+              <i class="fas fa-chart-line"></i>
+              <span id="pageTitle">Dashboard Overview</span>
+            </h1>
+          </div>
+          <div class="header-right">
+            <button
+              class="btn btn-primary"
+              onclick="window.open('../index.html', '_blank')"
+            >
+              <i class="fas fa-external-link-alt"></i> View Store
+            </button>
+          </div>
+        </div>
 
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Product List</h2>
-              <div>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Search products..."
-                  style="width: 300px"
-                />
+        <!-- Content Area -->
+        <div class="content">
+          <!-- Dashboard Section -->
+          <div id="dashboard" class="section active">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-header">
+                  <div>
+                    <div class="stat-value" id="statTotalOrders">15</div>
+                    <div class="stat-label">Total Orders</div>
+                  </div>
+                  <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                </div>
+                <div class="stat-change positive">
+                  <i class="fas fa-arrow-up"></i> 12% from last month
+                </div>
+              </div>
+
+              <div class="stat-card success">
+                <div class="stat-header">
+                  <div>
+                    <div class="stat-value" id="statTotalProducts">6</div>
+                    <div class="stat-label">Total Products</div>
+                  </div>
+                  <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                  </div>
+                </div>
+                <div class="stat-change positive">
+                  <i class="fas fa-arrow-up"></i> 8% from last week
+                </div>
+              </div>
+
+              <div class="stat-card warning">
+                <div class="stat-header">
+                  <div>
+                    <div class="stat-value" id="statPendingOrders">8</div>
+                    <div class="stat-label">Pending Orders</div>
+                  </div>
+                  <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                </div>
+                <div class="stat-change negative">
+                  <i class="fas fa-clock"></i> Requires attention
+                </div>
+              </div>
+
+              <div class="stat-card danger">
+                <div class="stat-header">
+                  <div>
+                    <div class="stat-value" id="statLowStock">2</div>
+                    <div class="stat-label">Low Stock Items</div>
+                  </div>
+                  <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                </div>
+                <div class="stat-change negative">
+                  <i class="fas fa-exclamation-circle"></i> Needs restocking
+                </div>
               </div>
             </div>
-            <div class="card-body">
+
+            <!-- Recent Activity Table -->
+            <div class="table-container">
+              <div class="table-header">
+                <div class="table-title">Recent Activity</div>
+                <div class="table-actions">
+                  <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input
+                      type="text"
+                      placeholder="Search activities..."
+                      oninput="searchActivities(this.value)"
+                    />
+                  </div>
+                </div>
+              </div>
               <table class="table">
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Image</th>
-                    <th>Name</th>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="activityTable">
+                  <!-- Activities will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Categories Management Section - SIMPLIFIED -->
+          <div id="categories" class="section">
+            <div class="category-manager">
+              <div class="category-header">
+                <div>
+                  <h2><i class="fas fa-tags"></i> Category Management</h2>
+                  <p class="helper-text" style="margin-top: 8px">
+                    Create and manage product categories
+                  </p>
+                </div>
+                <button
+                  class="btn btn-primary"
+                  onclick="openAddCategoryModal()"
+                >
+                  <i class="fas fa-plus"></i> Add Category
+                </button>
+              </div>
+
+              <div class="category-content">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Search Categories</label>
+                    <div class="search-box">
+                      <i class="fas fa-search"></i>
+                      <input
+                        type="text"
+                        placeholder="Search categories..."
+                        oninput="searchCategories(this.value)"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="categories-grid" id="categoriesGrid">
+                  <!-- Categories will be loaded here - SIMPLIFIED -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Section Control -->
+          <div id="hero-section" class="section">
+            <div class="hero-control-container">
+              <div class="section-header">
+                <h2><i class="fas fa-images"></i> Hero Section Management</h2>
+                <div>
+                  <button class="btn btn-primary" onclick="saveHeroSection()">
+                    <i class="fas fa-save"></i> Save Changes
+                  </button>
+                </div>
+              </div>
+              <p class="helper-text" style="margin-bottom: 20px">
+                Upload 2-5 images for the hero section. Recommended size:
+                1920x1080px. First image will be the default hero image.
+              </p>
+
+              <div class="hero-images-grid" id="heroImagesGrid">
+                <!-- Hero image slots will be generated here -->
+              </div>
+
+              <div class="form-actions" style="margin-top: 32px">
+                <button type="button" class="btn" onclick="resetHeroSection()">
+                  <i class="fas fa-redo"></i> Reset to Default
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Playlists Section -->
+          <div id="playlists" class="section">
+            <div class="product-form-container">
+              <div
+                class="section-header"
+                style="padding: 24px; border-bottom: 1px solid var(--border)"
+              >
+                <h2><i class="fas fa-list-music"></i> Playlist Management</h2>
+                <p class="helper-text" style="margin: 0">
+                  Manage your product playlists: Top Picks, New Arrivals, and
+                  Matching Products
+                </p>
+              </div>
+
+              <div style="padding: 32px">
+                <div class="playlist-tabs">
+                  <button
+                    class="playlist-tab active"
+                    onclick="switchPlaylistTab('top-picks')"
+                  >
+                    <i class="fas fa-star"></i> Top Picks
+                  </button>
+                  <button
+                    class="playlist-tab"
+                    onclick="switchPlaylistTab('new-arrivals')"
+                  >
+                    <i class="fas fa-bolt"></i> New Arrivals
+                  </button>
+                  <button
+                    class="playlist-tab"
+                    onclick="switchPlaylistTab('matching-products')"
+                  >
+                    <i class="fas fa-random"></i> Matching Products
+                  </button>
+                </div>
+
+                <!-- Top Picks Playlist -->
+                <div id="top-picks-content" class="playlist-content active">
+                  <div class="playlist-controls">
+                    <h3>Top Picks (Featured Products)</h3>
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="openAddProductModal('top-picks')"
+                    >
+                      <i class="fas fa-plus"></i> Add Product
+                    </button>
+                  </div>
+                  <div class="playlist-products" id="topPicksProducts">
+                    <!-- Top picks products will be loaded here -->
+                  </div>
+                </div>
+
+                <!-- New Arrivals Playlist -->
+                <div id="new-arrivals-content" class="playlist-content">
+                  <div class="playlist-controls">
+                    <h3>New Arrivals</h3>
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="openAddProductModal('new-arrivals')"
+                    >
+                      <i class="fas fa-plus"></i> Add Product
+                    </button>
+                  </div>
+                  <div class="playlist-products" id="newArrivalsProducts">
+                    <!-- New arrivals products will be loaded here -->
+                  </div>
+                </div>
+
+                <!-- Matching Products Playlist -->
+                <div id="matching-products-content" class="playlist-content">
+                  <div class="playlist-controls">
+                    <h3>Matching Products</h3>
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="openAddProductModal('matching-products')"
+                    >
+                      <i class="fas fa-plus"></i> Add Product
+                    </button>
+                  </div>
+                  <div class="playlist-products" id="matchingProductsProducts">
+                    <!-- Matching products will be loaded here -->
+                  </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 32px">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="savePlaylists()"
+                  >
+                    <i class="fas fa-save"></i> Save All Playlists
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Product Section -->
+          <div id="add-product" class="section">
+            <div class="product-form-container">
+              <!-- Form Tabs -->
+              <div class="form-tabs">
+                <button class="form-tab active" data-tab="basic">
+                  Basic Info
+                </button>
+                <button class="form-tab" data-tab="variants">Variants</button>
+                <button class="form-tab" data-tab="images">Images</button>
+                <button class="form-tab" data-tab="settings">Settings</button>
+              </div>
+
+              <!-- Form -->
+              <form id="productForm">
+                <!-- Basic Info Tab -->
+                <div class="tab-content active" id="basic-tab">
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label"
+                        >Product Title <span class="required">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="productTitle"
+                        required
+                        placeholder="Enter product title"
+                        maxlength="100"
+                      />
+                      <div class="helper-text">
+                        Enter a descriptive title for the product
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label"
+                        >SKU Code <span class="required">*</span></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="productSKU"
+                        required
+                        placeholder="e.g., TSHIRT-BLK-M"
+                        pattern="[A-Za-z0-9-]+"
+                      />
+                      <div class="helper-text">
+                        Unique product identifier (alphanumeric and hyphens
+                        only)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label"
+                      >Description <span class="required">*</span></label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="productDescription"
+                      required
+                      placeholder="Enter product description (150-300 characters)"
+                      rows="4"
+                      minlength="150"
+                      maxlength="300"
+                    ></textarea>
+                    <div class="char-counter" id="charCounter">0/300</div>
+                    <div class="helper-text">
+                      Detailed description helps customers make informed
+                      decisions
+                    </div>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label"
+                        >Price (₹) <span class="required">*</span></label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="productPrice"
+                        required
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                      <div class="helper-text">Regular selling price</div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Discounted Price (₹)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="productDiscountPrice"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                      <div class="helper-text">
+                        Optional discounted price for sales
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label"
+                        >Stock Quantity <span class="required">*</span></label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="productStock"
+                        required
+                        min="0"
+                        placeholder="0"
+                      />
+                      <div class="helper-text">
+                        Available units in inventory
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Low Stock Alert</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="productLowStockAlert"
+                        min="1"
+                        value="5"
+                        placeholder="5"
+                      />
+                      <div class="helper-text">
+                        Get notified when stock reaches this level
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label"
+                      >Category <span class="required">*</span></label
+                    >
+                    <select class="form-control" id="productCategory" required>
+                      <option value="">Select Category</option>
+                      <!-- Categories will be populated dynamically -->
+                    </select>
+                    <div class="helper-text">
+                      Main product category for organization
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Variants Tab -->
+                <div class="tab-content" id="variants-tab">
+                  <!-- Color Variants -->
+                  <div class="variants-section">
+                    <div class="section-header">
+                      <h3>Color Variants</h3>
+                      <button
+                        type="button"
+                        class="btn btn-sm"
+                        onclick="addColorVariant()"
+                      >
+                        <i class="fas fa-plus"></i> Add Color
+                      </button>
+                    </div>
+                    <div
+                      class="color-variants-container"
+                      id="colorVariantsContainer"
+                    >
+                      <!-- Color variants will be added here -->
+                    </div>
+                    <div class="helper-text">
+                      Add different color options for this product. Customers
+                      can select their preferred color.
+                    </div>
+                  </div>
+
+                  <!-- Size Options -->
+                  <div class="variants-section">
+                    <div class="section-header">
+                      <h3>Size Options</h3>
+                    </div>
+                    <div class="size-options" id="sizeOptionsContainer">
+                      <!-- Size options will be generated here -->
+                    </div>
+                    <div class="helper-text">
+                      Select all sizes that are available for this product
+                    </div>
+                  </div>
+
+                  <!-- Size Chart - FUNCTIONAL -->
+                  <div class="variants-section">
+                    <div class="section-header">
+                      <h3>Size Chart</h3>
+                      <select
+                        class="form-control"
+                        id="sizeChartTemplate"
+                        style="width: 200px"
+                        onchange="loadSizeChartTemplate()"
+                      >
+                        <option value="">Select Template</option>
+                        <option value="tshirt">T-Shirt</option>
+                        <option value="hoodie">Hoodie</option>
+                        <option value="pants">Pants</option>
+                        <option value="custom">Custom</option>
+                      </select>
+                    </div>
+                    <div class="size-chart-container">
+                      <table class="size-chart-table" id="sizeChartTable">
+                        <thead id="sizeChartHeader">
+                          <!-- Headers will be generated here -->
+                        </thead>
+                        <tbody id="sizeChartBody">
+                          <!-- Rows will be generated here -->
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="helper-text">
+                      Add measurements for each size. Measurements should be in
+                      inches.
+                    </div>
+                    <div
+                      style="
+                        margin-top: 16px;
+                        display: flex;
+                        gap: 12px;
+                        flex-wrap: wrap;
+                      "
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-sm"
+                        onclick="addSizeChartMeasurement()"
+                      >
+                        <i class="fas fa-plus"></i> Add Measurement
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm"
+                        onclick="addSizeChartSize()"
+                      >
+                        <i class="fas fa-plus"></i> Add Size
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm"
+                        onclick="resetSizeChart()"
+                      >
+                        <i class="fas fa-redo"></i> Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Images Tab -->
+                <div class="tab-content" id="images-tab">
+                  <!-- Image Upload Area -->
+                  <div class="image-upload-area" onclick="triggerImageUpload()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <div class="upload-title">Click to upload images</div>
+                    <div class="upload-subtitle">or drag and drop</div>
+                    <div
+                      class="upload-subtitle"
+                      style="margin-top: 8px; font-size: 13px"
+                    >
+                      PNG, JPG up to 5MB each • Maximum 5 images
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    id="imageUpload"
+                    multiple
+                    accept="image/*"
+                    style="display: none"
+                    onchange="handleImageUpload(event)"
+                  />
+
+                  <!-- Image Preview -->
+                  <div class="image-preview-grid" id="imagePreview">
+                    <!-- Images will be previewed here -->
+                  </div>
+
+                  <div
+                    class="helper-text"
+                    style="text-align: center; margin-top: 16px"
+                  >
+                    First image will be used as main product image. You can
+                    reorder by dragging.
+                  </div>
+                </div>
+
+                <!-- Settings Tab with UPDATED & SCALABLE Collections and Product Flags -->
+                <div class="tab-content" id="settings-tab">
+                  <div class="settings-grid">
+                    <!-- Collection Assignment - SCALABLE -->
+                    <div class="setting-option">
+                      <div class="setting-header">
+                        <i class="fas fa-layer-group"></i>
+                        <div class="setting-title">Collection Assignment</div>
+                      </div>
+                      <div class="setting-description">
+                        Add this product to collections for better organization
+                      </div>
+
+                      <!-- Collection Options -->
+                      <div class="collection-options" id="collectionOptions">
+                        <!-- Collection options will be generated here -->
+                      </div>
+
+                      <!-- Collection Management -->
+                      <div class="collection-management">
+                        <div class="collection-management-header">
+                          <h4>Manage Collections</h4>
+                          <button
+                            type="button"
+                            class="btn btn-sm"
+                            onclick="openAddCollectionModal()"
+                          >
+                            <i class="fas fa-plus"></i> Add New
+                          </button>
+                        </div>
+                        <div class="collections-list" id="collectionsList">
+                          <!-- Collections will be listed here -->
+                        </div>
+                      </div>
+
+                      <!-- Selected Collections Display -->
+                      <div class="collection-display" id="selectedCollections">
+                        <!-- Selected collections will be displayed here -->
+                      </div>
+                    </div>
+
+                    <!-- Product Flags - SCALABLE -->
+                    <div class="setting-option">
+                      <div class="setting-header">
+                        <i class="fas fa-flag"></i>
+                        <div class="setting-title">Product Flags</div>
+                      </div>
+                      <div class="setting-description">
+                        Special attributes for this product
+                      </div>
+
+                      <!-- Dynamic Product Flags -->
+                      <div
+                        class="product-flags-container"
+                        id="productFlagsContainer"
+                      >
+                        <!-- Product flags will be generated here -->
+                      </div>
+
+                      <!-- Flag Management -->
+                      <div class="new-flag-form">
+                        <input
+                          type="text"
+                          id="newFlagName"
+                          placeholder="New flag name"
+                          class="form-control"
+                        />
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-primary"
+                          onclick="addNewFlag()"
+                        >
+                          <i class="fas fa-plus"></i> Add
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Product Status -->
+                    <div class="setting-option">
+                      <div class="setting-header">
+                        <i class="fas fa-toggle-on"></i>
+                        <div class="setting-title">Product Status</div>
+                      </div>
+                      <div class="setting-description">
+                        Control product visibility and availability
+                      </div>
+                      <div
+                        style="display: flex; flex-direction: column; gap: 12px"
+                      >
+                        <label class="checkbox-group">
+                          <input type="checkbox" id="isActive" checked />
+                          <span>Product is Active</span>
+                        </label>
+                        <label class="checkbox-group">
+                          <input type="checkbox" id="allowBackorder" />
+                          <span>Allow Backorders</span>
+                        </label>
+                        <label class="checkbox-group">
+                          <input type="checkbox" id="requireShipping" checked />
+                          <span>Requires Shipping</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Additional Settings -->
+                    <div class="setting-option">
+                      <div class="setting-header">
+                        <i class="fas fa-cog"></i>
+                        <div class="setting-title">Additional Settings</div>
+                      </div>
+                      <div class="setting-description">
+                        Extra product information
+                      </div>
+                      <div
+                        style="display: flex; flex-direction: column; gap: 12px"
+                      >
+                        <div>
+                          <label class="form-label">Weight (kg)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="productWeight"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.5"
+                          />
+                        </div>
+                        <div>
+                          <label class="form-label">Material</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="productMaterial"
+                            placeholder="e.g., 100% Cotton"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    class="btn"
+                    onclick="resetProductForm()"
+                  >
+                    <i class="fas fa-redo"></i> Reset Form
+                  </button>
+                  <button type="button" class="btn" onclick="saveAsDraft()">
+                    <i class="fas fa-save"></i> Save as Draft
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Publish Product
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- All Products Section - WITH 6 SAMPLE PRODUCTS -->
+          <div id="all-products" class="section">
+            <div class="table-container">
+              <div class="table-header">
+                <div class="table-title">All Products (6 Products)</div>
+                <div class="table-actions">
+                  <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      oninput="searchProducts(this.value)"
+                    />
+                  </div>
+                  <button
+                    class="btn btn-sm btn-primary"
+                    onclick="showSection('add-product')"
+                  >
+                    <i class="fas fa-plus"></i> Add Product
+                  </button>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Product</th>
                     <th>Category</th>
                     <th>Price</th>
                     <th>Stock</th>
@@ -164,718 +944,472 @@
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody id="productsTableBody">
-                  <!-- Products will be populated dynamically -->
+                <tbody id="allProductsTable">
+                  <!-- 6 sample products will be loaded here -->
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
 
-        <!-- Add Product Section -->
-        <div id="add-product" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Add New Product</h2>
-
-          <div class="admin-card">
-            <div class="card-body">
-              <form id="productForm">
-                <input type="hidden" id="productId" value="" />
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="productName">Product Name</label>
+          <!-- Inventory Management Section - WITH SAMPLE DATA -->
+          <div id="inventory" class="section">
+            <div class="table-container">
+              <div class="table-header">
+                <div class="table-title">Inventory Management</div>
+                <div class="table-actions">
+                  <div class="search-box">
+                    <i class="fas fa-search"></i>
                     <input
                       type="text"
-                      id="productName"
-                      class="form-control"
-                      required
+                      placeholder="Search inventory..."
+                      oninput="searchInventory(this.value)"
                     />
-                  </div>
-                  <div class="form-group">
-                    <label for="productPrice">Price (₹)</label>
-                    <input
-                      type="number"
-                      id="productPrice"
-                      class="form-control"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="productDescription">Description</label>
-                  <textarea
-                    id="productDescription"
-                    class="form-control"
-                    maxlength="500"
-                    required
-                  ></textarea>
-                  <div
-                    style="
-                      text-align: right;
-                      margin-top: 0.5rem;
-                      font-size: 0.8rem;
-                      color: var(--text-light);
-                    "
-                  >
-                    <span id="charCount">0</span>/500 characters
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="productCategory">Category</label>
-                    <div style="display: flex; gap: 10px">
-                      <select
-                        id="productCategory"
-                        class="form-control"
-                        required
-                      >
-                        <option value="">Select Category</option>
-                        <!-- Categories will be populated dynamically -->
-                      </select>
-                      <button type="button" class="btn" id="addCategoryBtn">
-                        Add Category
-                      </button>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="productStock">Stock Quantity</label>
-                    <input
-                      type="number"
-                      id="productStock"
-                      class="form-control"
-                      min="0"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="productShipping">Shipping Charges (₹)</label>
-                    <input
-                      type="number"
-                      id="productShipping"
-                      class="form-control"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <!-- Empty for alignment -->
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label>Color Variants</label>
-                  <div id="colorVariantsContainer">
-                    <!-- Color variants will be added dynamically -->
                   </div>
                   <button
-                    type="button"
-                    class="btn"
-                    id="addColorVariant"
-                    style="margin-top: 1rem"
+                    class="btn btn-sm btn-primary"
+                    onclick="exportInventory()"
                   >
-                    + Add Color Variant
+                    <i class="fas fa-download"></i> Export
                   </button>
                 </div>
-
-                <div class="form-group">
-                  <label>Available Sizes</label>
-                  <div class="size-options">
-                    <div class="size-option active">XS</div>
-                    <div class="size-option active">S</div>
-                    <div class="size-option active">M</div>
-                    <div class="size-option">L</div>
-                    <div class="size-option">XL</div>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label>Product Images</label>
-                  <div class="image-upload" id="imageUpload">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Click to upload or drag and drop</p>
-                    <p style="font-size: 0.8rem; color: var(--text-light)">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
-                  </div>
-                  <div class="image-preview" id="imagePreview"></div>
-                  <input
-                    type="file"
-                    id="fileInput"
-                    multiple
-                    style="display: none"
-                    accept="image/*"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label class="toggle-switch">
-                    <input type="checkbox" id="productFeatured" />
-                    <span class="toggle-slider"></span>
-                  </label>
-                  <span style="margin-left: 10px">Featured Product</span>
-                </div>
-
-                <button
-                  type="submit"
-                  class="btn btn-success"
-                  id="productSubmitBtn"
-                >
-                  Add Product
-                </button>
-                <button
-                  type="button"
-                  class="btn"
-                  id="cancelEditBtn"
-                  style="display: none; margin-left: 10px"
-                >
-                  Cancel Edit
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Categories Section -->
-        <div id="categories" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Category Management</h2>
-
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Add New Category</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="newCategoryName">Category Name</label>
-                <input type="text" id="newCategoryName" class="form-control" />
               </div>
-              <button type="button" class="btn" id="saveCategoryBtn">
-                Add Category
-              </button>
-            </div>
-          </div>
-
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Existing Categories</h2>
-            </div>
-            <div class="card-body">
-              <div class="category-list" id="categoryList">
-                <!-- Categories will be populated dynamically -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Other sections remain the same -->
-        <!-- Playlists Section -->
-        <div id="playlists" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Manage Playlists</h2>
-
-          <div class="section-tabs">
-            <div class="section-tab active" data-tab="top-picks">Top Picks</div>
-            <div class="section-tab" data-tab="new-arrivals">New Arrivals</div>
-          </div>
-
-          <!-- Top Picks Playlist -->
-          <div id="top-picks" class="section-content active">
-            <div class="playlist-section">
-              <div class="playlist-header">
-                <h3>Top Picks Playlist</h3>
-                <button class="btn">Add Product to Top Picks</button>
-              </div>
-
-              <div class="playlist-products">
-                <div class="playlist-product">
-                  <img
-                    src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80"
-                    alt="Silk Shirt"
-                  />
-                  <div class="playlist-product-info">
-                    <div class="playlist-product-name">Silk Shirt</div>
-                    <div class="playlist-product-actions">
-                      <button class="btn btn-danger">Remove</button>
-                      <button class="btn">Edit Position</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="playlist-product">
-                  <img
-                    src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-                    alt="Cashmere Coat"
-                  />
-                  <div class="playlist-product-info">
-                    <div class="playlist-product-name">Cashmere Coat</div>
-                    <div class="playlist-product-actions">
-                      <button class="btn btn-danger">Remove</button>
-                      <button class="btn">Edit Position</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="playlist-product">
-                  <img
-                    src="https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-                    alt="Wool Blazer"
-                  />
-                  <div class="playlist-product-info">
-                    <div class="playlist-product-name">Wool Blazer</div>
-                    <div class="playlist-product-actions">
-                      <button class="btn btn-danger">Remove</button>
-                      <button class="btn">Edit Position</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- New Arrivals Playlist -->
-          <div id="new-arrivals" class="section-content">
-            <div class="playlist-section">
-              <div class="playlist-header">
-                <h3>New Arrivals Playlist</h3>
-                <button class="btn">Add Product to New Arrivals</button>
-              </div>
-
-              <div class="playlist-products">
-                <div class="playlist-product">
-                  <img
-                    src="https://lh3.googleusercontent.com/p/AF1QipMIV1C6dppvP91qcgn6e8qDTcH0HCE2Qc5wWtQK=s1360-w1360-h1020-rw"
-                    alt="Tailored Trousers"
-                  />
-                  <div class="playlist-product-info">
-                    <div class="playlist-product-name">Tailored Trousers</div>
-                    <div class="playlist-product-actions">
-                      <button class="btn btn-danger">Remove</button>
-                      <button class="btn">Edit Position</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="playlist-product">
-                  <img
-                    src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-                    alt="Leather Jacket"
-                  />
-                  <div class="playlist-product-info">
-                    <div class="playlist-product-name">Leather Jacket</div>
-                    <div class="playlist-product-actions">
-                      <button class="btn btn-danger">Remove</button>
-                      <button class="btn">Edit Position</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="playlist-product">
-                  <img
-                    src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-                    alt="Evening Dress"
-                  />
-                  <div class="playlist-product-info">
-                    <div class="playlist-product-name">Evening Dress</div>
-                    <div class="playlist-product-actions">
-                      <button class="btn btn-danger">Remove</button>
-                      <button class="btn">Edit Position</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Coupons Section -->
-        <div id="coupons" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Coupon Management</h2>
-
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Create New Coupon</h2>
-            </div>
-            <div class="card-body">
-              <form id="couponForm">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="couponCode">Coupon Code</label>
-                    <input
-                      type="text"
-                      id="couponCode"
-                      class="form-control"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="couponDiscount">Discount (%)</label>
-                    <input
-                      type="number"
-                      id="couponDiscount"
-                      class="form-control"
-                      min="1"
-                      max="100"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="couponStartDate">Start Date</label>
-                    <input
-                      type="date"
-                      id="couponStartDate"
-                      class="form-control"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="couponEndDate">End Date</label>
-                    <input
-                      type="date"
-                      id="couponEndDate"
-                      class="form-control"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="couponProducts">Applicable Products</label>
-                  <select id="couponProducts" class="form-control" multiple>
-                    <option value="all">All Products</option>
-                  </select>
-                  <div
-                    style="
-                      font-size: 0.8rem;
-                      color: var(--text-light);
-                      margin-top: 0.5rem;
-                    "
-                  >
-                    Hold Ctrl/Cmd to select multiple products
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="couponUsageLimit">Usage Limit</label>
-                  <input
-                    type="number"
-                    id="couponUsageLimit"
-                    class="form-control"
-                    min="1"
-                    placeholder="Leave empty for unlimited"
-                  />
-                </div>
-
-                <button type="submit" class="btn btn-success">
-                  Create Coupon
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Existing Coupons</h2>
-            </div>
-            <div class="card-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Code</th>
-                    <th>Discount</th>
-                    <th>Valid Until</th>
-                    <th>Usage</th>
+                    <th>SKU</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Current Stock</th>
+                    <th>Low Stock Alert</th>
                     <th>Status</th>
+                    <th>Last Updated</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>SOULVARD20</td>
-                    <td>20%</td>
-                    <td>2023-11-30</td>
-                    <td>45/100</td>
-                    <td><span style="color: var(--success)">Active</span></td>
-                    <td class="table-actions">
-                      <button class="btn">Edit</button>
-                      <button class="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>WELCOME10</td>
-                    <td>10%</td>
-                    <td>2023-12-15</td>
-                    <td>128/Unlimited</td>
-                    <td><span style="color: var(--success)">Active</span></td>
-                    <td class="table-actions">
-                      <button class="btn">Edit</button>
-                      <button class="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>SUMMER25</td>
-                    <td>25%</td>
-                    <td>2023-09-30</td>
-                    <td>89/100</td>
-                    <td><span style="color: var(--error)">Expired</span></td>
-                    <td class="table-actions">
-                      <button class="btn">Edit</button>
-                      <button class="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
+                <tbody id="inventoryTable">
+                  <!-- Inventory items will be loaded here -->
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
 
-        <!-- Hero Images Section -->
-        <div id="hero-images" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Hero Image Management</h2>
-
-          <div class="admin-card">
-            <div class="card-body">
-              <div class="form-group">
-                <label>Current Hero Images</label>
-                <div class="image-preview">
-                  <div class="preview-item">
-                    <img
-                      src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
-                      alt="Hero Image 1"
+          <!-- Orders Section with Enhanced Details and EXPORT ALL functionality -->
+          <div id="orders" class="section">
+            <div class="table-container">
+              <div class="table-header">
+                <div class="table-title">Order Management (15 Orders)</div>
+                <div class="table-actions">
+                  <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input
+                      type="text"
+                      placeholder="Search orders..."
+                      oninput="searchOrders(this.value)"
                     />
-                    <div class="remove">&times;</div>
                   </div>
-                  <div class="preview-item">
-                    <img
-                      src="https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80"
-                      alt="Hero Image 2"
-                    />
-                    <div class="remove">&times;</div>
-                  </div>
-                  <div class="preview-item">
-                    <img
-                      src="https://images.unsplash.com/photo-1558769132-cb25e35ca267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80"
-                      alt="Hero Image 3"
-                    />
-                    <div class="remove">&times;</div>
+                  <div style="display: flex; gap: 12px">
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="exportAllOrders()"
+                    >
+                      <i class="fas fa-download"></i> Export All Orders
+                    </button>
+                    <button class="btn btn-sm" onclick="refreshOrders()">
+                      <i class="fas fa-sync"></i> Refresh
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <div class="form-group">
-                <label>Add New Hero Image</label>
-                <div class="image-upload" id="heroImageUpload">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                  <p>Click to upload or drag and drop</p>
-                  <p style="font-size: 0.8rem; color: var(--text-light)">
-                    PNG, JPG, GIF up to 10MB
-                  </p>
+              <div
+                style="
+                  padding: 20px 24px;
+                  border-bottom: 1px solid var(--border);
+                "
+              >
+                <div class="order-filters">
+                  <button
+                    class="order-filter-btn active"
+                    onclick="filterOrders('all')"
+                  >
+                    All Orders (15)
+                  </button>
+                  <button
+                    class="order-filter-btn"
+                    onclick="filterOrders('pending')"
+                  >
+                    Pending (8)
+                  </button>
+                  <button
+                    class="order-filter-btn"
+                    onclick="filterOrders('processing')"
+                  >
+                    Processing (4)
+                  </button>
+                  <button
+                    class="order-filter-btn"
+                    onclick="filterOrders('completed')"
+                  >
+                    Completed (3)
+                  </button>
                 </div>
-                <input
-                  type="file"
-                  id="heroFileInput"
-                  style="display: none"
-                  accept="image/*"
-                />
               </div>
 
-              <button type="button" class="btn">Update Hero Images</button>
+              <div id="ordersList" style="padding: 24px">
+                <!-- Orders will be loaded here -->
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Size Charts Section -->
-        <div id="size-charts" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Size Chart Management</h2>
-
-          <div class="admin-card">
-            <div class="card-body">
-              <div class="form-group">
-                <label for="sizeChartCategory">Select Category</label>
-                <select id="sizeChartCategory" class="form-control">
-                  <option value="shirts">Shirts</option>
-                  <option value="trousers">Trousers</option>
-                  <option value="coats">Coats</option>
-                  <option value="dresses">Dresses</option>
-                  <option value="shoes">Shoes</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Size Chart Data</label>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Size</th>
-                      <th>Chest (inches)</th>
-                      <th>Waist (inches)</th>
-                      <th>Hip (inches)</th>
-                      <th>Length (inches)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>XS</td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>S</td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>M</td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>L</td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>XL</td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <button type="button" class="btn" onclick="saveSizeChart()">
-                Update Size Chart
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 style="margin: 0; font-size: 18px">Product Published!</h3>
+          <button class="btn btn-icon" onclick="closeModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="text-align: center; padding: 20px">
+            <i
+              class="fas fa-check-circle"
+              style="
+                font-size: 48px;
+                color: var(--success);
+                margin-bottom: 16px;
+              "
+            ></i>
+            <h4 id="modalMessage" style="margin-bottom: 12px">
+              Product added successfully!
+            </h4>
+            <p style="color: var(--dark-gray); margin-bottom: 24px">
+              The product has been published and added to your collections.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center">
+              <button class="btn" onclick="closeModal()">
+                Add Another Product
+              </button>
+              <button class="btn btn-primary" onclick="viewAllProducts()">
+                View All Products
               </button>
             </div>
           </div>
         </div>
-
-        <!-- Promotions Section -->
-        <div id="promotions" class="section-content">
-          <h2 style="margin-bottom: 1.5rem">Promotion Management</h2>
-
-          <div class="admin-card">
-            <div class="card-header">
-              <h2>Current Promotion Banner</h2>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="promoTitle">Promotion Title</label>
-                <input
-                  type="text"
-                  id="promoTitle"
-                  class="form-control"
-                  value="SPECIAL OFFER"
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="promoDescription">Promotion Description</label>
-                <textarea id="promoDescription" class="form-control">
-Enjoy 20% off your first purchase with code: SOULVARD20</textarea
-                >
-              </div>
-
-              <div class="form-group">
-                <label for="promoEndDate">Promotion End Date</label>
-                <input
-                  type="date"
-                  id="promoEndDate"
-                  class="form-control"
-                  value="2023-11-30"
-                />
-              </div>
-
-              <div class="form-group">
-                <label class="toggle-switch">
-                  <input type="checkbox" id="promoActive" checked />
-                  <span class="toggle-slider"></span>
-                </label>
-                <span style="margin-left: 10px">Promotion Active</span>
-              </div>
-
-              <button type="button" class="btn">Update Promotion</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Add Category Modal -->
-    <div class="modal" id="categoryModal">
+    <!-- Add Product to Playlist Modal - UPDATED to show SKU -->
+    <div id="addToPlaylistModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Add New Category</h3>
-          <button class="close-modal">&times;</button>
+          <h3 style="margin: 0; font-size: 18px">Add Product to Playlist</h3>
+          <button class="btn btn-icon" onclick="closeAddToPlaylistModal()">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="categoryName">Category Name</label>
-            <input type="text" id="categoryName" class="form-control" />
+            <label class="form-label">Select Product by SKU</label>
+            <select class="form-control" id="playlistProductSelect">
+              <!-- Products will be populated here -->
+            </select>
+            <div class="helper-text">
+              Products are listed by SKU for easy identification
+            </div>
           </div>
-          <button type="button" class="btn" id="saveNewCategoryBtn">
-            Save Category
-          </button>
+          <div class="form-group">
+            <label class="form-label">Position in Playlist</label>
+            <input
+              type="number"
+              class="form-control"
+              id="playlistPosition"
+              min="1"
+              value="1"
+              placeholder="1"
+            />
+            <div class="helper-text">Position in the playlist (1 = first)</div>
+          </div>
+          <div
+            class="form-actions"
+            style="margin-top: 24px; padding: 0; border: none"
+          >
+            <button
+              type="button"
+              class="btn"
+              onclick="closeAddToPlaylistModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="addProductToPlaylist()"
+            >
+              <i class="fas fa-plus"></i> Add to Playlist
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Add/Edit Category Modal - SIMPLIFIED -->
+    <div id="categoryModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 style="margin: 0; font-size: 18px" id="categoryModalTitle">
+            Add New Category
+          </h3>
+          <button class="btn btn-icon" onclick="closeCategoryModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label"
+              >Category Name <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="categoryName"
+              placeholder="e.g., T-Shirts"
+            />
+          </div>
+          <div
+            class="form-actions"
+            style="margin-top: 24px; padding: 0; border: none"
+          >
+            <button type="button" class="btn" onclick="closeCategoryModal()">
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="saveCategory()"
+            >
+              <i class="fas fa-save"></i> Save Category
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Collection Modal -->
+    <div id="addCollectionModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 style="margin: 0; font-size: 18px">Add New Collection</h3>
+          <button class="btn btn-icon" onclick="closeAddCollectionModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label"
+              >Collection Name <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="collectionName"
+              placeholder="e.g., Custom Products"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Icon</label>
+            <select class="form-control" id="collectionIcon">
+              <option value="fas fa-star">Star</option>
+              <option value="fas fa-bolt">Bolt</option>
+              <option value="fas fa-random">Random</option>
+              <option value="fas fa-cogs" selected>Cogs</option>
+              <option value="fas fa-fire">Fire</option>
+              <option value="fas fa-heart">Heart</option>
+              <option value="fas fa-gem">Gem</option>
+              <option value="fas fa-tag">Tag</option>
+              <option value="fas fa-award">Award</option>
+            </select>
+          </div>
+          <div
+            class="form-actions"
+            style="margin-top: 24px; padding: 0; border: none"
+          >
+            <button
+              type="button"
+              class="btn"
+              onclick="closeAddCollectionModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="saveNewCollection()"
+            >
+              <i class="fas fa-plus"></i> Add Collection
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium Invoice Modal -->
+    <div id="invoiceModal" class="modal">
+      <div class="modal-content invoice-modal">
+        <div class="invoice-header">
+          <div class="invoice-tag">SOULVARD</div>
+          <div class="invoice-logo">
+            <div class="invoice-logo-icon">S</div>
+            <div class="invoice-logo-text">SOULVARD</div>
+          </div>
+          <div style="position: relative; z-index: 1">
+            <h1 style="font-size: 32px; margin-bottom: 8px; font-weight: 300">
+              INVOICE
+            </h1>
+            <div style="font-size: 14px; opacity: 0.9">
+              Premium Fashion Invoice
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-body">
+          <div class="invoice-grid">
+            <div class="invoice-section">
+              <div class="invoice-section-title">From</div>
+              <div class="invoice-info">
+                <div class="invoice-info-item">
+                  <span class="invoice-info-label">Company:</span>
+                  <span class="invoice-info-value">Soulvard</span>
+                </div>
+                <div class="invoice-info-item">
+                  <span class="invoice-info-label">Address:</span>
+                  <span class="invoice-info-value"
+                    >Sapper vihar kalas dighi 411015, Pune, Maharashtra</span
+                  >
+                </div>
+                <div class="invoice-info-item">
+                  <span class="invoice-info-label">Mobile Number:</span>
+                  <span class="invoice-info-value">7020094838</span>
+                </div>
+                <div class="invoice-info-item">
+                  <span class="invoice-info-label">Email:</span>
+                  <span class="invoice-info-value">thesoulvard@gmail.com</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="invoice-section">
+              <div class="invoice-section-title">Invoice Details</div>
+              <div class="invoice-info" id="invoiceDetails">
+                <!-- Invoice details will be populated here -->
+              </div>
+            </div>
+          </div>
+
+          <div class="invoice-section">
+            <div class="invoice-section-title">Bill To</div>
+            <div class="invoice-info" id="invoiceCustomer">
+              <!-- Customer details will be populated here -->
+            </div>
+          </div>
+
+          <div class="invoice-section">
+            <div class="invoice-section-title">Shipping Address</div>
+            <div class="invoice-info" id="invoiceShipping">
+              <!-- Shipping details will be populated here -->
+            </div>
+          </div>
+
+          <div class="invoice-section">
+            <div class="invoice-section-title">Order Items</div>
+            <table class="invoice-table" id="invoiceItems">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>SKU</th>
+                  <th>Size</th>
+                  <th>Color</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceItemsBody">
+                <!-- Order items will be populated here -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6" style="text-align: right; font-weight: 600">
+                    Subtotal:
+                  </td>
+                  <td id="invoiceSubtotal">₹0.00</td>
+                </tr>
+                <tr>
+                  <td colspan="6" style="text-align: right; font-weight: 600">
+                    Shipping:
+                  </td>
+                  <td id="invoiceShippingFee">₹0.00</td>
+                </tr>
+                <tr>
+                  <td colspan="6" style="text-align: right; font-weight: 600">
+                    Tax (18%):
+                  </td>
+                  <td id="invoiceTax">₹0.00</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="invoice-total" id="invoiceTotal">Total: ₹0.00</div>
+          </div>
+
+          <div class="invoice-section">
+            <div class="invoice-section-title">Payment Information</div>
+            <div class="invoice-info">
+              <div class="invoice-info-item">
+                <span class="invoice-info-label">Payment Method:</span>
+                <span class="invoice-info-value" id="invoicePaymentMethod"
+                  >Credit Card</span
+                >
+              </div>
+              <div class="invoice-info-item">
+                <span class="invoice-info-label">Transaction ID:</span>
+                <span class="invoice-info-value" id="invoiceTransactionId"
+                  >TXN-123456789</span
+                >
+              </div>
+              <div class="invoice-info-item">
+                <span class="invoice-info-label">Payment Status:</span>
+                <span class="invoice-info-value" id="invoicePaymentStatus"
+                  >Paid</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="invoice-actions">
+            <button class="btn" onclick="printInvoice()">
+              <i class="fas fa-print"></i> Print Invoice
+            </button>
+            <button class="btn btn-primary" onclick="downloadInvoice()">
+              <i class="fas fa-download"></i> Download PDF
+            </button>
+            <button class="btn" onclick="closeInvoiceModal()">
+              <i class="fas fa-times"></i> Close
+            </button>
+          </div>
+        </div>
+
+        <div class="invoice-footer">
+          <div>Thank you for shopping with Soulvard!</div>
+          <div style="margin-top: 8px; font-size: 12px">
+            This is a computer-generated invoice. No signature required.
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="admin.js"></script>
   </body>
 </html>

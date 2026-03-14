@@ -1,894 +1,411 @@
-// API integrated Index Page
-let currentSlideIndex = 0;
-let slideInterval;
-let products = [];
-let topPickProducts = [];
-let currentProduct = null;
-let heroImages = [];
-let activePromotion = null;
-let testimonials = [];
-let currentTestimonialIndex = 0;
 
-// Initialize page
-document.addEventListener("DOMContentLoaded", async function () {
-  // Check auth and redirect if needed
-  if (!isLoggedIn()) {
-    window.location.href = "/client/login.html";
-    return;
-  }
-
-  // Load all data from API
-  products = await getProducts();
-  heroImages = await getHeroImages();
-  activePromotion = await getActivePromotion();
-  // testimonials endpoint not available yet, will remain empty array
-
-  topPickProducts = products
-    .filter((p) => p.category === "Top Picks" || products.indexOf(p) < 3)
-    .slice(0, 3);
-
-  // Initialize sliders
-  initializeHeroSlider();
-  initializeTestimonialSlider();
-  loadPromotionFromAPI();
-  loadTestimonialsFromAPI();
-  renderTopPicks();
-  renderNewArrivals();
-
-  // Update cart count
-  updateCartCount();
-  updateWishlistCount();
-});
-
-// ===== HERO SLIDER =====
-function initializeHeroSlider() {
-  const slides = document.querySelectorAll(".hero-slide");
-  const dots = document.querySelectorAll(".slider-dot");
-  const totalSlides = slides.length;
-
-  // Update counter
-  if (document.getElementById("total-slides")) {
-    document.getElementById("total-slides").textContent =
-      totalSlides < 10 ? "0" + totalSlides : totalSlides;
-  }
-
-  showSlide(0);
-  startSlideInterval();
-}
-
-const slides = document.querySelectorAll(".hero-slide");
-const dots = document.querySelectorAll(".slider-dot");
-const totalSlides = slides.length;
-let wishlistItems = [];
-
-// Initialize slide counter
-if (document.getElementById("total-slides")) {
-  document.getElementById("total-slides").textContent =
-    totalSlides < 10 ? "0" + totalSlides : totalSlides;
-}
-
-// Hero slider functionality
-function showSlide(n) {
-  // Reset all slides
-  slides.forEach((slide) => {
-    slide.classList.remove("active");
-  });
-  dots.forEach((dot) => {
-    dot.classList.remove("active");
-  });
-
-  // Set new slide
-  currentSlideIndex = (n + slides.length) % slides.length;
-  slides[currentSlideIndex].classList.add("active");
-  dots[currentSlideIndex].classList.add("active");
-
-  // Update slide counter
-  document.getElementById("current-slide").textContent =
-    currentSlideIndex + 1 < 10
-      ? "0" + (currentSlideIndex + 1)
-      : currentSlideIndex + 1;
-}
-
-function currentSlide(n) {
-  clearInterval(slideInterval);
-  showSlide(n);
-  startSlideInterval();
-}
-
-function nextSlide() {
-  clearInterval(slideInterval);
-  showSlide(currentSlideIndex + 1);
-  startSlideInterval();
-}
-
-function prevSlide() {
-  clearInterval(slideInterval);
-  showSlide(currentSlideIndex - 1);
-  startSlideInterval();
-}
-
-function startSlideInterval() {
-  slideInterval = setInterval(() => {
-    showSlide(currentSlideIndex + 1);
-  }, 5000);
-}
-
-// Initialize slider
-startSlideInterval();
-
-// ===== TESTIMONIAL SLIDER =====
-/**
- * Initialize testimonial slider after testimonials are loaded
- */
-function initializeTestimonialSlider() {
-  // This function is called after testimonials are loaded from API
-  // The testimonial slides will be created dynamically by loadTestimonialsFromAPI()
-  // This function sets up the slider functionality
-
-  setTimeout(() => {
-    const testimonialSlides = document.querySelectorAll(".testimonial-slide");
-    if (testimonialSlides.length === 0) {
-      console.warn("No testimonial slides found");
-      return;
-    }
-
-    // Show first testimonial
-    currentTestimonialIndex = 0;
-    const testimonialTrack = document.getElementById("testimonialTrack");
-    if (testimonialTrack) {
-      testimonialTrack.style.transition = "transform 0.5s ease-in-out";
-    }
-  }, 100);
-}
-
-// Navbar scroll effect
-window.addEventListener("scroll", function () {
-  const navbar = document.getElementById("navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled");
-  } else {
-    navbar.classList.remove("scrolled");
-  }
-});
-
-// Quick View Modal functionality
-async function openQuickView(
-  productName,
-  price,
-  imageUrl,
-  productType,
-  productId
-) {
-  const modal = document.getElementById("quickViewModal");
-  const modalContent = document.getElementById("modalProductContent");
-
-  // Store current product
-  currentProduct = {
-    _id: productId,
-    name: productName,
-    price: price,
-    images: [imageUrl],
-  };
-
-  // Generate size options based on product type
-  const sizeOptions = await generateSizeOptions(productType);
-
-  // Generate color options based on product type
-  const colorOptions = generateColorOptions(productType);
-
-  modalContent.innerHTML = `
-    <div class="modal-product-image" style="background-image: url('${imageUrl}')"></div>
-    <div class="modal-product-info">
-      <h3>${productName}</h3>
-      <div class="price">${formatPrice(price)}</div>
-      <div class="description">
-        Experience the epitome of luxury with our ${productName.toLowerCase()}. Meticulously crafted from the finest materials, this piece embodies timeless elegance and sophisticated design. Perfect for those who appreciate quality and attention to detail.
-      </div>
+      // ===== FIXED HERO SLIDER FUNCTIONS =====
+      let currentSlideIndex = 0;
+      let totalSlides = 4;
+      let slideInterval;
       
-      <!-- Color Selection -->
-      <div class="color-selection">
-        <h4>SELECT COLOR</h4>
-        <div class="color-options">
-          ${colorOptions}
-        </div>
-      </div>
-      
-      <!-- Size Selection -->
-      <div class="size-selection">
-        <h4>SELECT SIZE</h4>
-        <div class="size-options">
-          ${sizeOptions}
-        </div>
-        <div class="size-chart-link" onclick="openSizeChart()">View Size Chart</div>
-      </div>
-      
-      <div class="modal-actions">
-        <button class="add-to-cart" onclick="addToCart('${productName}', ${price}, '${productId}'); closeModal()">ADD TO CART</button>
-        <button class="wishlist-btn" id="wishlistBtn" onclick="toggleWishlist('${productName}', ${price}, '${imageUrl}', '${productId}')">
-          <i class="far fa-heart"></i> ADD TO WISHLIST
-        </button>
-      </div>
-    </div>
-  `;
-
-  // Check if product is already in wishlist
-  if (isInWishlist(productId)) {
-    const wishlistBtn = document.getElementById("wishlistBtn");
-    wishlistBtn.classList.add("active");
-    wishlistBtn.innerHTML = '<i class="fas fa-heart"></i> IN WISHLIST';
-  }
-
-  modal.style.display = "flex";
-}
-
-// Generate size options based on product type (using API data)
-async function generateSizeOptions(productType) {
-  let sizes = [];
-
-  // Try to fetch size chart from API
-  const sizeChart = await getSizeChartByCategory(productType);
-  if (sizeChart && sizeChart.sizes) {
-    sizes = sizeChart.sizes.map((s) => s.size);
-  } else {
-    // Fallback to hardcoded defaults if API data not available
-    switch (productType) {
-      case "shirt":
-      case "blazer":
-      case "sweater":
-        sizes = ["XS", "S", "M", "L", "XL"];
-        break;
-      case "trousers":
-        sizes = ["28", "30", "32", "34", "36"];
-        break;
-      case "coat":
-      case "jacket":
-        sizes = ["S", "M", "L", "XL", "XXL"];
-        break;
-      case "dress":
-        sizes = ["XS", "S", "M", "L", "XL"];
-        break;
-      case "shoes":
-        sizes = ["7", "8", "9", "10", "11"];
-        break;
-      case "accessory":
-        sizes = ["One Size"];
-        break;
-      default:
-        sizes = ["XS", "S", "M", "L", "XL"];
-    }
-  }
-
-  let html = "";
-  sizes.forEach((size, index) => {
-    const disabled = index === 2 ? "" : ""; // For demo, size M is available
-    const selected = index === 2 ? "selected" : "";
-    html += `<div class="size-option ${selected} ${disabled}" onclick="selectSize(this)">${size}</div>`;
-  });
-
-  return html;
-}
-
-// Generate color options based on product type
-function generateColorOptions(productType) {
-  let colors = [];
-
-  switch (productType) {
-    case "shirt":
-    case "blazer":
-      colors = [
-        { name: "Ivory", value: "#f8f5f0" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Charcoal", value: "#36454f" },
-        { name: "White", value: "#ffffff" },
-      ];
-      break;
-    case "trousers":
-      colors = [
-        { name: "Charcoal", value: "#36454f" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Black", value: "#000000" },
-        { name: "Khaki", value: "#c3b091" },
-      ];
-      break;
-    case "coat":
-    case "jacket":
-      colors = [
-        { name: "Camel", value: "#c19a6b" },
-        { name: "Black", value: "#000000" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Charcoal", value: "#36454f" },
-      ];
-      break;
-    case "dress":
-      colors = [
-        { name: "Black", value: "#000000" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Burgundy", value: "#800020" },
-        { name: "Emerald", value: "#50c878" },
-      ];
-      break;
-    case "sweater":
-      colors = [
-        { name: "Camel", value: "#c19a6b" },
-        { name: "Charcoal", value: "#36454f" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Cream", value: "#f8f5f0" },
-      ];
-      break;
-    case "shoes":
-      colors = [
-        { name: "Brown", value: "#8b4513" },
-        { name: "Black", value: "#000000" },
-        { name: "Tan", value: "#d2b48c" },
-        { name: "Burgundy", value: "#800020" },
-      ];
-      break;
-    case "accessory":
-      colors = [
-        { name: "Black", value: "#000000" },
-        { name: "Brown", value: "#8b4513" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Camel", value: "#c19a6b" },
-      ];
-      break;
-    default:
-      colors = [
-        { name: "Black", value: "#000000" },
-        { name: "White", value: "#ffffff" },
-        { name: "Navy", value: "#1a1a2e" },
-        { name: "Charcoal", value: "#36454f" },
-      ];
-  }
-
-  let html = "";
-  colors.forEach((color, index) => {
-    const selected = index === 0 ? "selected" : "";
-    html += `
-                    <div class="color-option-container">
-                        <div class="color-option ${selected}" style="background-color: ${color.value}" onclick="selectColor(this)" title="${color.name}"></div>
-                        <div class="color-name">${color.name}</div>
-                    </div>
-                `;
-  });
-
-  return html;
-}
-
-// Select size function
-function selectSize(element) {
-  // Remove selected class from all size options
-  document.querySelectorAll(".size-option").forEach((option) => {
-    option.classList.remove("selected");
-  });
-
-  // Add selected class to clicked option
-  element.classList.add("selected");
-}
-
-// Select color function
-function selectColor(element) {
-  // Remove selected class from all color options
-  document.querySelectorAll(".color-option").forEach((option) => {
-    option.classList.remove("selected");
-  });
-
-  // Add selected class to clicked option
-  element.classList.add("selected");
-}
-
-// Open size chart
-function openSizeChart() {
-  document.getElementById("sizeChartModal").style.display = "flex";
-}
-
-// Close size chart
-function closeSizeChart() {
-  document.getElementById("sizeChartModal").style.display = "none";
-}
-
-function closeModal() {
-  document.getElementById("quickViewModal").style.display = "none";
-}
-
-// Close modal when clicking outside
-window.addEventListener("click", function (event) {
-  const modal = document.getElementById("quickViewModal");
-  const sizeChartModal = document.getElementById("sizeChartModal");
-
-  if (event.target === modal) {
-    closeModal();
-  }
-
-  if (event.target === sizeChartModal) {
-    closeSizeChart();
-  }
-});
-
-// Toggle wishlist
-function toggleWishlist(productName, price, imageUrl, productId) {
-  const wishlistBtn = document.getElementById("wishlistBtn");
-  const product = {
-    _id: productId,
-    name: productName,
-    price: price,
-    images: [imageUrl],
-  };
-
-  if (isInWishlist(productId)) {
-    // Remove from wishlist
-    removeFromWishlist(productId);
-    wishlistBtn.classList.remove("active");
-    wishlistBtn.innerHTML = '<i class="far fa-heart"></i> ADD TO WISHLIST';
-    showNotification(`${productName} removed from wishlist`, "info");
-  } else {
-    // Add to wishlist
-    addToWishlist(product);
-    wishlistBtn.classList.add("active");
-    wishlistBtn.innerHTML = '<i class="fas fa-heart"></i> IN WISHLIST';
-    showNotification(`${productName} added to wishlist`, "success");
-  }
-
-  updateWishlistCount();
-}
-
-function updateWishlistCount() {
-  const wishlist = getWishlist();
-  const wishlistCounter = document.querySelector(".wishlist-count");
-  if (wishlistCounter) {
-    wishlistCounter.textContent = wishlist.length;
-  }
-}
-
-// Add to Cart functionality
-function addToCart(productName, price, productId) {
-  const selectedSize = document.querySelector(".size-option.selected");
-  const selectedColor = document.querySelector(".color-option.selected");
-
-  const product = {
-    _id: productId,
-    name: productName,
-    price: price,
-    images: currentProduct?.images || [],
-  };
-
-  const sizeValue = selectedSize ? selectedSize.textContent.trim() : "";
-  const colorValue = selectedColor ? selectedColor.style.backgroundColor : "";
-
-  addToCart(product, 1, colorValue, sizeValue);
-
-  showNotification(`${productName} added to cart!`, "success");
-}
-
-// Show notification
-function showNotification(message, type) {
-  const notification = document.createElement("div");
-  notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: ${
-                  type === "success"
-                    ? "var(--gold)"
-                    : type === "info"
-                    ? "var(--charcoal)"
-                    : "var(--gold)"
-                };
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 2px;
-                z-index: 2000;
-                font-weight: 500;
-                letter-spacing: 1px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                animation: slideIn 0.3s ease;
-            `;
-  notification.textContent = message;
-  document.body.appendChild(notification);
-
-  setTimeout(() => {
-    notification.style.animation = "slideOut 0.3s ease";
-    setTimeout(() => {
-      document.body.removeChild(notification);
-    }, 300);
-  }, 3000);
-}
-
-function scrollToTopPicks() {
-  document.getElementById("top-picks").scrollIntoView({ behavior: "smooth" });
-}
-
-function scrollToCollection() {
-  document.getElementById("collection").scrollIntoView({ behavior: "smooth" });
-}
-
-function learnMore() {
-  alert(
-    "Thank you for your interest in Soulvard. Our story continues to unfold..."
-  );
-}
-
-// Smooth scroll for nav links
-document.querySelectorAll(".nav-links a").forEach((link) => {
-  link.addEventListener("click", function (e) {
-    const href = this.getAttribute("href");
-    if (href.startsWith("#")) {
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
+      // Initialize hero slider
+      function initializeHeroSlider() {
+        updateSlideCounter();
+        updateDots();
+        startAutoplay();
       }
-    }
-  });
-});
-
-// Load Promotion from API
-function loadPromotionFromAPI() {
-  if (!activePromotion) {
-    // No active promotion, hide or show default message
-    const banner = document.querySelector(".coupon-banner");
-    if (banner) {
-      banner.style.display = "none";
-    }
-    return;
-  }
-
-  // Update coupon code display
-  const couponCodeEl = document.getElementById("couponCode");
-  if (couponCodeEl && activePromotion.code) {
-    couponCodeEl.textContent = activePromotion.code;
-  }
-
-  // Update promotion description
-  const titleEl = document.querySelector(".coupon-banner h2");
-  if (titleEl && activePromotion.title) {
-    titleEl.textContent = activePromotion.title;
-  }
-
-  // Update promotion details
-  const descEl = document.querySelector(
-    ".coupon-banner > .coupon-content > p:nth-of-type(1)"
-  );
-  if (descEl && activePromotion.description) {
-    descEl.textContent = activePromotion.description;
-  }
-
-  // Update timer with promotion end date if available
-  if (activePromotion.endDate) {
-    updatePromotionCountdown(new Date(activePromotion.endDate));
-  }
-}
-
-// Update countdown based on promotion end date
-function updatePromotionCountdown(endDate) {
-  const updateTimer = () => {
-    const now = new Date();
-    const timeLeft = endDate - now;
-
-    if (timeLeft > 0) {
-      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-      document.getElementById("days").textContent =
-        days < 10 ? "0" + days : days;
-      document.getElementById("hours").textContent =
-        hours < 10 ? "0" + hours : hours;
-      document.getElementById("minutes").textContent =
-        minutes < 10 ? "0" + minutes : minutes;
-      document.getElementById("seconds").textContent =
-        seconds < 10 ? "0" + seconds : seconds;
-    } else {
-      const timerEl = document.querySelector(".coupon-timer");
-      if (timerEl) {
-        timerEl.innerHTML = "<p>Offer has expired</p>";
+      
+      // Update slide position - FIXED: No more gap
+      function updateSlidePosition() {
+        const slidesContainer = document.getElementById('heroSlides');
+        // Use percentage-based transform instead of vw to prevent gaps
+        slidesContainer.style.transform = `translateX(-${currentSlideIndex * 25}%)`;
+        
+        updateSlideCounter();
+        updateDots();
       }
-      clearInterval(promotionTimerInterval);
-    }
-  };
+      
+      // Update slide counter
+      function updateSlideCounter() {
+        const currentSlideElement = document.getElementById('currentSlide');
+        if (currentSlideElement) {
+          currentSlideElement.textContent = (currentSlideIndex + 1).toString().padStart(2, '0');
+        }
+      }
+      
+      // Update navigation dots
+      function updateDots() {
+        const dots = document.querySelectorAll('.slider-dot');
+        dots.forEach((dot, index) => {
+          if (index === currentSlideIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+      
+      // Go to specific slide
+      function goToSlide(index) {
+        currentSlideIndex = index;
+        updateSlidePosition();
+        resetAutoplay();
+      }
+      
+      // Next slide
+      function nextSlide() {
+        currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+        updateSlidePosition();
+        resetAutoplay();
+      }
+      
+      // Previous slide
+      function prevSlide() {
+        currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+        updateSlidePosition();
+        resetAutoplay();
+      }
+      
+      // Autoplay functions
+      function startAutoplay() {
+        slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+      }
+      
+      function stopAutoplay() {
+        clearInterval(slideInterval);
+      }
+      
+      function resetAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+      }
+      
+      // ===== TRUST BADGES SCROLLING =====
+      let currentBadgeIndex = 0;
+      const totalBadges = 4;
+      
+      function scrollBadges(direction) {
+        const badgesContainer = document.getElementById('badgesContainer');
+        const badgeWidth = badgesContainer.offsetWidth;
+        
+        if (direction === 'left') {
+          currentBadgeIndex = Math.max(0, currentBadgeIndex - 1);
+        } else {
+          currentBadgeIndex = Math.min(totalBadges - 1, currentBadgeIndex + 1);
+        }
+        
+        badgesContainer.scrollTo({
+          left: currentBadgeIndex * (badgeWidth + 20),
+          behavior: 'smooth'
+        });
+        
+        updateBadgeDots();
+      }
+      
+      function goToBadge(index) {
+        currentBadgeIndex = index;
+        const badgesContainer = document.getElementById('badgesContainer');
+        const badgeWidth = badgesContainer.offsetWidth;
+        
+        badgesContainer.scrollTo({
+          left: index * (badgeWidth + 20),
+          behavior: 'smooth'
+        });
+        
+        updateBadgeDots();
+      }
+      
+      function updateBadgeDots() {
+        const dots = document.querySelectorAll('.badge-dot');
+        dots.forEach((dot, index) => {
+          if (index === currentBadgeIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+      
+      // ===== TESTIMONIALS SCROLLING =====
+      let currentTestimonialIndex = 0;
+      const totalTestimonials = 3;
+      
+      function scrollTestimonials(direction) {
+        const testimonialContainer = document.getElementById('testimonialContainer');
+        const testimonialWidth = testimonialContainer.offsetWidth;
+        
+        if (direction === 'left') {
+          currentTestimonialIndex = Math.max(0, currentTestimonialIndex - 1);
+        } else {
+          currentTestimonialIndex = Math.min(totalTestimonials - 1, currentTestimonialIndex + 1);
+        }
+        
+        testimonialContainer.scrollTo({
+          left: currentTestimonialIndex * (testimonialWidth + 20),
+          behavior: 'smooth'
+        });
+        
+        updateTestimonialDots();
+      }
+      
+      function goToTestimonial(index) {
+        currentTestimonialIndex = index;
+        const testimonialContainer = document.getElementById('testimonialContainer');
+        const testimonialWidth = testimonialContainer.offsetWidth;
+        
+        testimonialContainer.scrollTo({
+          left: index * (testimonialWidth + 20),
+          behavior: 'smooth'
+        });
+        
+        updateTestimonialDots();
+      }
+      
+      function updateTestimonialDots() {
+        const dots = document.querySelectorAll('.testimonial-dot');
+        dots.forEach((dot, index) => {
+          if (index === currentTestimonialIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+      
+      // Initialize scrolling for mobile
+      function initializeMobileScrolling() {
+        // Update scroll indicators visibility based on screen size
+        const updateScrollIndicators = () => {
+          const isMobile = window.innerWidth <= 768;
+          const indicators = document.querySelectorAll('.scroll-indicator');
+          indicators.forEach(indicator => {
+            indicator.style.display = isMobile ? 'flex' : 'none';
+          });
+          
+          const badgeDots = document.getElementById('badgeNavDots');
+          const testimonialDots = document.getElementById('testimonialNavDots');
+          
+          if (badgeDots) badgeDots.style.display = isMobile ? 'flex' : 'none';
+          if (testimonialDots) testimonialDots.style.display = isMobile ? 'flex' : 'none';
+        };
+        
+        updateScrollIndicators();
+        window.addEventListener('resize', updateScrollIndicators);
+      }
+      
+      // ===== DATA =====
+      const products = [
+        // Top Picks (6 products)
+        { id: 1, name: "Classic Wool Blazer", price: 8999, mrp: 12999, badge: "Bestseller", image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 2, name: "Silk Evening Dress", price: 12999, mrp: 15999, badge: "Premium", image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 3, name: "Linen Summer Set", price: 7499, mrp: 9999, badge: "Summer", image: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 4, name: "Cashmere Sweater", price: 6999, mrp: 8999, badge: "Luxury", image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 5, name: "Tailored Trousers", price: 4999, mrp: 6999, badge: "Essential", image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 6, name: "Leather Moto Jacket", price: 15999, mrp: 19999, badge: "Iconic", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        
+        // New Arrivals (6 products)
+        { id: 7, name: "Embroidered Kimono", price: 8999, mrp: 11999, badge: "New", image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 8, name: "Wide-Leg Jumpsuit", price: 8499, mrp: 10999, badge: "Trending", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 9, name: "Suede Midi Skirt", price: 5999, mrp: 7999, badge: "New", image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 10, name: "Velvet Blazer Set", price: 12999, mrp: 15999, badge: "Luxury", image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 11, name: "Cropped Cardigan", price: 4499, mrp: 5999, badge: "New", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf53a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 12, name: "Silk Slip Dress", price: 7999, mrp: 9999, badge: "Evening", image: "https://images.unsplash.com/photo-1566174053879-31528523f9ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        
+        // Matching Products (6 products)
+        { id: 13, name: "Linen Two-Piece Set", price: 9999, mrp: 12999, badge: "Set", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 14, name: "Silk Palazzo Set", price: 13999, mrp: 17999, badge: "Set", image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 15, name: "Cotton Lounge Set", price: 5999, mrp: 7999, badge: "Set", image: "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 16, name: "Wool Co-Ord Set", price: 11999, mrp: 14999, badge: "Set", image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 17, name: "Knit Two-Piece", price: 8499, mrp: 10999, badge: "Set", image: "https://images.unsplash.com/photo-1549576490-b0b4831ef60a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+        { id: 18, name: "Satin Evening Set", price: 14999, mrp: 18999, badge: "Set", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" }
+      ];
 
-  updateTimer();
-  if (typeof promotionTimerInterval !== "undefined") {
-    clearInterval(promotionTimerInterval);
-  }
-  promotionTimerInterval = setInterval(updateTimer, 1000);
-}
+      // ===== STATE =====
+      let cart = JSON.parse(localStorage.getItem('soulvardCart')) || [];
+      let wishlist = JSON.parse(localStorage.getItem('soulvardWishlist')) || [];
 
-let promotionTimerInterval;
+      // ===== INITIALIZATION =====
+      document.addEventListener('DOMContentLoaded', function() {
+        initializeHeroSlider();
+        renderProducts();
+        updateCartCount();
+        updateWishlistCount();
+        setupNavScroll();
+        setupSmoothScroll();
+        initializeMobileScrolling();
+        
+        // Newsletter form submission
+        document.querySelector('.newsletter-btn').addEventListener('click', function() {
+          const email = document.querySelector('.newsletter-input').value;
+          if (email) {
+            showNotification('Thank you for subscribing!', 'success');
+            document.querySelector('.newsletter-input').value = '';
+          }
+        });
+        
+        // Pause autoplay on hover
+        document.querySelector('.hero-slider-container').addEventListener('mouseenter', stopAutoplay);
+        document.querySelector('.hero-slider-container').addEventListener('mouseleave', startAutoplay);
+        
+        // Add scroll event listeners for badges and testimonials
+        const badgesContainer = document.getElementById('badgesContainer');
+        const testimonialContainer = document.getElementById('testimonialContainer');
+        
+        if (badgesContainer) {
+          badgesContainer.addEventListener('scroll', () => {
+            const scrollLeft = badgesContainer.scrollLeft;
+            const badgeWidth = badgesContainer.offsetWidth;
+            currentBadgeIndex = Math.round(scrollLeft / (badgeWidth + 20));
+            updateBadgeDots();
+          });
+        }
+        
+        if (testimonialContainer) {
+          testimonialContainer.addEventListener('scroll', () => {
+            const scrollLeft = testimonialContainer.scrollLeft;
+            const testimonialWidth = testimonialContainer.offsetWidth;
+            currentTestimonialIndex = Math.round(scrollLeft / (testimonialWidth + 20));
+            updateTestimonialDots();
+          });
+        }
+      });
 
-// ===== TESTIMONIALS =====
-/**
- * Load testimonials from API and populate slider
- */
-function loadTestimonialsFromAPI() {
-  const testimonialTrack = document.getElementById("testimonialTrack");
-  const testimonialNav = document.getElementById("testimonialNav");
+      // ===== PRODUCT RENDERING - UPDATED TO MATCH MATCHING_PRODUCT.HTML =====
+      function renderProducts() {
+        renderProductGrid('topPicksGrid', products.slice(0, 6));
+        renderProductGrid('newArrivalsGrid', products.slice(6, 12));
+        renderProductGrid('matchingProductsGrid', products.slice(12, 18));
+      }
 
-  if (!testimonialTrack) return;
+      function renderProductGrid(gridId, productList) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
 
-  // Clear existing content
-  testimonialTrack.innerHTML = "";
-  if (testimonialNav) {
-    testimonialNav.innerHTML = "";
-  }
+        grid.innerHTML = productList.map(product => {
+          const discount = product.mrp ? Math.round(((product.mrp - product.price) / product.mrp) * 100) : 0;
+          
+          return `
+          <a href="product.html?id=${product.id}" class="product-card">
+            ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+            <div class="product-image-container">
+              <div class="product-image" style="background-image: url('${product.image}')"></div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">${product.name}</div>
+              <div class="product-price">
+                ₹${product.price.toLocaleString()}
+                ${product.mrp ? `<span class="mrp-price">₹${product.mrp.toLocaleString()}</span>` : ''}
+                ${discount > 0 ? `<span class="discount-percent">(${discount}% OFF)</span>` : ''}
+              </div>
+              <div class="view-product">View Product <i class="fas fa-arrow-right"></i></div>
+            </div>
+          </a>
+        `}).join('');
+      }
 
-  if (!testimonials || testimonials.length === 0) {
-    // If no testimonials from API, show placeholder
-    testimonialTrack.innerHTML =
-      '<div class="testimonial-slide"><p>No testimonials available</p></div>';
-    return;
-  }
+      // ===== CART FUNCTIONS =====
+      function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
 
-  // Create slides for each testimonial
-  testimonials.forEach((testimonial, index) => {
-    const slide = document.createElement("div");
-    slide.className = "testimonial-slide";
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ ...product, quantity: 1 });
+        }
 
-    const card = document.createElement("div");
-    card.className = "testimonial-card";
+        localStorage.setItem('soulvardCart', JSON.stringify(cart));
+        updateCartCount();
+        showNotification(`${product.name} added to cart!`, 'success');
+      }
 
-    const text = document.createElement("p");
-    text.className = "testimonial-text";
-    text.textContent = testimonial.text || testimonial.content || "";
+      function updateCartCount() {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        document.querySelector('.cart-count').textContent = count;
+      }
 
-    const author = document.createElement("div");
-    author.className = "testimonial-author";
+      // ===== WISHLIST FUNCTIONS =====
+      function toggleWishlist(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
 
-    const avatar = document.createElement("div");
-    avatar.className = "author-avatar";
-    if (testimonial.avatar || testimonial.image) {
-      avatar.style.backgroundImage = `url('${
-        testimonial.avatar || testimonial.image
-      }')`;
-    }
+        const index = wishlist.findIndex(item => item.id === productId);
+        if (index > -1) {
+          wishlist.splice(index, 1);
+          showNotification(`${product.name} removed from wishlist`, 'info');
+        } else {
+          wishlist.push(product);
+          showNotification(`${product.name} added to wishlist`, 'success');
+        }
 
-    const authorInfo = document.createElement("div");
-    authorInfo.className = "author-info";
+        localStorage.setItem('soulvardWishlist', JSON.stringify(wishlist));
+        updateWishlistCount();
+      }
 
-    const authorName = document.createElement("div");
-    authorName.className = "author-name";
-    authorName.textContent =
-      testimonial.name || testimonial.author || "Anonymous";
+      function updateWishlistCount() {
+        document.querySelector('.wishlist-count').textContent = wishlist.length;
+      }
 
-    const authorTitle = document.createElement("div");
-    authorTitle.className = "author-title";
-    authorTitle.textContent = testimonial.title || testimonial.position || "";
+      // ===== UI FUNCTIONS =====
+      function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.background = type === 'success' ? 'var(--charcoal)' : 'var(--text-light)';
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateY(-20px)';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
 
-    authorInfo.appendChild(authorName);
-    authorInfo.appendChild(authorTitle);
-    author.appendChild(avatar);
-    author.appendChild(authorInfo);
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('active');
+        document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+      }
 
-    card.appendChild(text);
-    card.appendChild(author);
-    slide.appendChild(card);
-    testimonialTrack.appendChild(slide);
+      // ===== SCROLL FUNCTIONS =====
+      function setupNavScroll() {
+        window.addEventListener('scroll', function() {
+          const navbar = document.getElementById('navbar');
+          if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+          } else {
+            navbar.classList.remove('scrolled');
+          }
+        });
+      }
 
-    // Create navigation dot for each testimonial
-    if (testimonialNav) {
-      const dot = document.createElement("div");
-      dot.className =
-        index === 0 ? "testimonial-dot active" : "testimonial-dot";
-      dot.setAttribute("onclick", `currentTestimonial(${index})`);
-      testimonialNav.appendChild(dot);
-    }
-  });
-
-  // Initialize testimonial slider functionality
-  currentTestimonialIndex = 0;
-}
-
-// Coupon Code Functionality
-function copyCouponCode() {
-  const couponCode = document.getElementById("couponCode");
-  const textArea = document.createElement("textarea");
-  textArea.value = couponCode.textContent;
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textArea);
-
-  // Show notification
-  showNotification("Coupon code copied to clipboard!", "success");
-
-  // Visual feedback
-  couponCode.style.background = "var(--light-gold)";
-  setTimeout(() => {
-    couponCode.style.background = "var(--gold)";
-  }, 300);
-}
-
-// ===== PRODUCT RENDERING =====
-/**
- * Render Top Picks products from API data
- */
-function renderTopPicks() {
-  const topPicksGrid = document.getElementById("topPicksGrid");
-  if (!topPicksGrid || !topPickProducts || topPickProducts.length === 0) {
-    return;
-  }
-
-  topPicksGrid.innerHTML = "";
-  topPickProducts.forEach((product) => {
-    const imageUrl =
-      product.images && product.images.length > 0
-        ? product.images[0]
-        : "https://via.placeholder.com/300";
-    const productCard = document.createElement("div");
-    productCard.className = "product-card";
-    productCard.innerHTML = `
-      <div class="product-badge">${product.badge || "FEATURED"}</div>
-      <div class="product-image" style="background-image: url('${imageUrl}')">
-        <div class="product-overlay">
-          <div class="product-actions">
-            <button class="quick-view" onclick="openQuickView('${
-              product.name
-            }', ${product.price}, '${imageUrl}', '${
-      product.category
-    }')">QUICK VIEW</button>
-            <button class="add-to-cart" onclick="addToCart('${product.name}', ${
-      product.price
-    })">ADD TO CART</button>
-          </div>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-name">${product.name}</div>
-        <div class="product-price">₹${product.price.toLocaleString()}</div>
-      </div>
-    `;
-    topPicksGrid.appendChild(productCard);
-  });
-}
-
-/**
- * Render New Arrivals products from API data
- */
-function renderNewArrivals() {
-  const newArrivalsGrid = document.getElementById("newArrivalsGrid");
-  if (!newArrivalsGrid || !products || products.length === 0) {
-    return;
-  }
-
-  newArrivalsGrid.innerHTML = "";
-  // Show first 8 products as new arrivals
-  const newArrivals = products.slice(0, 8);
-  newArrivals.forEach((product) => {
-    const imageUrl =
-      product.images && product.images.length > 0
-        ? product.images[0]
-        : "https://via.placeholder.com/300";
-    const productCard = document.createElement("div");
-    productCard.className = "product-card";
-    productCard.innerHTML = `
-      <div class="product-badge">NEW</div>
-      <div class="product-image" style="background-image: url('${imageUrl}')">
-        <div class="product-overlay">
-          <div class="product-actions">
-            <button class="quick-view" onclick="openQuickView('${
-              product.name
-            }', ${product.price}, '${imageUrl}', '${
-      product.category
-    }')">QUICK VIEW</button>
-            <button class="add-to-cart" onclick="addToCart('${product.name}', ${
-      product.price
-    })">ADD TO CART</button>
-          </div>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-name">${product.name}</div>
-        <div class="product-price">₹${product.price.toLocaleString()}</div>
-      </div>
-    `;
-    newArrivalsGrid.appendChild(productCard);
-  });
-}
-
-// Countdown Timer
-function updateCountdown() {
-  const now = new Date();
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  endOfMonth.setHours(23, 59, 59, 999);
-
-  const timeLeft = endOfMonth - now;
-
-  if (timeLeft > 0) {
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-    document.getElementById("days").textContent = days < 10 ? "0" + days : days;
-    document.getElementById("hours").textContent =
-      hours < 10 ? "0" + hours : hours;
-    document.getElementById("minutes").textContent =
-      minutes < 10 ? "0" + minutes : minutes;
-    document.getElementById("seconds").textContent =
-      seconds < 10 ? "0" + seconds : seconds;
-  } else {
-    document.querySelector(".coupon-timer").innerHTML =
-      "<p>Offer has expired</p>";
-  }
-}
-
-// Initialize countdown
-updateCountdown();
-setInterval(updateCountdown, 1000);
-
-// Testimonial Slider Functionality - Updated for dynamic testimonials
-function showTestimonial(n) {
-  // Get slides dynamically
-  const testimonialSlides = document.querySelectorAll(".testimonial-slide");
-  const testimonialDots = document.querySelectorAll(".testimonial-dot");
-  const testimonialTrack = document.getElementById("testimonialTrack");
-
-  if (testimonialSlides.length === 0) {
-    console.warn("No testimonial slides available");
-    return;
-  }
-
-  // Validate index
-  n = (n + testimonialSlides.length) % testimonialSlides.length;
-
-  // Update active dot if dots exist
-  if (testimonialDots && testimonialDots.length > 0) {
-    testimonialDots.forEach((dot) => {
-      dot.classList.remove("active");
-    });
-    if (testimonialDots[n]) {
-      testimonialDots[n].classList.add("active");
-    }
-  }
-
-  // Move track
-  if (testimonialTrack) {
-    testimonialTrack.style.transform = `translateX(-${n * 100}%)`;
-  }
-  currentTestimonialIndex = n;
-}
-
-function nextTestimonial() {
-  const testimonialSlides = document.querySelectorAll(".testimonial-slide");
-  if (testimonialSlides.length === 0) return;
-  let nextIndex = (currentTestimonialIndex + 1) % testimonialSlides.length;
-  showTestimonial(nextIndex);
-}
-
-function prevTestimonial() {
-  const testimonialSlides = document.querySelectorAll(".testimonial-slide");
-  if (testimonialSlides.length === 0) return;
-  let prevIndex =
-    (currentTestimonialIndex - 1 + testimonialSlides.length) %
-    testimonialSlides.length;
-  showTestimonial(prevIndex);
-}
-
-function currentTestimonial(n) {
-  showTestimonial(n);
-}
-
-// Auto-advance testimonials
-setInterval(nextTestimonial, 6000);
-
-// Add animations
-const style = document.createElement("style");
-style.textContent = `
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.2); }
+      function setupSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const target = document.querySelector(targetId);
+            if (target) {
+              window.scrollTo({
+                top: target.offsetTop - 100,
+                behavior: 'smooth'
+              });
             }
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+            
+            // Close mobile menu if open
+            const menu = document.getElementById('mobileMenu');
+            if (menu.classList.contains('active')) {
+              toggleMobileMenu();
             }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-document.head.appendChild(style);
+          });
+        });
+      }
+
+      function scrollToCollections() {
+        document.getElementById('collections').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // ===== UTILITY FUNCTIONS =====
+      function formatPrice(price) {
+        return '₹' + price.toLocaleString();
+      }

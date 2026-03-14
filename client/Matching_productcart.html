@@ -1,0 +1,2155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matching Product - Soulvard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --cream: #f8f5f0;
+        --dark-cream: #e8e2d6;
+        --charcoal: #1a1a1a;
+        --dark-gray: #2a2a2a;
+        --light-gray: #f0f0f0;
+        --gold: #c9a96e;
+        --light-gold: #e8d9b9;
+        --text-dark: #333333;
+        --text-light: #777777;
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        --discount-red: #d32f2f;
+        --border-light: #e0e0e0;
+        --out-of-stock-gray: #888888;
+        --success-green: #2e7d32;
+        --her-color: #e91e63;
+        --him-color: #2196f3;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background: var(--cream);
+        color: var(--text-dark);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-weight: 500;
+      }
+
+      /* Header Banner */
+      .header-banner {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: var(--charcoal);
+        color: var(--cream);
+        padding: 0.2rem;
+        text-align: center;
+        font-size: 0.65rem;
+        letter-spacing: 1.5px;
+        z-index: 1001;
+        overflow: hidden;
+        height: 25px;
+        font-family: "Inter", sans-serif;
+        font-weight: 300;
+      }
+
+      .banner-content {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .banner-text {
+        position: absolute;
+        width: 100%;
+        opacity: 0;
+        animation: bannerSlide 15s infinite;
+      }
+
+      .banner-text:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      .banner-text:nth-child(2) {
+        animation-delay: 5s;
+      }
+
+      .banner-text:nth-child(3) {
+        animation-delay: 10s;
+      }
+
+      @keyframes bannerSlide {
+        0%,
+        20% {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        5%,
+        15% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        25%,
+        100% {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        width: 100%;
+        padding: 1.2rem 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        background: rgba(248, 245, 240, 0.98);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+        top: 25px;
+        transition: var(--transition);
+      }
+
+      nav.scrolled {
+        padding: 0.8rem 5%;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--charcoal);
+        cursor: pointer;
+        position: relative;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: var(--charcoal);
+        text-decoration: none;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        position: relative;
+        transition: all 0.3s ease;
+        font-weight: 400;
+        font-family: "Inter", sans-serif;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--charcoal);
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-links a.active {
+        color: var(--gold);
+      }
+
+      .nav-links a.active::after {
+        width: 100%;
+        background: var(--gold);
+      }
+
+      .cart-icon,
+      .wishlist-icon {
+        position: relative;
+        cursor: pointer;
+        font-size: 1.2rem;
+        margin-left: 1.5rem;
+        color: var(--charcoal);
+        transition: transform 0.3s ease;
+      }
+
+      .cart-icon:hover,
+      .wishlist-icon:hover {
+        transform: scale(1.1);
+      }
+
+      .cart-count,
+      .wishlist-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--charcoal);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        font-weight: 500;
+        font-family: "Inter", sans-serif;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      /* Mobile Menu Button */
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--charcoal);
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Matching Product Detail Container */
+      .matching-product-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 8rem 5% 6rem;
+      }
+
+      /* Breadcrumb */
+      .breadcrumb {
+        margin-bottom: 2rem;
+        font-family: "Inter", sans-serif;
+        font-size: 0.85rem;
+        color: var(--text-light);
+      }
+
+      .breadcrumb a {
+        color: var(--text-light);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .breadcrumb a:hover {
+        color: var(--charcoal);
+      }
+
+      .breadcrumb span {
+        margin: 0 0.5rem;
+      }
+
+      /* Product Layout */
+      .matching-product-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        margin-bottom: 4rem;
+      }
+
+      /* Product Gallery */
+      .matching-product-gallery {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main-image-container {
+        width: 100%;
+        height: 600px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .main-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
+        cursor: zoom-in;
+      }
+
+      .image-zoom-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .image-zoom-modal.active {
+        display: flex;
+      }
+
+      .zoomed-image {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+      }
+
+      .close-zoom {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        color: white;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .thumbnail-container {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .thumbnail {
+        width: 100px;
+        height: 100px;
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: var(--transition);
+        opacity: 0.7;
+      }
+
+      .thumbnail:hover,
+      .thumbnail.active {
+        opacity: 1;
+        border-color: var(--gold);
+      }
+
+      /* Product Info */
+      .matching-product-info {
+        padding: 0 1rem;
+      }
+
+      .product-category {
+        font-family: "Inter", sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        color: var(--text-light);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+      }
+
+      .matching-product-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2.8rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        color: var(--charcoal);
+        line-height: 1.2;
+      }
+
+      .matching-price-container {
+        margin-bottom: 2rem;
+      }
+
+      .matching-current-price {
+        font-family: "Inter", sans-serif;
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: var(--charcoal);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .matching-original-price {
+        font-size: 1.5rem;
+        color: var(--text-light);
+        text-decoration: line-through;
+        font-weight: 400;
+      }
+
+      .discount-badge {
+        background: var(--discount-red);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        font-family: "Inter", sans-serif;
+      }
+
+      .matching-product-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 3rem;
+        color: var(--text-dark);
+        font-weight: 300;
+      }
+
+      /* Dual Size Selection */
+      .dual-size-section {
+        margin-bottom: 2.5rem;
+      }
+
+      .dual-size-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+
+      .size-section-title {
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        color: var(--charcoal);
+        font-weight: 500;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .size-section-title.her i {
+        color: var(--her-color);
+      }
+
+      .size-section-title.him i {
+        color: var(--him-color);
+      }
+
+      .dual-size-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      .size-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .size-group-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .size-option {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border-light);
+        background: white;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .size-option:hover {
+        border-color: var(--charcoal);
+      }
+
+      .size-option.selected {
+        background: var(--charcoal);
+        color: white;
+        border-color: var(--charcoal);
+      }
+
+      .size-option.her.selected {
+        background: var(--her-color);
+        border-color: var(--her-color);
+      }
+
+      .size-option.him.selected {
+        background: var(--him-color);
+        border-color: var(--him-color);
+      }
+
+      .size-option.out-of-stock {
+        background: var(--light-gray);
+        color: var(--out-of-stock-gray);
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+
+      .size-option.out-of-stock:hover {
+        border-color: var(--border-light);
+      }
+
+      /* Color Selection for Matching Products */
+      .matching-color-section {
+        margin-bottom: 2.5rem;
+      }
+
+      .matching-color-label {
+        display: block;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        color: var(--charcoal);
+        font-weight: 500;
+      }
+
+      .matching-color-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .matching-color-option {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+      }
+
+      .matching-color-option:hover {
+        transform: scale(1.1);
+      }
+
+      .matching-color-option.selected {
+        border-color: var(--charcoal);
+        transform: scale(1.1);
+      }
+
+      .matching-color-option.selected::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Color Labels */
+      .matching-color-name {
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        color: var(--text-dark);
+        text-align: center;
+      }
+
+      .matching-color-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Quantity Selector */
+      .matching-quantity-section {
+        margin-bottom: 2.5rem;
+      }
+
+      .matching-quantity-label {
+        display: block;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        color: var(--charcoal);
+        font-weight: 500;
+      }
+
+      .matching-quantity-selector {
+        display: flex;
+        align-items: center;
+        width: 150px;
+        border: 1px solid var(--border-light);
+        background: white;
+      }
+
+      .matching-quantity-btn {
+        width: 50px;
+        height: 50px;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--charcoal);
+      }
+
+      .matching-quantity-btn:hover {
+        background: var(--light-gray);
+      }
+
+      .matching-quantity-input {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        border: none;
+        border-left: 1px solid var(--border-light);
+        border-right: 1px solid var(--border-light);
+        font-family: "Inter", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--charcoal);
+      }
+
+      .matching-quantity-input:focus {
+        outline: none;
+      }
+
+      /* Action Buttons */
+      .matching-action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .matching-add-to-cart-btn,
+      .matching-buy-now-btn {
+        flex: 1;
+        padding: 1.2rem 2rem;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        border: none;
+      }
+
+      .matching-add-to-cart-btn {
+        background: var(--charcoal);
+        color: white;
+        border: 1px solid var(--charcoal);
+      }
+
+      .matching-add-to-cart-btn:hover {
+        background: transparent;
+        color: var(--charcoal);
+      }
+
+      .matching-buy-now-btn {
+        background: var(--gold);
+        color: var(--charcoal);
+        border: 1px solid var(--gold);
+      }
+
+      .matching-buy-now-btn:hover {
+        background: transparent;
+        color: var(--charcoal);
+      }
+
+      .matching-wishlist-btn {
+        width: 60px;
+        height: 60px;
+        background: white;
+        border: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1.2rem;
+        color: var(--charcoal);
+      }
+
+      .matching-wishlist-btn:hover {
+        color: var(--discount-red);
+        border-color: var(--discount-red);
+      }
+
+      .matching-wishlist-btn.active {
+        color: var(--discount-red);
+        border-color: var(--discount-red);
+      }
+
+      /* Product Details */
+      .matching-product-details-section {
+        margin-top: 3rem;
+        border-top: 1px solid var(--border-light);
+        padding-top: 3rem;
+      }
+
+      .matching-details-tabs {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .matching-detail-tab {
+        padding: 1rem 0;
+        background: transparent;
+        border: none;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-light);
+        cursor: pointer;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .matching-detail-tab.active {
+        color: var(--charcoal);
+      }
+
+      .matching-detail-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--charcoal);
+      }
+
+      .matching-tab-content {
+        display: none;
+      }
+
+      .matching-tab-content.active {
+        display: block;
+      }
+
+      .matching-details-list {
+        list-style: none;
+        margin-bottom: 2rem;
+      }
+
+      .matching-details-list li {
+        margin-bottom: 1rem;
+        display: flex;
+      }
+
+      .matching-details-list strong {
+        font-family: "Inter", sans-serif;
+        min-width: 150px;
+        font-weight: 500;
+        color: var(--charcoal);
+      }
+
+      .matching-details-list span {
+        color: var(--text-dark);
+      }
+
+      /* Mobile Menu */
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--cream);
+        z-index: 999;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .mobile-menu.active {
+        display: flex;
+      }
+
+      .mobile-links {
+        list-style: none;
+        text-align: center;
+      }
+
+      .mobile-links li {
+        margin: 1.5rem 0;
+      }
+
+      .mobile-links a {
+        font-family: "Inter", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+        color: var(--charcoal);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-weight: 400;
+      }
+
+      .mobile-links a:hover {
+        color: var(--text-light);
+      }
+
+      .close-menu {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: var(--charcoal);
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Notification */
+      .notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 1.2rem 2rem;
+        background: var(--charcoal);
+        color: white;
+        border-radius: 0;
+        z-index: 3000;
+        animation: slideIn 0.3s ease;
+        font-weight: 500;
+        letter-spacing: 1px;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        border-left: 3px solid var(--gold);
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Footer */
+      footer {
+        background: var(--charcoal);
+        color: white;
+        padding: 6rem 5% 4rem;
+        margin-top: 6rem;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4rem;
+        margin-bottom: 4rem;
+      }
+
+      .footer-column {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .footer-column h3 {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        margin-bottom: 2rem;
+        font-weight: 500;
+        color: white;
+        text-transform: uppercase;
+        font-family: "Inter", sans-serif;
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-links li {
+        margin-bottom: 1rem;
+      }
+
+      .footer-links a {
+        font-family: "Cormorant Garamond", serif;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        font-weight: 300;
+        display: inline-block;
+      }
+
+      .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 1.2rem;
+        margin-top: 2rem;
+      }
+
+      .social-icons a {
+        color: white;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .social-icons a:hover {
+        color: var(--charcoal);
+        background: white;
+        transform: translateY(-3px);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 4rem;
+      }
+
+      .footer-bottom p {
+        font-family: "Inter", sans-serif;
+        opacity: 0.7;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+      }
+
+      .policy-links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      .policy-links a {
+        font-family: "Inter", sans-serif;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: opacity 0.3s ease;
+        font-weight: 300;
+        white-space: nowrap;
+      }
+
+      .policy-links a:hover {
+        color: white;
+      }
+
+      /* RESPONSIVE DESIGN */
+      @media (max-width: 1200px) {
+        .main-image-container {
+          height: 500px;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .matching-product-layout {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        .main-image-container {
+          height: 450px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .matching-product-container {
+          padding: 7rem 5% 4rem;
+        }
+
+        .matching-product-title {
+          font-size: 2.2rem;
+        }
+
+        .matching-current-price {
+          font-size: 1.8rem;
+        }
+
+        .matching-action-buttons {
+          flex-direction: column;
+        }
+
+        .thumbnail {
+          width: 80px;
+          height: 80px;
+        }
+
+        .dual-size-options {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .matching-product-title {
+          font-size: 1.8rem;
+        }
+
+        .matching-current-price {
+          font-size: 1.6rem;
+        }
+
+        .size-option {
+          width: 40px;
+          height: 40px;
+        }
+
+        .thumbnail-container {
+          overflow-x: auto;
+          padding-bottom: 0.5rem;
+        }
+
+        .thumbnail {
+          flex-shrink: 0;
+        }
+
+        .matching-details-list li {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .matching-details-list strong {
+          min-width: auto;
+        }
+
+        .matching-color-item {
+          margin-bottom: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header Banner -->
+    <div class="header-banner">
+      <div class="banner-content">
+        <div class="banner-text">FREE SHIPPING ON ORDERS OVER ₹500</div>
+        <div class="banner-text">NEW COLLECTION LAUNCHING SOON</div>
+        <div class="banner-text">EXCLUSIVE OFFERS FOR SUBSCRIBERS</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+      <div class="logo" onclick="window.location.href = 'index.html'">
+        SOULVARD
+      </div>
+
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <ul class="nav-links">
+        <li><a href="index.html">HOME</a></li>
+        <!-- <li><a href="collection.html">COLLECTIONS</a></li>
+            <li><a href="Matching_Product.html" class="active">MATCHING PRODUCTS</a></li>
+            <li><a href="custome_product.html">CUSTOM PRODUCTS</a></li>
+            <li><a href="index.html#contact">CONTACT</a></li> -->
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#" class="wishlist-icon" onclick="toggleWishlist()">
+          <i class="far fa-heart"></i>
+          <div class="wishlist-count">0</div>
+        </a>
+        <a href="cart.html" class="cart-icon">
+          <i class="fas fa-shopping-bag"></i>
+          <div class="cart-count">0</div>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="close-menu" onclick="toggleMobileMenu()">&times;</button>
+      <ul class="mobile-links">
+        <li><a href="index.html" onclick="toggleMobileMenu()">HOME</a></li>
+        <li>
+          <a href="collection.html" onclick="toggleMobileMenu()">COLLECTIONS</a>
+        </li>
+        <li>
+          <a href="Matching_Product.html" onclick="toggleMobileMenu()"
+            >MATCHING PRODUCTS</a
+          >
+        </li>
+        <li>
+          <a href="custome_product.html" onclick="toggleMobileMenu()"
+            >CUSTOMIZE</a
+          >
+        </li>
+        <li><a href="Custom.html" onclick="toggleMobileMenu()">CUSTOM</a></li>
+        <li><a href="cart.html" onclick="toggleMobileMenu()">CART</a></li>
+        <li>
+          <a href="whishlist.html" onclick="toggleMobileMenu()">WISHLIST</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Matching Product Detail Container -->
+    <div class="matching-product-container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="collection.html">Collections</a>
+        <span>/</span>
+        <a href="Matching_Product.html">Matching Products</a>
+        <span>/</span>
+        <span>Duo Moqueen x Sally Tees</span>
+      </div>
+
+      <!-- Product Layout -->
+      <div class="matching-product-layout">
+        <!-- Product Gallery -->
+        <div class="matching-product-gallery">
+          <div class="main-image-container">
+            <div
+              class="main-image"
+              id="mainImage"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80&quot;);
+              "
+            ></div>
+          </div>
+
+          <div class="thumbnail-container" id="thumbnailContainer">
+            <!-- Thumbnails will be generated dynamically -->
+          </div>
+        </div>
+
+        <!-- Image Zoom Modal -->
+        <div class="image-zoom-modal" id="imageZoomModal">
+          <button class="close-zoom" onclick="closeZoom()">&times;</button>
+          <img src="" alt="" class="zoomed-image" id="zoomedImage" />
+        </div>
+
+        <!-- Product Info -->
+        <div class="matching-product-info">
+          <div class="product-category">Couple T-Shirts</div>
+          <h1 class="matching-product-title">Duo Moqueen x Sally Tees</h1>
+
+          <div class="matching-price-container">
+            <div class="matching-current-price">
+              ₹3,599
+              <span class="matching-original-price">₹4,999</span>
+              <span class="discount-badge">28% OFF</span>
+            </div>
+          </div>
+
+          <p class="matching-product-description">
+            A perfectly coordinated set for couples who want to express their
+            connection through style. Premium cotton blend with breathable
+            fabric that ensures all-day comfort. Features unique complementary
+            designs that tell a story when worn together.
+          </p>
+
+          <!-- Color Selection -->
+          <div class="matching-color-section">
+            <label class="matching-color-label">Select Color</label>
+            <div class="matching-color-options" id="colorOptions">
+              <!-- Color options will be generated dynamically -->
+            </div>
+          </div>
+
+          <!-- Dual Size Selection -->
+          <div class="dual-size-section">
+            <div class="dual-size-header">
+              <div class="size-section-title her">
+                <i class="fas fa-female"></i> Size for Her
+              </div>
+              <div class="size-section-title him">
+                <i class="fas fa-male"></i> Size for Him
+              </div>
+            </div>
+
+            <div class="dual-size-options">
+              <div class="size-group">
+                <div class="size-group-options" id="sizeOptionsHer">
+                  <!-- Size options for Her will be generated dynamically -->
+                </div>
+              </div>
+
+              <div class="size-group">
+                <div class="size-group-options" id="sizeOptionsHim">
+                  <!-- Size options for Him will be generated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="matching-quantity-section">
+            <label class="matching-quantity-label">Quantity (Sets)</label>
+            <div class="matching-quantity-selector">
+              <button
+                class="matching-quantity-btn"
+                onclick="decreaseQuantity()"
+              >
+                -
+              </button>
+              <input
+                type="number"
+                class="matching-quantity-input"
+                id="quantityInput"
+                value="1"
+                min="1"
+                max="10"
+              />
+              <button
+                class="matching-quantity-btn"
+                onclick="increaseQuantity()"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="matching-action-buttons">
+            <button
+              class="matching-add-to-cart-btn"
+              onclick="addMatchingToCart()"
+            >
+              <i class="fas fa-shopping-bag" style="margin-right: 0.5rem"></i>
+              ADD TO CART
+            </button>
+            <button class="matching-buy-now-btn" onclick="buyMatchingNow()">
+              <i class="fas fa-bolt" style="margin-right: 0.5rem"></i> BUY NOW
+            </button>
+          </div>
+
+          <button
+            class="matching-wishlist-btn"
+            id="wishlistBtn"
+            onclick="toggleProductWishlist()"
+          >
+            <i class="far fa-heart"></i>
+          </button>
+
+          <!-- Product Details -->
+          <div class="matching-product-details-section">
+            <div class="matching-details-tabs">
+              <button class="matching-detail-tab active" data-tab="description">
+                Description
+              </button>
+              <button class="matching-detail-tab" data-tab="details">
+                Product Details
+              </button>
+              <button class="matching-detail-tab" data-tab="shipping">
+                Shipping & Returns
+              </button>
+              <button class="matching-detail-tab" data-tab="sizing">
+                Size Guide
+              </button>
+            </div>
+
+            <div class="matching-tab-content active" id="descriptionTab">
+              <p>
+                Our Duo Moqueen x Sally Tees are more than just matching outfits
+                - they're a statement of connection. Designed with premium 100%
+                organic cotton, these tees offer exceptional comfort and
+                durability.
+              </p>
+              <p>
+                The unique artwork on each tee tells a complementary story - one
+                piece is incomplete without the other, much like the perfect
+                relationship. The Moqueen design features subtle royal elements,
+                while the Sally design incorporates playful patterns that
+                complete the narrative.
+              </p>
+            </div>
+
+            <div class="matching-tab-content" id="detailsTab">
+              <ul class="matching-details-list">
+                <li>
+                  <strong>Material:</strong> <span>100% Organic Cotton</span>
+                </li>
+                <li><strong>Fit:</strong> <span>Regular Fit</span></li>
+                <li>
+                  <strong>Care:</strong>
+                  <span>Machine wash cold, tumble dry low</span>
+                </li>
+                <li><strong>Origin:</strong> <span>Made in India</span></li>
+                <li><strong>Weight:</strong> <span>180 GSM</span></li>
+                <li>
+                  <strong>Sustainability:</strong>
+                  <span>Eco-friendly dyes, sustainable packaging</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="matching-tab-content" id="shippingTab">
+              <p>
+                <strong>Shipping:</strong> Free shipping on orders over ₹500.
+                Delivery within 5-7 business days.
+              </p>
+              <p>
+                <strong>Returns:</strong> Easy 30-day return policy. Items must
+                be unworn with original tags.
+              </p>
+              <p>
+                <strong>Customization:</strong> This product is part of our
+                matching collection but can be customized upon request.
+              </p>
+            </div>
+
+            <div class="matching-tab-content" id="sizingTab">
+              <h4>Her Size Guide (in inches)</h4>
+              <ul class="matching-details-list">
+                <li>
+                  <strong>XS:</strong> <span>Bust: 32, Waist: 26, Hip: 35</span>
+                </li>
+                <li>
+                  <strong>S:</strong> <span>Bust: 34, Waist: 28, Hip: 37</span>
+                </li>
+                <li>
+                  <strong>M:</strong> <span>Bust: 36, Waist: 30, Hip: 39</span>
+                </li>
+                <li>
+                  <strong>L:</strong> <span>Bust: 38, Waist: 32, Hip: 41</span>
+                </li>
+                <li>
+                  <strong>XL:</strong> <span>Bust: 40, Waist: 34, Hip: 43</span>
+                </li>
+              </ul>
+
+              <h4 style="margin-top: 2rem">Him Size Guide (in inches)</h4>
+              <ul class="matching-details-list">
+                <li>
+                  <strong>S:</strong> <span>Chest: 36-38, Waist: 30-32</span>
+                </li>
+                <li>
+                  <strong>M:</strong> <span>Chest: 38-40, Waist: 32-34</span>
+                </li>
+                <li>
+                  <strong>L:</strong> <span>Chest: 40-42, Waist: 34-36</span>
+                </li>
+                <li>
+                  <strong>XL:</strong> <span>Chest: 42-44, Waist: 36-38</span>
+                </li>
+                <li>
+                  <strong>XXL:</strong> <span>Chest: 44-46, Waist: 38-40</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+      <div class="footer-content">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <h3>SOULVARD</h3>
+            <p
+              style="
+                opacity: 0.8;
+                margin-bottom: 1.5rem;
+                font-weight: 300;
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 1.1rem;
+              "
+            >
+              Timeless elegance, crafted for you. Premium clothing for the
+              modern soul.
+            </p>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://wa.me/919876543210" target="_blank"
+                ><i class="fab fa-whatsapp"></i
+              ></a>
+              <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3>QUICK LINKS</h3>
+            <ul class="footer-links">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="collection.html">Collections</a></li>
+              <li><a href="Matching_Product.html">Matching Products</a></li>
+              <li><a href="custome_product.html">Custom Products</a></li>
+              <li><a href="#">Track Order</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h3>CONTACT US</h3>
+            <div style="margin-top: 1.5rem">
+              <p
+                style="
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                  opacity: 0.8;
+                  margin-bottom: 1rem;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 1rem;
+                "
+              >
+                <i
+                  class="fas fa-phone"
+                  style="
+                    color: var(--gold);
+                    width: 20px;
+                    font-size: 1rem;
+                    margin-top: 0.2rem;
+                  "
+                ></i>
+                +91 98765 43210
+              </p>
+              <p
+                style="
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                  opacity: 0.8;
+                  margin-bottom: 1rem;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 1rem;
+                "
+              >
+                <i
+                  class="fas fa-envelope"
+                  style="
+                    color: var(--gold);
+                    width: 20px;
+                    font-size: 1rem;
+                    margin-top: 0.2rem;
+                  "
+                ></i>
+                hello@soulvard.com
+              </p>
+              <p
+                style="
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                  opacity: 0.8;
+                  margin-bottom: 1rem;
+                  font-weight: 300;
+                  font-size: 1.1rem;
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 1rem;
+                "
+              >
+                <i
+                  class="fas fa-map-marker-alt"
+                  style="
+                    color: var(--gold);
+                    width: 20px;
+                    font-size: 1rem;
+                    margin-top: 0.2rem;
+                  "
+                ></i>
+                Mumbai, India
+              </p>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3>NEWSLETTER</h3>
+            <p
+              style="
+                opacity: 0.8;
+                margin-bottom: 1.5rem;
+                font-weight: 300;
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 1.1rem;
+              "
+            >
+              Subscribe for exclusive offers, styling tips, and updates.
+            </p>
+            <div style="margin-top: 1.5rem">
+              <input
+                type="email"
+                id="newsletterEmail"
+                class="sort-select"
+                placeholder="Your email address"
+                style="width: 100%; margin-bottom: 1rem"
+              />
+              <button
+                class="sort-select"
+                onclick="subscribeNewsletter()"
+                style="
+                  width: 100%;
+                  background: white;
+                  color: var(--charcoal);
+                  cursor: pointer;
+                "
+              >
+                SUBSCRIBE
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>© 2025 SOULVARD. ALL RIGHTS RESERVED.</p>
+          <div class="policy-links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms-of-use.html">Terms of Use</a>
+            <a href="refund-policy.html">Refund Policy</a>
+            <a href="shipping-policy.html">Shipping Policy</a>
+            <a href="faq.html">FAQ</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Matching Product Data with Color Variants and Dual Sizes
+      const matchingProduct = {
+        id: 1,
+        name: "Duo Moqueen x Sally Tees",
+        price: 3599,
+        mrp: 4999,
+        category: "couple-tshirts",
+        colors: [
+          {
+            name: "Black",
+            value: "black",
+            hex: "#1a1a1a",
+            images: [
+              "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1513531926349-466f15ec8cc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+            ],
+          },
+          {
+            name: "White",
+            value: "white",
+            hex: "#ffffff",
+            images: [
+              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1513531926349-466f15ec8cc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+            ],
+          },
+          {
+            name: "Navy Blue",
+            value: "navy",
+            hex: "#003366",
+            images: [
+              "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+            ],
+          },
+          {
+            name: "Grey",
+            value: "grey",
+            hex: "#808080",
+            images: [
+              "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+              "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
+            ],
+          },
+        ],
+        sizesHer: [
+          { size: "XS", inStock: true },
+          { size: "S", inStock: true },
+          { size: "M", inStock: true },
+          { size: "L", inStock: true },
+          { size: "XL", inStock: false },
+        ],
+        sizesHim: [
+          { size: "S", inStock: true },
+          { size: "M", inStock: true },
+          { size: "L", inStock: true },
+          { size: "XL", inStock: true },
+          { size: "XXL", inStock: false },
+        ],
+      };
+
+      // State variables
+      let selectedColor = matchingProduct.colors[0]; // Default to first color
+      let selectedSizeHer = "";
+      let selectedSizeHim = "";
+      let quantity = 1;
+      let cartCount = parseInt(localStorage.getItem("cartCount")) || 0;
+      let wishlistCount = parseInt(localStorage.getItem("wishlistCount")) || 0;
+      let isProductInWishlist =
+        localStorage.getItem("productInWishlist") === "true";
+
+      // Initialize the page
+      document.addEventListener("DOMContentLoaded", function () {
+        updateCartCount();
+        updateWishlistCount();
+        setupEventListeners();
+        setupNavScroll();
+        updateProductWishlistButton();
+
+        // Generate color options
+        generateColorOptions();
+
+        // Generate size options for Her
+        generateSizeOptions("her");
+
+        // Generate size options for Him
+        generateSizeOptions("him");
+
+        // Initialize thumbnails with first color's images
+        updateThumbnails();
+
+        // Set default sizes
+        const defaultSizeHer = matchingProduct.sizesHer.find(
+          (size) => size.inStock,
+        );
+        const defaultSizeHim = matchingProduct.sizesHim.find(
+          (size) => size.inStock,
+        );
+
+        if (defaultSizeHer) {
+          selectedSizeHer = defaultSizeHer.size;
+          document
+            .querySelector(
+              `.size-option.her[data-size="${defaultSizeHer.size}"]`,
+            )
+            .classList.add("selected");
+        }
+
+        if (defaultSizeHim) {
+          selectedSizeHim = defaultSizeHim.size;
+          document
+            .querySelector(
+              `.size-option.him[data-size="${defaultSizeHim.size}"]`,
+            )
+            .classList.add("selected");
+        }
+      });
+
+      // Generate color options
+      function generateColorOptions() {
+        const colorOptionsContainer = document.getElementById("colorOptions");
+        colorOptionsContainer.innerHTML = "";
+
+        matchingProduct.colors.forEach((color) => {
+          const colorItem = document.createElement("div");
+          colorItem.className = "matching-color-item";
+
+          const colorOption = document.createElement("div");
+          colorOption.className = `matching-color-option ${color.value === selectedColor.value ? "selected" : ""}`;
+          colorOption.style.backgroundColor = color.hex;
+          colorOption.setAttribute("data-color", color.value);
+
+          // Add border for white color to make it visible
+          if (color.value === "white") {
+            colorOption.style.border = "1px solid #e0e0e0";
+          }
+
+          colorOption.addEventListener("click", () => selectColor(color));
+
+          const colorName = document.createElement("div");
+          colorName.className = "matching-color-name";
+          colorName.textContent = color.name;
+
+          colorItem.appendChild(colorOption);
+          colorItem.appendChild(colorName);
+          colorOptionsContainer.appendChild(colorItem);
+        });
+      }
+
+      // Generate size options
+      function generateSizeOptions(type) {
+        const sizeOptionsContainer = document.getElementById(
+          `sizeOptions${type.charAt(0).toUpperCase() + type.slice(1)}`,
+        );
+        sizeOptionsContainer.innerHTML = "";
+
+        const sizes =
+          type === "her" ? matchingProduct.sizesHer : matchingProduct.sizesHim;
+
+        sizes.forEach((size) => {
+          const sizeOption = document.createElement("div");
+          sizeOption.className = `size-option ${type} ${!size.inStock ? "out-of-stock" : ""}`;
+          sizeOption.textContent = size.size;
+          sizeOption.setAttribute("data-size", size.size);
+
+          if (size.inStock) {
+            sizeOption.addEventListener("click", () =>
+              selectSize(type, size.size),
+            );
+          }
+
+          sizeOptionsContainer.appendChild(sizeOption);
+        });
+      }
+
+      // Select color
+      function selectColor(color) {
+        selectedColor = color;
+
+        // Update UI
+        document
+          .querySelectorAll(".matching-color-option")
+          .forEach((opt) => opt.classList.remove("selected"));
+        event.currentTarget.classList.add("selected");
+
+        // Update product images
+        updateProductImages();
+
+        // Show notification
+        showNotification(`Color changed to ${color.name}`);
+      }
+
+      // Select size
+      function selectSize(type, size) {
+        if (type === "her") {
+          selectedSizeHer = size;
+          document
+            .querySelectorAll(".size-option.her")
+            .forEach((opt) => opt.classList.remove("selected"));
+        } else {
+          selectedSizeHim = size;
+          document
+            .querySelectorAll(".size-option.him")
+            .forEach((opt) => opt.classList.remove("selected"));
+        }
+
+        event.currentTarget.classList.add("selected");
+      }
+
+      // Update product images based on selected color
+      function updateProductImages() {
+        // Update main image
+        const mainImage = document.getElementById("mainImage");
+        mainImage.style.backgroundImage = `url('${selectedColor.images[0]}')`;
+
+        // Update thumbnails
+        updateThumbnails();
+
+        // Update zoom image if modal is open
+        const zoomedImage = document.getElementById("zoomedImage");
+        if (zoomedImage.src) {
+          zoomedImage.src = selectedColor.images[0];
+        }
+      }
+
+      // Update thumbnails
+      function updateThumbnails() {
+        const thumbnailContainer =
+          document.getElementById("thumbnailContainer");
+        thumbnailContainer.innerHTML = "";
+
+        selectedColor.images.forEach((image, index) => {
+          const thumbnail = document.createElement("div");
+          thumbnail.className = `thumbnail ${index === 0 ? "active" : ""}`;
+          thumbnail.style.backgroundImage = `url('${image}')`;
+          thumbnail.setAttribute("data-image", image);
+
+          thumbnail.addEventListener("click", function () {
+            const imageUrl = this.getAttribute("data-image");
+            document.getElementById("mainImage").style.backgroundImage =
+              `url('${imageUrl}')`;
+
+            // Update active thumbnail
+            document
+              .querySelectorAll(".thumbnail")
+              .forEach((t) => t.classList.remove("active"));
+            this.classList.add("active");
+          });
+
+          thumbnailContainer.appendChild(thumbnail);
+        });
+      }
+
+      // Set up event listeners
+      function setupEventListeners() {
+        // Tab switching
+        document.querySelectorAll(".matching-detail-tab").forEach((tab) => {
+          tab.addEventListener("click", function () {
+            const tabId = this.getAttribute("data-tab");
+
+            // Update active tab
+            document
+              .querySelectorAll(".matching-detail-tab")
+              .forEach((t) => t.classList.remove("active"));
+            this.classList.add("active");
+
+            // Show corresponding content
+            document
+              .querySelectorAll(".matching-tab-content")
+              .forEach((content) => content.classList.remove("active"));
+            document.getElementById(tabId + "Tab").classList.add("active");
+          });
+        });
+
+        // Image zoom
+        document
+          .getElementById("mainImage")
+          .addEventListener("click", function () {
+            const currentImage = this.style.backgroundImage
+              .replace('url("', "")
+              .replace('")', "");
+            document.getElementById("zoomedImage").src = currentImage;
+            document.getElementById("imageZoomModal").classList.add("active");
+            document.body.style.overflow = "hidden";
+          });
+
+        // Quantity input
+        document
+          .getElementById("quantityInput")
+          .addEventListener("change", function () {
+            quantity = parseInt(this.value) || 1;
+            if (quantity < 1) quantity = 1;
+            if (quantity > 10) quantity = 10;
+            this.value = quantity;
+          });
+      }
+
+      // Quantity controls
+      function decreaseQuantity() {
+        if (quantity > 1) {
+          quantity--;
+          document.getElementById("quantityInput").value = quantity;
+        }
+      }
+
+      function increaseQuantity() {
+        if (quantity < 10) {
+          quantity++;
+          document.getElementById("quantityInput").value = quantity;
+        }
+      }
+
+      // Add matching product to cart
+      function addMatchingToCart() {
+        if (!selectedSizeHer || !selectedSizeHim) {
+          showNotification("Please select sizes for both Her and Him");
+          return;
+        }
+
+        // Check if selected sizes are in stock
+        const sizeDataHer = matchingProduct.sizesHer.find(
+          (s) => s.size === selectedSizeHer,
+        );
+        const sizeDataHim = matchingProduct.sizesHim.find(
+          (s) => s.size === selectedSizeHim,
+        );
+
+        if (!sizeDataHer || !sizeDataHer.inStock) {
+          showNotification("Selected size for Her is out of stock");
+          return;
+        }
+
+        if (!sizeDataHim || !sizeDataHim.inStock) {
+          showNotification("Selected size for Him is out of stock");
+          return;
+        }
+
+        // Create cart item for matching product
+        const cartItem = {
+          productId: matchingProduct.id,
+          name: matchingProduct.name,
+          price: matchingProduct.price,
+          sizeHer: selectedSizeHer,
+          sizeHim: selectedSizeHim,
+          color: selectedColor.name,
+          colorValue: selectedColor.value,
+          quantity: quantity,
+          image: selectedColor.images[0],
+          total: matchingProduct.price * quantity,
+          type: "matching",
+        };
+
+        // Get existing cart from localStorage
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Check if item already exists in cart (same product, sizes, and color)
+        const existingItemIndex = cart.findIndex(
+          (item) =>
+            item.productId === cartItem.productId &&
+            item.sizeHer === cartItem.sizeHer &&
+            item.sizeHim === cartItem.sizeHim &&
+            item.colorValue === cartItem.colorValue,
+        );
+
+        if (existingItemIndex !== -1) {
+          // Update quantity if item exists
+          cart[existingItemIndex].quantity += quantity;
+          cart[existingItemIndex].total =
+            cart[existingItemIndex].price * cart[existingItemIndex].quantity;
+        } else {
+          // Add new item
+          cart.push(cartItem);
+        }
+
+        // Save to localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Update cart count
+        cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+        localStorage.setItem("cartCount", cartCount);
+        updateCartCount();
+
+        // Show success message
+        showNotification(
+          `${matchingProduct.name} (${selectedColor.name}, Her: ${selectedSizeHer}, Him: ${selectedSizeHim}) added to cart!`,
+        );
+      }
+
+      // Buy now for matching product
+      function buyMatchingNow() {
+        if (!selectedSizeHer || !selectedSizeHim) {
+          showNotification("Please select sizes for both Her and Him");
+          return;
+        }
+
+        const sizeDataHer = matchingProduct.sizesHer.find(
+          (s) => s.size === selectedSizeHer,
+        );
+        const sizeDataHim = matchingProduct.sizesHim.find(
+          (s) => s.size === selectedSizeHim,
+        );
+
+        if (!sizeDataHer || !sizeDataHer.inStock) {
+          showNotification("Selected size for Her is out of stock");
+          return;
+        }
+
+        if (!sizeDataHim || !sizeDataHim.inStock) {
+          showNotification("Selected size for Him is out of stock");
+          return;
+        }
+
+        // Create order item
+        const orderItem = {
+          productId: matchingProduct.id,
+          name: matchingProduct.name,
+          price: matchingProduct.price,
+          sizeHer: selectedSizeHer,
+          sizeHim: selectedSizeHim,
+          color: selectedColor.name,
+          colorValue: selectedColor.value,
+          quantity: quantity,
+          image: selectedColor.images[0],
+          total: matchingProduct.price * quantity,
+          type: "matching",
+        };
+
+        // Store order for checkout
+        localStorage.setItem("checkoutItem", JSON.stringify(orderItem));
+
+        // Redirect to checkout page
+        showNotification("Redirecting to checkout...");
+        setTimeout(() => {
+          window.location.href = "checkout.html";
+        }, 1000);
+      }
+
+      // Toggle product wishlist
+      function toggleProductWishlist() {
+        const wishlistBtn = document.getElementById("wishlistBtn");
+        const icon = wishlistBtn.querySelector("i");
+
+        if (isProductInWishlist) {
+          // Remove from wishlist
+          isProductInWishlist = false;
+          icon.className = "far fa-heart";
+          wishlistBtn.classList.remove("active");
+          wishlistCount--;
+
+          // Remove from localStorage
+          let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+          wishlist = wishlist.filter(
+            (item) => item.productId !== matchingProduct.id,
+          );
+          localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+          showNotification("Removed from wishlist");
+        } else {
+          // Add to wishlist
+          isProductInWishlist = true;
+          icon.className = "fas fa-heart";
+          wishlistBtn.classList.add("active");
+          wishlistCount++;
+
+          // Add to localStorage
+          let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+          const wishlistItem = {
+            productId: matchingProduct.id,
+            name: matchingProduct.name,
+            price: matchingProduct.price,
+            color: selectedColor.name,
+            image: selectedColor.images[0],
+            type: "matching",
+          };
+          wishlist.push(wishlistItem);
+          localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+          showNotification("Added to wishlist!");
+        }
+
+        localStorage.setItem("productInWishlist", isProductInWishlist);
+        localStorage.setItem("wishlistCount", wishlistCount);
+        updateWishlistCount();
+      }
+
+      // Update product wishlist button state
+      function updateProductWishlistButton() {
+        const wishlistBtn = document.getElementById("wishlistBtn");
+        const icon = wishlistBtn.querySelector("i");
+
+        if (isProductInWishlist) {
+          icon.className = "fas fa-heart";
+          wishlistBtn.classList.add("active");
+        } else {
+          icon.className = "far fa-heart";
+          wishlistBtn.classList.remove("active");
+        }
+      }
+
+      // Toggle wishlist (for header)
+      function toggleWishlist() {
+        // This would toggle the main wishlist
+        showNotification("Viewing wishlist...");
+        setTimeout(() => {
+          window.location.href = "wishlist.html";
+        }, 500);
+      }
+
+      // Show notification
+      function showNotification(message) {
+        const notification = document.createElement("div");
+        notification.className = "notification";
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.opacity = "0";
+          notification.style.transform = "translateY(-20px)";
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
+      // Update cart count display
+      function updateCartCount() {
+        document.querySelector(".cart-count").textContent = cartCount;
+      }
+
+      // Update wishlist count display
+      function updateWishlistCount() {
+        document.querySelector(".wishlist-count").textContent = wishlistCount;
+      }
+
+      // Subscribe to newsletter
+      function subscribeNewsletter() {
+        const emailInput = document.getElementById("newsletterEmail");
+        const email = emailInput.value;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email && emailRegex.test(email)) {
+          showNotification("Thank you for subscribing to our newsletter!");
+          emailInput.value = "";
+        } else {
+          showNotification("Please enter a valid email address.");
+        }
+      }
+
+      // Close image zoom
+      function closeZoom() {
+        document.getElementById("imageZoomModal").classList.remove("active");
+        document.body.style.overflow = "auto";
+      }
+
+      // Toggle mobile menu
+      function toggleMobileMenu() {
+        const menu = document.getElementById("mobileMenu");
+        menu.classList.toggle("active");
+        document.body.style.overflow = menu.classList.contains("active")
+          ? "hidden"
+          : "auto";
+      }
+
+      // Navbar scroll effect
+      function setupNavScroll() {
+        window.addEventListener("scroll", function () {
+          const navbar = document.getElementById("navbar");
+          if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+          } else {
+            navbar.classList.remove("scrolled");
+          }
+        });
+      }
+
+      // Close zoom modal with ESC key
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeZoom();
+        }
+      });
+
+      // Close zoom modal when clicking outside image
+      document
+        .getElementById("imageZoomModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeZoom();
+          }
+        });
+    </script>
+  </body>
+</html>

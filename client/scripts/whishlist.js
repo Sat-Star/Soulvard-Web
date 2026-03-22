@@ -1,83 +1,71 @@
-// Sample wishlist data matching the premium design
-const sampleWishlistItems = [
-  {
-    id: 1,
-    name: "Premium Leather Journal Set",
-    price: 3599,
-    mrp: 4999,
-    category: "Writing",
-    image:
-      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    badge: "PREMIUM",
-    inStock: true,
-  },
-  {
-    id: 2,
-    name: "Artisanal Fountain Pen Collection",
-    price: 8599,
-    mrp: 9999,
-    category: "Writing",
-    image:
-      "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    badge: "LIMITED",
-    inStock: false,
-  },
-  {
-    id: 3,
-    name: "Handcrafted Wooden Desk Organizer",
-    price: 6799,
-    category: "Desk Accessories",
-    image:
-      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    badge: "ARTISAN",
-    inStock: true,
-  },
-  {
-    id: 4,
-    name: "Premium Writing Paper Collection",
-    price: 2599,
-    mrp: 3299,
-    category: "Writing",
-    image:
-      "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    badge: "NEW",
-    inStock: true,
-  },
-  {
-    id: 5,
-    name: "Classic Brass Letter Opener",
-    price: 1899,
-    category: "Desk Accessories",
-    image:
-      "https://images.unsplash.com/photo-1583484963886-cfe2bff2945f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    badge: "CLASSIC",
-    inStock: true,
-  },
-  {
-    id: 6,
-    name: "Vintage Style Desk Lamp",
-    price: 7899,
-    mrp: 9999,
-    category: "Desk Accessories",
-    image:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    badge: "SOLD OUT",
-    inStock: false,
-  },
-];
+// Wishlist data - loaded from API
+let wishlistItems = [];
 
-// Initialize wishlist from localStorage or create with sample data
-let wishlistItems =
-  JSON.parse(localStorage.getItem("soulvardWishlist")) || sampleWishlistItems;
-let cartCount = parseInt(localStorage.getItem("soulvardCartCount")) || 3;
+// Load wishlist from API
+async function loadWishlistFromAPI() {
+  try {
+    const user = getCurrentUser();
+    if (!user) {
+      // Not logged in - show empty wishlist
+      wishlistItems = [];
+      return;
+    }
+
+    const response = await wishlistAPI.get();
+    if (response.success && response.data) {
+      wishlistItems = response.data.items || [];
+      console.log("Wishlist loaded from API:", wishlistItems);
+    } else {
+      wishlistItems = [];
+    }
+  } catch (error) {
+    console.error("Error loading wishlist from API:", error);
+    // Fallback to empty wishlist on error
+    wishlistItems = [];
+  }
+}
+
+let cartCount = 0;
 
 // Update counts on page load
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  // Show loading state
+  const wishlistGrid = document.getElementById("wishlistGrid");
+  if (wishlistGrid) {
+    wishlistGrid.innerHTML = `
+      <div style="grid-column: 1/-1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 2rem;">
+        <div style="width:28px;height:28px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;animation:soulvardSpin .8s linear infinite;"></div>
+        <span style="font-size: 14px;">Loading wishlist...</span>
+      </div>
+    `;
+  }
+
+  await loadWishlistFromAPI();
+  await syncHeaderCounts();
   updateWishlistCount();
   updateCartCount();
   renderWishlistItems();
   setupNavScroll();
 });
+
+async function syncHeaderCounts() {
+  const user = getCurrentUser();
+  if (!user) {
+    cartCount = 0;
+    return;
+  }
+  try {
+    const cartResponse = await cartAPI.get();
+    if (cartResponse.success) {
+      cartCount = (cartResponse.data?.items || []).reduce(
+        (sum, item) => sum + (item.quantity || 0),
+        0,
+      );
+    }
+  } catch (e) {
+    console.warn("Could not sync cart count:", e);
+  }
+}
 
 // Update wishlist count display
 function updateWishlistCount() {
@@ -116,13 +104,22 @@ function renderWishlistItems() {
       ? Math.round(((item.mrp - item.price) / item.mrp) * 100)
       : 0;
 
+    // Fallback image if product image is missing
+    const defaultImage =
+      "https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60";
+    const productImage =
+      item.image || item.colors?.[0]?.images?.[0] || defaultImage;
+
+    // Handle inStock field - default to true if not specified
+    const inStock = item.inStock !== false;
+
     const wishlistItem = document.createElement("div");
-    wishlistItem.className = `wishlist-product-card ${!item.inStock ? "out-of-stock" : ""}`;
+    wishlistItem.className = `wishlist-product-card ${!inStock ? "out-of-stock" : ""}`;
     wishlistItem.innerHTML = `
                     <div class="wishlist-image-container">
-                        <div class="wishlist-product-image" style="background-image: url('${item.image}')"></div>
+                        <div class="wishlist-product-image" style="background-image: url('${productImage}'); background-size: cover; background-position: center;"></div>
                         ${
-                          !item.inStock
+                          !inStock
                             ? `
                             <div class="out-of-stock-overlay">
                                 <div class="out-of-stock-label">OUT OF STOCK</div>
@@ -140,17 +137,17 @@ function renderWishlistItems() {
                     <div class="wishlist-product-info">
                         <div class="wishlist-product-name">${item.name}</div>
                         <div class="wishlist-price-container">
-                            <span class="wishlist-current-price">₹${item.price.toLocaleString("en-IN")}</span>
-                            ${item.mrp ? `<span class="wishlist-mrp">₹${item.mrp.toLocaleString("en-IN")}</span>` : ""}
-                            ${discount > 0 && item.inStock ? `<span class="wishlist-discount">${discount}% OFF</span>` : ""}
+                            <span class="wishlist-current-price">₹${(item.price || 0).toLocaleString("en-IN")}</span>
+                            ${item.mrp ? `<span class="wishlist-mrp">₹${(item.mrp || 0).toLocaleString("en-IN")}</span>` : ""}
+                            ${discount > 0 && inStock ? `<span class="wishlist-discount">${discount}% OFF</span>` : ""}
                         </div>
                         ${
-                          !item.inStock
+                          !inStock
                             ? `
                             <div class="wishlist-out-of-stock">
                                 <i class="fas fa-clock"></i> Will be back soon
                             </div>
-                            <button class="notify-me-btn" onclick="notifyMe(${item.id})">
+                            <button class="notify-me-btn" onclick="notifyMe('${item._id || item.id || item.productId}')">
                                 NOTIFY ME
                             </button>
                         `
@@ -171,12 +168,47 @@ function renderWishlistItems() {
 function removeFromWishlist(index) {
   event.stopPropagation();
   const removedItem = wishlistItems[index];
-  wishlistItems.splice(index, 1);
-  localStorage.setItem("soulvardWishlist", JSON.stringify(wishlistItems));
+  const productId = removedItem._id || removedItem.id || removedItem.productId;
 
-  updateWishlistCount();
-  renderWishlistItems();
-  showNotification(`${removedItem.name} removed from wishlist`);
+  if (!productId) {
+    showNotification("Error: Could not identify product", "error");
+    return;
+  }
+
+  // Find and disable the remove button
+  const removeBtn = document.querySelector(
+    `button[onclick="removeFromWishlist(${index})"]`,
+  );
+  if (removeBtn) {
+    removeBtn.disabled = true;
+    removeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  }
+
+  // Call API to remove from wishlist
+  wishlistAPI
+    .remove(productId)
+    .then((response) => {
+      if (response.success) {
+        wishlistItems.splice(index, 1);
+        updateWishlistCount();
+        renderWishlistItems();
+        showNotification(`${removedItem.name} removed from wishlist`);
+      } else {
+        showNotification("Failed to remove from wishlist", "error");
+        if (removeBtn) {
+          removeBtn.disabled = false;
+          removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        }
+      }
+    })
+    .catch((error) => {
+      console.error("Error removing from wishlist:", error);
+      showNotification("Error: " + error.message, "error");
+      if (removeBtn) {
+        removeBtn.disabled = false;
+        removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+      }
+    });
 }
 
 // Add to cart from wishlist
@@ -187,12 +219,52 @@ function addToCartFromWishlist(index) {
     showNotification("This item is currently out of stock");
     return;
   }
+  const productId = item._id || item.id || item.productId;
+  const defaultSize =
+    item?.sizes?.find((s) => s?.inStock)?.size ||
+    item?.sizes?.[0]?.size ||
+    "One Size";
+  const defaultColor =
+    item?.colors?.find((c) => Array.isArray(c?.images) && c.images.length > 0)
+      ?.value ||
+    item?.colors?.[0]?.value ||
+    "default";
 
-  cartCount++;
-  localStorage.setItem("soulvardCartCount", cartCount.toString());
+  // Find and disable the add to cart button
+  const addBtn = document.querySelector(
+    `button[onclick="addToCartFromWishlist(${index})"]`,
+  );
+  if (addBtn) {
+    addBtn.disabled = true;
+    addBtn.textContent = "Adding...";
+  }
 
-  updateCartCount();
-  showNotification(`${item.name} added to cart`);
+  cartAPI
+    .add(productId, 1, defaultSize, defaultColor)
+    .then((response) => {
+      if (!response.success) {
+        showNotification("Failed to add to cart", "error");
+        if (addBtn) {
+          addBtn.disabled = false;
+          addBtn.textContent = "ADD TO CART";
+        }
+        return;
+      }
+      cartCount = (response.data?.items || []).reduce(
+        (sum, cartItem) => sum + (cartItem.quantity || 0),
+        0,
+      );
+      localStorage.setItem("cartCount", cartCount.toString());
+      updateCartCount();
+      showNotification(`${item.name} added to cart`);
+    })
+    .catch((error) => {
+      showNotification("Error adding to cart: " + error.message, "error");
+      if (addBtn) {
+        addBtn.disabled = false;
+        addBtn.textContent = "ADD TO CART";
+      }
+    });
 }
 
 // Notify me when available
@@ -220,12 +292,23 @@ function clearWishlist() {
   }
 
   if (confirm("Are you sure you want to clear your entire wishlist?")) {
-    wishlistItems = [];
-    localStorage.setItem("soulvardWishlist", JSON.stringify(wishlistItems));
-
-    updateWishlistCount();
-    renderWishlistItems();
-    showNotification("Wishlist cleared");
+    // Call API to clear wishlist
+    wishlistAPI
+      .clear()
+      .then((response) => {
+        if (response.success) {
+          wishlistItems = [];
+          updateWishlistCount();
+          renderWishlistItems();
+          showNotification("Wishlist cleared");
+        } else {
+          showNotification("Failed to clear wishlist", "error");
+        }
+      })
+      .catch((error) => {
+        console.error("Error clearing wishlist:", error);
+        showNotification("Error: " + error.message, "error");
+      });
   }
 }
 

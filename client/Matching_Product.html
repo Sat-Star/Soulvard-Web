@@ -39,11 +39,27 @@
         <li><a href="index.html">HOME</a></li>
         <li><a href="collection.html">COLLECTIONS</a></li>
         <li><a href="Matching_Product.html">MATCH PRODUCTS</a></li>
-        <li><a href="custome_product.html">CUSTOMIZATION</a></li>
-        <li><a href="Custom.html">CUSTOME</a></li>
       </ul>
 
       <div class="nav-actions">
+        <button
+          id="loginBtn"
+          class="auth-btn login-btn"
+          onclick="openLoginModal()"
+        >
+          LOGIN
+        </button>
+        <button
+          id="signupBtn"
+          class="auth-btn signup-btn"
+          onclick="openSignupModal()"
+        >
+          SIGN UP
+        </button>
+        <div id="userMenu" style="display: none">
+          <span id="userName">User</span>
+          <a href="#" onclick="handleLogout(event)">Logout</a>
+        </div>
         <a href="#" class="wishlist-icon">
           <i class="far fa-heart"></i>
           <div class="wishlist-count">0</div>
@@ -68,12 +84,6 @@
             >MATCHING PRODUCTS</a
           >
         </li>
-        <li>
-          <a href="custome_product.html" onclick="toggleMobileMenu()"
-            >CUSTOMIZE</a
-          >
-        </li>
-        <li><a href="Custom.html" onclick="toggleMobileMenu()">CUSTOM</a></li>
         <li><a href="cart.html" onclick="toggleMobileMenu()">CART</a></li>
         <li>
           <a href="whishlist.html" onclick="toggleMobileMenu()">WISHLIST</a>
@@ -301,6 +311,83 @@
       </div>
     </footer>
 
+    <!-- Login Modal -->
+    <div id="loginModal" class="auth-modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('loginModal')">
+          &times;
+        </button>
+        <h2>Login to Soulvard</h2>
+        <form onsubmit="handleLogin(event)">
+          <input type="email" id="loginEmail" placeholder="Email" required />
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            required
+          />
+          <button type="submit" class="submit-btn">LOGIN</button>
+        </form>
+        <p class="modal-footer">
+          Don't have an account?
+          <a
+            href="#"
+            onclick="
+              openSignupModal();
+              closeModal('loginModal');
+            "
+            >Sign up</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="auth-modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('signupModal')">
+          &times;
+        </button>
+        <h2>Create Account</h2>
+        <form onsubmit="handleSignup(event)">
+          <input type="text" id="signupName" placeholder="Full Name" required />
+          <input type="email" id="signupEmail" placeholder="Email" required />
+          <input
+            type="tel"
+            id="signupPhone"
+            placeholder="Phone Number"
+            required
+          />
+          <input
+            type="password"
+            id="signupPassword"
+            placeholder="Password"
+            required
+          />
+          <input
+            type="password"
+            id="signupConfirmPassword"
+            placeholder="Confirm Password"
+            required
+          />
+          <button type="submit" class="submit-btn">SIGN UP</button>
+        </form>
+        <p class="modal-footer">
+          Already have an account?
+          <a
+            href="#"
+            onclick="
+              openLoginModal();
+              closeModal('signupModal');
+            "
+            >Login</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <script src="scripts/api.js"></script>
+    <script src="scripts/auth.js"></script>
     <script src="scripts/Matching_Product.js"></script>
   </body>
 </html>

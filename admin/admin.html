@@ -7,6 +7,30 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Soulvard - Admin Dashboard</title>
+
+    <!-- Authentication Check - Protect Admin Page -->
+    <script>
+      // Get auth token and user from localStorage
+      function getAuthToken() {
+        return localStorage.getItem("authToken");
+      }
+
+      function getCurrentUser() {
+        const user = localStorage.getItem("currentUser");
+        return user ? JSON.parse(user) : null;
+      }
+
+      // Check if user is logged in and has admin role
+      const token = getAuthToken();
+      const user = getCurrentUser();
+
+      if (!token || !user || user.role !== "admin") {
+        // Not authenticated or not admin - redirect to login
+        alert("Admin access required. Please login with admin credentials.");
+        window.location.href = "../client/index.html";
+      }
+    </script>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -186,7 +210,7 @@
           <div class="header-right">
             <button
               class="btn btn-primary"
-              onclick="window.open('../index.html', '_blank')"
+              onclick="window.open('../client/index.html', '_blank')"
             >
               <i class="fas fa-external-link-alt"></i> View Store
             </button>
@@ -902,7 +926,11 @@
                   <button type="button" class="btn" onclick="saveAsDraft()">
                     <i class="fas fa-save"></i> Save as Draft
                   </button>
-                  <button type="submit" class="btn btn-primary">
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="productSubmitBtn"
+                  >
                     <i class="fas fa-check"></i> Publish Product
                   </button>
                 </div>
@@ -1069,7 +1097,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3 style="margin: 0; font-size: 18px">Product Published!</h3>
-          <button class="btn btn-icon" onclick="closeModal()">
+          <button class="btn btn-icon" onclick="closeSuccessModal()">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -1090,7 +1118,7 @@
               The product has been published and added to your collections.
             </p>
             <div style="display: flex; gap: 12px; justify-content: center">
-              <button class="btn" onclick="closeModal()">
+              <button class="btn" onclick="closeSuccessModal()">
                 Add Another Product
               </button>
               <button class="btn btn-primary" onclick="viewAllProducts()">
@@ -1410,6 +1438,7 @@
       </div>
     </div>
 
+    <script src="../client/scripts/api.js"></script>
     <script src="admin.js"></script>
   </body>
 </html>

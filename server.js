@@ -3,16 +3,17 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const connectDB = require("./backend/db");
+const errorHandler = require("./backend/middleware/errorHandler");
 
 // Import routes
 const authRoutes = require("./backend/routes/auth");
 const productRoutes = require("./backend/routes/products");
 const categoryRoutes = require("./backend/routes/categories");
+const cartRoutes = require("./backend/routes/cart");
+const wishlistRoutes = require("./backend/routes/wishlist");
+const orderRoutes = require("./backend/routes/orders");
 const couponRoutes = require("./backend/routes/coupons");
-const playlistRoutes = require("./backend/routes/playlists");
-const heroImageRoutes = require("./backend/routes/heroImages");
-const sizeChartRoutes = require("./backend/routes/sizeCharts");
-const promotionRoutes = require("./backend/routes/promotions");
+const notificationRoutes = require("./backend/routes/notifications");
 
 // Initialize Express app
 const app = express();
@@ -22,19 +23,18 @@ connectDB();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// Routes (Images now served from Cloudinary)
 // API routes MUST be before static file serving
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/orders", orderRoutes);
 app.use("/api/coupons", couponRoutes);
-app.use("/api/playlists", playlistRoutes);
-app.use("/api/hero-images", heroImageRoutes);
-app.use("/api/size-charts", sizeChartRoutes);
-app.use("/api/promotions", promotionRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Serve static files AFTER API routes
 app.use(express.static(path.join(__dirname, "client")));
@@ -50,10 +50,6 @@ app.get("/index.html", (req, res) => {
 });
 
 // Customer pages routes
-app.get("/login.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/login.html"));
-});
-
 app.get("/collection.html", (req, res) => {
   res.sendFile(path.join(__dirname, "client/collection.html"));
 });
@@ -63,7 +59,19 @@ app.get("/cart.html", (req, res) => {
 });
 
 app.get("/wishlist.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/wishlist.html"));
+  res.sendFile(path.join(__dirname, "client/whishlist.html"));
+});
+
+app.get("/product/:id", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/product_cart.html"));
+});
+
+app.get("/custom.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/Custom.html"));
+});
+
+app.get("/ourstory.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/ourstory.html"));
 });
 
 // Admin routes
@@ -75,16 +83,13 @@ app.get("/admin/admin.html", (req, res) => {
   res.sendFile(path.join(__dirname, "admin/admin.html"));
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: err.message || "Internal server error" });
-});
-
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;

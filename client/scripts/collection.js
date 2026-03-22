@@ -1,191 +1,86 @@
-// Enhanced product data for collections with stock status
-const collectionsProducts = [
-  {
-    id: 1,
-    name: "Premium Cotton Hoodie",
-    price: 3499,
-    mrp: 4999,
-    category: "hoodie",
-    image:
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "BESTSELLER",
-    inStock: true,
-  },
-  {
-    id: 2,
-    name: "Classic Fit T-Shirt",
-    price: 1999,
-    mrp: 2999,
-    category: "t-shirt",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "NEW ARRIVAL",
-    inStock: false,
-  },
-  {
-    id: 3,
-    name: "Graphic Print Hoodie",
-    price: 3999,
-    mrp: 5499,
-    category: "hoodie",
-    image:
-      "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "GRAPHIC",
-    inStock: true,
-  },
-  {
-    id: 4,
-    name: "Oversized T-Shirt",
-    price: 2299,
-    mrp: 3299,
-    category: "t-shirt",
-    image:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "OVERSIZED",
-    inStock: true,
-  },
-  {
-    id: 5,
-    name: "Silk Elegance Shirt",
-    price: 24999,
-    mrp: 32999,
-    category: "shirts",
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "PREMIUM",
-    inStock: true,
-  },
-  {
-    id: 6,
-    name: "Tailored Wool Trousers",
-    price: 33199,
-    mrp: 41999,
-    category: "trousers",
-    image:
-      "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "NEW ARRIVAL",
-    inStock: false,
-  },
-  {
-    id: 7,
-    name: "Graphic Logo Hoodie",
-    price: 4299,
-    mrp: 5999,
-    category: "hoodie",
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "LOGO",
-    inStock: true,
-  },
-  {
-    id: 8,
-    name: "Striped T-Shirt",
-    price: 1799,
-    mrp: 2499,
-    category: "t-shirt",
-    image:
-      "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "STRIPED",
-    inStock: true,
-  },
-  {
-    id: 9,
-    name: "Cashmere Heritage Coat",
-    price: 74699,
-    mrp: 89999,
-    category: "coats",
-    image:
-      "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "LIMITED EDITION",
-    inStock: true,
-  },
-  {
-    id: 10,
-    name: "Artisan Leather Jacket",
-    price: 66399,
-    mrp: 79999,
-    category: "jackets",
-    image:
-      "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "HANDCRAFTED",
-    inStock: false,
-  },
-  {
-    id: 11,
-    name: "Zipped Hoodie",
-    price: 3799,
-    mrp: 4999,
-    category: "hoodie",
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "ZIPPERED",
-    inStock: true,
-  },
-  {
-    id: 12,
-    name: "Vintage Print T-Shirt",
-    price: 2499,
-    mrp: 3499,
-    category: "t-shirt",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "VINTAGE",
-    inStock: true,
-  },
-  {
-    id: 13,
-    name: "Wool Bespoke Blazer",
-    price: 49799,
-    mrp: 62999,
-    category: "blazers",
-    image:
-      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "PREMIUM",
-    inStock: true,
-  },
-  {
-    id: 14,
-    name: "Linen Craft Shirt",
-    price: 23199,
-    mrp: 29999,
-    category: "shirts",
-    image:
-      "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1815&q=80",
-    badge: "SUSTAINABLE",
-    inStock: true,
-  },
-  {
-    id: 15,
-    name: "Pullover Hoodie",
-    price: 3199,
-    mrp: 4499,
-    category: "hoodie",
-    image:
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "PULLOVER",
-    inStock: false,
-  },
-  {
-    id: 16,
-    name: "Basic Crewneck T-Shirt",
-    price: 1499,
-    mrp: 1999,
-    category: "t-shirt",
-    image:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80",
-    badge: "BASIC",
-    inStock: true,
-  },
-];
+// Enhanced product data - loaded from API
+let collectionsProducts = [];
+let allCollectionsProducts = [];
+
+// Load products from API
+async function loadProductsFromAPI() {
+  renderCollectionsLoader();
+  try {
+    const response = await productsAPI.getAll({
+      limit: 100,
+    });
+
+    if (response.success) {
+      allCollectionsProducts = response.data;
+      collectionsProducts = response.data;
+
+      // Set up category tabs from API data
+      setupCategoryTabs();
+
+      renderCollectionsProducts();
+      updateCartCount();
+      updateWishlistCount();
+      setupNavScroll();
+    }
+  } catch (error) {
+    console.error("Failed to load products:", error);
+    showError("Failed to load products. Using fallback data.");
+    // Continue with empty array - user can refresh
+  }
+}
+
+function renderCollectionsLoader() {
+  if (!collectionsGrid) return;
+  collectionsGrid.innerHTML = `
+    <div style="grid-column: 1/-1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 2rem;">
+      <div style="width:28px;height:28px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;animation:soulvardSpin .8s linear infinite;"></div>
+      <span style="font-size: 14px;">Loading products...</span>
+    </div>
+  `;
+  if (!document.getElementById("soulvardSpinStyle")) {
+    const style = document.createElement("style");
+    style.id = "soulvardSpinStyle";
+    style.textContent =
+      "@keyframes soulvardSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }";
+    document.head.appendChild(style);
+  }
+}
+
+// Setup category tabs from API categories
+async function setupCategoryTabs() {
+  try {
+    const response = await categoriesAPI.getAll();
+    if (response.success) {
+      const categories = response.data;
+      const tabsContainer = document.querySelector(".category-tabs");
+      if (tabsContainer) {
+        tabsContainer.innerHTML = `
+          <button class="category-tab active" data-category="all">All Products</button>
+          ${categories
+            .map(
+              (cat) => `
+            <button class="category-tab" data-category="${cat._id}">${cat.name}</button>
+          `,
+            )
+            .join("")}
+        `;
+
+        // Re-attach event listeners
+        setupEventListeners();
+      }
+    }
+  } catch (error) {
+    console.error("Failed to load categories:", error);
+  }
+}
 
 // DOM elements
 const collectionsGrid = document.getElementById("collectionsGrid");
-const categoryTabs = document.querySelectorAll(".category-tab");
 const sortSelect = document.getElementById("sortSelect");
 const productCount = document.getElementById("productCount");
 const loadMoreBtn = document.getElementById("loadMoreBtn");
 
-// State variables - FIXED: Added load more functionality
+// State variables
 let currentCategory = "all";
 let currentSort = "featured";
 let visibleProducts = 8;
@@ -193,16 +88,50 @@ let cartCount = 0;
 let wishlistCount = 0;
 
 // Initialize the page
-document.addEventListener("DOMContentLoaded", function () {
-  renderCollectionsProducts();
+document.addEventListener("DOMContentLoaded", async function () {
+  await loadProductsFromAPI();
+  await syncHeaderCounts();
   setupEventListeners();
   updateCartCount();
   updateWishlistCount();
   setupNavScroll();
 });
 
-// Set up event listeners - FIXED: Added load more event listener
+async function syncHeaderCounts() {
+  const user = getCurrentUser();
+  if (!user) {
+    cartCount = 0;
+    wishlistCount = 0;
+    return;
+  }
+
+  try {
+    const cartResponse = await cartAPI.get();
+    if (cartResponse.success) {
+      cartCount = (cartResponse.data?.items || []).reduce(
+        (sum, item) => sum + (item.quantity || 0),
+        0,
+      );
+    }
+  } catch (e) {
+    console.warn("Could not sync cart count:", e);
+  }
+
+  try {
+    const wishlistResponse = await wishlistAPI.get();
+    if (wishlistResponse.success) {
+      wishlistCount = (wishlistResponse.data?.items || []).length;
+    }
+  } catch (e) {
+    console.warn("Could not sync wishlist count:", e);
+  }
+}
+
+// Set up event listeners - FIXED: Query category tabs fresh each time
 function setupEventListeners() {
+  // Query category tabs fresh to ensure we get the latest DOM elements
+  const categoryTabs = document.querySelectorAll(".category-tab");
+
   // Category tabs
   categoryTabs.forEach((tab) => {
     tab.addEventListener("click", function () {
@@ -243,9 +172,13 @@ function renderCollectionsProducts() {
   // Filter products
   let filteredProducts = collectionsProducts;
   if (currentCategory !== "all") {
-    filteredProducts = collectionsProducts.filter(
-      (product) => product.category === currentCategory,
-    );
+    filteredProducts = collectionsProducts.filter((product) => {
+      // Handle both object category {_id, name, slug} and string category
+      if (typeof product.category === "object" && product.category) {
+        return product.category._id === currentCategory;
+      }
+      return product.category === currentCategory;
+    });
   }
 
   // Sort products
@@ -300,9 +233,15 @@ function createCollectionsProductCard(product) {
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : 0;
 
+  // Fallback image if product image is missing
+  const defaultImage =
+    "https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60";
+  const productImage =
+    product.image || product.colors?.[0]?.images?.[0] || defaultImage;
+
   card.innerHTML = `
                 <div class="matching-image-container">
-                    <div class="matching-product-image" style="background-image: url('${product.image}')"></div>
+                    <div class="matching-product-image" style="background-image: url('${productImage}'); background-size: cover; background-position: center;"></div>
                     ${
                       !product.inStock
                         ? `
@@ -325,7 +264,7 @@ function createCollectionsProductCard(product) {
                       !product.inStock
                         ? `
                         <div class="out-of-stock-text">Will be back soon</div>
-                        <button class="notify-me-btn" onclick="notifyMe(${product.id})">
+                        <button class="notify-me-btn" onclick="notifyMe('${product._id}')">
                             NOTIFY ME WHEN AVAILABLE
                         </button>
                     `
@@ -347,7 +286,7 @@ function createCollectionsProductCard(product) {
         !e.target.closest(".notify-me-btn") &&
         !e.target.classList.contains("discount-text")
       ) {
-        openProductDetail(product.id);
+        openProductDetail(product._id);
       }
     });
   }
@@ -355,39 +294,63 @@ function createCollectionsProductCard(product) {
   return card;
 }
 
-// Open product detail page (simulated)
+// Open product detail page
 function openProductDetail(productId) {
-  const product = collectionsProducts.find((p) => p.id === productId);
-  if (!product) return;
-
-  showNotification(`Opening ${product.name} details...`);
-
-  // Simulate navigation to product page
-  setTimeout(() => {
-    // This would be: window.location.href = `product-detail.html?id=${product.id}`;
-    console.log(`Navigating to product detail page for ${product.name}`);
-  }, 500);
+  showPageLoader("Loading product...");
+  window.location.href = `product_cart.html?id=${productId}`;
 }
 
-// Notify me when available
-function notifyMe(productId) {
-  const product = collectionsProducts.find((p) => p.id === productId);
-  if (!product) return;
+function showPageLoader(message = "Loading...") {
+  let loader = document.getElementById("pageNavLoader");
+  if (!loader) {
+    loader = document.createElement("div");
+    loader.id = "pageNavLoader";
+    loader.style.cssText = `
+      position: fixed; inset: 0; z-index: 99999;
+      background: rgba(255,255,255,0.88);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 10px;
+    `;
+    loader.innerHTML = `
+      <div style="width:36px;height:36px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;animation:soulvardSpin .8s linear infinite;"></div>
+      <div style="font-size:14px;color:#222;">${message}</div>
+    `;
+    document.body.appendChild(loader);
+  }
+  if (!document.getElementById("soulvardSpinStyle")) {
+    const style = document.createElement("style");
+    style.id = "soulvardSpinStyle";
+    style.textContent =
+      "@keyframes soulvardSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }";
+    document.head.appendChild(style);
+  }
+}
 
+// Notify me when product is back in stock
+async function notifyMe(productId) {
   const email = prompt(
-    `Enter your email to get notified when "${product.name}" is back in stock:`,
+    "Enter your email to get notified when this product is back in stock:",
   );
 
-  if (email && validateEmail(email)) {
-    showNotification(
-      `You'll be notified when ${product.name} is back in stock!`,
-    );
-    // In a real app, you would send this to your backend
-    console.log(
-      `Notification requested for product ${productId} from email: ${email}`,
-    );
-  } else if (email) {
+  if (!email) return;
+
+  if (!validateEmail(email)) {
     showNotification("Please enter a valid email address.");
+    return;
+  }
+
+  try {
+    const response = await notificationsAPI.registerStockNotification(
+      productId,
+      email,
+    );
+    if (response.success) {
+      showNotification(
+        "You'll be notified when this product is back in stock!",
+      );
+    }
+  } catch (error) {
+    showError("Failed to register notification. Please try again.");
   }
 }
 

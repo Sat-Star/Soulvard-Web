@@ -295,21 +295,6 @@ POST   /api/coupons/validate   Validate coupon
 4. Test complete user flows
 5. Deploy to production
 
----
-
-## 💾 Environment Setup
-
-Your `.env` is **already configured** with:
-
-```
-PORT=5000
-MONGODB_URL=mongodb+srv://soulvard_client:client123@cluster0.xaecowa.mongodb.net/
-JWT_SECRET=e9c0f4a1d6b7429f8a2c7b5e4d1a0f3c9b8e6a7d5f2c1b4a9e8d0c6f7a2b3
-NODE_ENV=development
-CLOUDINARY_CLOUD_NAME=dbc4pr6sx
-CLOUDINARY_API_KEY=852441582889163
-CLOUDINARY_API_SECRET=1isrNmP6_LvsMjhHMabM0fMlFgg
-```
 
 **No additional setup needed!**
 
